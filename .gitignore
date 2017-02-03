@@ -1,3 +1,10 @@
 # Compiled files
-*.tfstate
-*.tfstate.backup
+**/*.tfstate
+**/*.tfplan
+**/*.tfstate.backup
+**/.terraform
+**/.terraform/*
+# OSX
+**/.DS_Store
+**/.AppleDouble
+**/.LSOverride
