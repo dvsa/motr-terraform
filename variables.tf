@@ -113,12 +113,12 @@ variable "mot_test_reminder_info_endpoint" {
   description = "MOT test reminder info endpoint"
 }
 
-variable "notify_subscription_template_id" {
+variable "confirmation_template_id" {
   type        = "string"
   description = "Gov Notify template ID"
 }
 
-variable "notify_client_api_key" {
+variable "gov_notify_api_token" {
   type        = "string"
   description = "Gov Notify API key"
 }
