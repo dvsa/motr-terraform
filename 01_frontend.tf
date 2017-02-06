@@ -96,7 +96,7 @@ resource "aws_lambda_function" "MotrWebHandler" {
       DB_TABLE_PENDING_SUBSCRIPTION  = "motr-${var.environment}-pending_subscription"
       MOT_TEST_REMINDER_INFO_API_URI = "${var.mot_test_reminder_info_endpoint == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mock-moth" : var.mot_test_reminder_info_endpoint}"
       GOV_NOTIFY_API_TOKEN           = "${var.notify_client_api_key}"
-      NOTIFY_SUBSCRIPTON_TEMPLATE_ID = "${notify_subscription_template_id}"
+      NOTIFY_SUBSCRIPTION_TEMPLATE_ID = "${notify_subscription_template_id}"
     }
   }
   depends_on        = ["aws_api_gateway_rest_api.MotrWeb"]
