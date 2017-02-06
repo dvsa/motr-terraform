@@ -495,7 +495,7 @@ resource "aws_api_gateway_integration_response" "MothMockGET_200" {
         "secondaryColour": "",
         "regNumber": "$input.params('vrm')",
         "yearOfManufacture": "2006",
-        "motExpiryDate": "2016/11/26"
+        "motExpiryDate": "2016-11-26"
     #elseif($input.params('vrm').contains("YN13NTX"))
         "make": "HARLEY-DAVIDSON CVO ROAD GLIDE FLTRXSE2 ANV 13",
         "model": "",
@@ -503,7 +503,7 @@ resource "aws_api_gateway_integration_response" "MothMockGET_200" {
         "secondaryColour": "Multi-colour",
         "regNumber": "$input.params('vrm')",
         "yearOfManufacture": "2004",
-        "motExpiryDate": "2017/12/01"
+        "motExpiryDate": "2017-12-01"
     #elseif($input.params('vrm').contains("LOY-500"))
         "make": "TOJEIRO BRISTOL 2.0L",
         "model": "1 DR MANUAL CONVERTIBLE SPORTS",
@@ -511,7 +511,7 @@ resource "aws_api_gateway_integration_response" "MothMockGET_200" {
         "secondaryColour": "",
         "regNumber": "$input.params('vrm')",
         "yearOfManufacture": "1999",
-        "motExpiryDate": "2017/03/14"
+        "motExpiryDate": "2017-03-14"
     #else
         "make": "testMake",
         "model": "testModel",
@@ -519,7 +519,7 @@ resource "aws_api_gateway_integration_response" "MothMockGET_200" {
         "secondaryColour": "testSecondaryColour",
         "regNumber": "$input.params('vrm')",
         "yearOfManufacture": "1998",
-        "motExpiryDate": "2019/12/23"
+        "motExpiryDate": "2019-12-23"
     #end
 }
 EOF
