@@ -12,13 +12,13 @@ resource "aws_iam_role" "APIGateway" {
 }
 
 # IAM role + policy that grants WebApp Lambda permissons to assume roles
-data "template_file" "lambda_webapp_assumerole_policy" {
-  template = "${file("${path.module}/iam_policies/lambda_webapp_assumerole_policy.json.tpl")}"
+data "template_file" "lambda_assumerole_policy" {
+  template = "${file("${path.module}/iam_policies/lambda_assumerole_policy.json.tpl")}"
 }
 
-resource "aws_iam_role" "Lambda" {
+resource "aws_iam_role" "MotrWebAppLambda" {
   name               = "motr-lambda-${var.environment}"
-  assume_role_policy = "${data.template_file.lambda_webapp_assumerole_policy.rendered}"
+  assume_role_policy = "${data.template_file.lambda_assumerole_policy.rendered}"
 }
 
 # IAM policy that grants WebApp Lambda required permissons
@@ -32,9 +32,9 @@ data "template_file" "lambda_webapp_permissions_policy" {
   }
 }
 
-resource "aws_iam_role_policy" "Lambda" {
+resource "aws_iam_role_policy" "MotrWebAppLambda" {
   name   = "motr-web-policy-${var.environment}"
-  role   = "${aws_iam_role.Lambda.id}"
+  role   = "${aws_iam_role.MotrWebAppLambda.id}"
   policy = "${data.template_file.lambda_webapp_permissions_policy.rendered}"
 }
 
@@ -81,11 +81,11 @@ resource "aws_lambda_function" "MotrWebHandler" {
   s3_bucket         = "${aws_s3_bucket.MOTRS3Bucket.bucket}"
   s3_key            = "lambdas/${var.MotrWebHandler_s3_key}"
   function_name     = "MotrWebHandler-${var.environment}"
-  role              = "${aws_iam_role.Lambda.arn}"
+  role              = "${aws_iam_role.MotrWebAppLambda.arn}"
   handler           = "uk.gov.dvsa.motr.web.handler.MotrWebHandler::handleRequest"
   publish           = "${var.MotrWebHandler_publish}"
-  memory_size       = "256"
-  timeout           = "15"
+  memory_size       = "${var.MotrWebHandler_mem_size}"
+  timeout           = "${var.MotrWebHandler_timeout}"
   environment {
     variables = {
       LOG_LEVEL                      = "${var.webapp_log_level}"
