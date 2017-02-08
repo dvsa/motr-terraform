@@ -97,6 +97,7 @@ resource "aws_lambda_function" "MotrWebHandler" {
       MOT_TEST_REMINDER_INFO_API_URI = "${var.mot_test_reminder_info_endpoint == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mock-moth" : var.mot_test_reminder_info_endpoint}"
       GOV_NOTIFY_API_TOKEN           = "${var.gov_notify_api_token}"
       CONFIRMATION_TEMPLATE_ID       = "${var.confirmation_template_id}"
+      BASE_URL                       = "${var.base_url == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/" : var.base_url}"
     }
   }
   depends_on        = ["aws_api_gateway_rest_api.MotrWeb"]
