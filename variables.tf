@@ -18,6 +18,11 @@ variable "bucket_prefix" {
   description = "S3 bucket prefix"
 }
 
+variable "bucket_versioning_enabled" {
+  type        = "string"
+  description = "S3 bucket versioning switch"
+}
+
 variable "with_cloudfront" {
   type        = "string"
   description = "CloudFront on/off switch"

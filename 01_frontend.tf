@@ -47,9 +47,9 @@ resource "aws_s3_bucket" "MOTRS3Bucket" {
   # http://stackoverflow.com/questions/33954150/aws-api-gateway-method-to-serve-static-content-from-s3-bucket
   bucket        = "${var.bucket_prefix}${var.environment}"
   force_destroy = "true"
-  # versioning {
-  #   enabled = true
-  # }
+  versioning {
+    enabled = "${var.bucket_versioning_enabled}"
+  }
   policy = <<EOF
 {
   "Version": "2008-10-17",
