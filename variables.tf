@@ -28,6 +28,16 @@ variable "with_cloudfront" {
   description = "CloudFront on/off switch"
 }
 
+variable "wab_acl_id" {
+  type        = "string"
+  description = "WAF Web ACL id"
+}
+
+variable "cf_apig_channel_key" {
+  type        = "string"
+  description = "API Gateway key value"
+}
+
 variable "public_dns_domain" {
   type        = "string"
   description = "Public DNS domain name"
