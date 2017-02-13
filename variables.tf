@@ -6,7 +6,7 @@ variable "aws_region" {
 variable "project" {
   type        = "string"
   description = "Project name"
-}
+  }
 
 variable "environment" {
   type        = "string"
@@ -127,7 +127,7 @@ variable "mot_test_reminder_info_endpoint" {
   type        = "string"
   description = "MOT test reminder info endpoint"
 }
-
+  
 variable "MotrSubscriptionLoader_s3_key" {
   type        = "string"
   description = "MotrSubscriptionLoader Lambda Handler S3 key"
@@ -226,4 +226,14 @@ variable "motr_subscribtion_q_msg_retention_s" {
 variable "motr_subscribtion_q_receive_wait_s" {
   type        = "string"
   description = "The time for which a ReceiveMessage call will wait for a message to arrive (long polling) before returning"
+}
+
+variable "confirmation_template_id" {
+  type        = "string"
+  description = "Gov Notify template ID"
+}
+
+variable "gov_notify_api_token" {
+  type        = "string"
+  description = "Gov Notify API key"
 }
