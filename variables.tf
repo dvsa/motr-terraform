@@ -28,7 +28,7 @@ variable "with_cloudfront" {
   description = "CloudFront on/off switch"
 }
 
-variable "wab_acl_id" {
+variable "waf_acl_id" {
   type        = "string"
   description = "WAF Web ACL id"
 }

@@ -645,7 +645,7 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
   enabled     = true
   aliases     = ["${var.environment}.motr.${var.public_dns_domain}"]
   price_class = "PriceClass_100" # US+EU
-  web_acl_id  = "${var.wab_acl_id}"
+  web_acl_id  = "${var.waf_acl_id}"
   origin { # API Gateway
     domain_name   = "${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com"
     origin_id     = "motr-web-${var.environment}"
