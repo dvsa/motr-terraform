@@ -136,10 +136,11 @@ resource "aws_api_gateway_rest_api" "MotrWeb" {
 
 # GET method -> ROOT (/)
 resource "aws_api_gateway_method" "LambdaRootGET" {
-  rest_api_id   = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id   = "${aws_api_gateway_rest_api.MotrWeb.root_resource_id}"
-  http_method   = "GET"
-  authorization = "NONE"
+  rest_api_id      = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id      = "${aws_api_gateway_rest_api.MotrWeb.root_resource_id}"
+  http_method      = "GET"
+  authorization    = "NONE"
+  api_key_required = "${var.with_cloudfront ? true : false}"
 }
 
 # integration between ROOT resource's GET method and Lambda function (back-end)
@@ -196,10 +197,11 @@ resource "aws_api_gateway_resource" "LambdaWildcard" {
 
 # GET method -> Lambda Wildcard/{proxy}
 resource "aws_api_gateway_method" "LambdaWildcardGET" {
-  rest_api_id   = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id   = "${aws_api_gateway_resource.LambdaWildcard.id}"
-  http_method   = "GET"
-  authorization = "NONE"
+  rest_api_id      = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id      = "${aws_api_gateway_resource.LambdaWildcard.id}"
+  http_method      = "GET"
+  authorization    = "NONE"
+  api_key_required = "${var.with_cloudfront ? true : false}"
 }
 
 # integration between Lambda Wildcard resource's GET method and Lambda function (back-end)
@@ -212,7 +214,6 @@ resource "aws_api_gateway_integration" "LambdaWildcardGET" {
   integration_http_method = "POST"
   #credentials             = "${aws_iam_role.Lambda.arn}"
 }
-
 
 resource "aws_api_gateway_method_response" "LambdaWildcardGET_200" {
   rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
@@ -248,10 +249,11 @@ resource "aws_api_gateway_integration_response" "LambdaWildcardGET_200" {
 
 # POST method -> Lambda Wildcard/{proxy}
 resource "aws_api_gateway_method" "LambdaWildcardPOST" {
-  rest_api_id   = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id   = "${aws_api_gateway_resource.LambdaWildcard.id}"
-  http_method   = "POST"
-  authorization = "NONE"
+  rest_api_id      = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id      = "${aws_api_gateway_resource.LambdaWildcard.id}"
+  http_method      = "POST"
+  authorization    = "NONE"
+  api_key_required = "${var.with_cloudfront ? true : false}"
 }
 
 # integration between Lambda Wildcard resource's POST method and Lambda function (back-end)
@@ -321,6 +323,7 @@ resource "aws_api_gateway_method" "AssetsWildcardGET" {
   resource_id        = "${aws_api_gateway_resource.AssetsWildcard.id}"
   http_method        = "GET"
   authorization      = "NONE"
+  api_key_required   = "${var.with_cloudfront ? true : false}"
   request_parameters = {
     "method.request.path.item" = true
   }
@@ -439,12 +442,12 @@ EOF
 }
 
 resource "aws_api_gateway_method_response" "MothMockGET_200" {
-  count               = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.MothMock.id}"
-  http_method         = "${aws_api_gateway_method.MothMockGET.http_method}"
-  status_code         = "200"
-  response_models     = {
+  count           = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
+  rest_api_id     = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id     = "${aws_api_gateway_resource.MothMock.id}"
+  http_method     = "${aws_api_gateway_method.MothMockGET.http_method}"
+  status_code     = "200"
+  response_models = {
     "application/json" = "Empty"
   }
   response_parameters = {
@@ -472,22 +475,22 @@ resource "aws_api_gateway_method_response" "MothMockGET_404" {
 }
 
 resource "aws_api_gateway_integration_response" "MothMockGET_404" {
-  count               = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.MothMock.id}"
-  http_method         = "${aws_api_gateway_method.MothMockGET.http_method}"
-  status_code         = "${aws_api_gateway_method_response.MothMockGET_404.status_code}"
-  selection_pattern   = "404"
-  depends_on          = ["aws_api_gateway_integration.MothMockGET"]
+  count             = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
+  rest_api_id       = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id       = "${aws_api_gateway_resource.MothMock.id}"
+  http_method       = "${aws_api_gateway_method.MothMockGET.http_method}"
+  status_code       = "${aws_api_gateway_method_response.MothMockGET_404.status_code}"
+  selection_pattern = "404"
+  depends_on        = ["aws_api_gateway_integration.MothMockGET"]
 }
 
 resource "aws_api_gateway_integration_response" "MothMockGET_200" {
-  count               = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.MothMock.id}"
-  http_method         = "${aws_api_gateway_method.MothMockGET.http_method}"
-  status_code         = "${aws_api_gateway_method_response.MothMockGET_200.status_code}"
-  selection_pattern   = "200"
+  count             = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
+  rest_api_id       = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id       = "${aws_api_gateway_resource.MothMock.id}"
+  http_method       = "${aws_api_gateway_method.MothMockGET.http_method}"
+  status_code       = "${aws_api_gateway_method_response.MothMockGET_200.status_code}"
+  selection_pattern = "200"
   response_templates {
     "application/json" = <<EOF
 {
@@ -554,9 +557,7 @@ resource "aws_api_gateway_api_key" "MotrWebApiKey" {
     rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
     stage_name  = "${aws_api_gateway_deployment.Deployment.stage_name}"
   }
-  depends_on = [ "aws_api_gateway_rest_api.MotrWeb"
-               , "aws_api_gateway_deployment.Deployment"
-  ]
+  depends_on = ["aws_api_gateway_deployment.Deployment"]
 }
 
 ####################################################################################################################################
@@ -611,9 +612,7 @@ STACK
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }
-  depends_on = [ "aws_api_gateway_rest_api.MotrWeb"
-               , "aws_api_gateway_deployment.Deployment"
-  ]
+  depends_on = ["aws_api_gateway_deployment.Deployment"]
 }
 
 ####################################################################################################################################
@@ -625,13 +624,16 @@ data "aws_route53_zone" "Route53Zone" {
   private_zone = false
 }
 
-resource "aws_route53_record" "MotrWebCNAME" {
+resource "aws_route53_record" "MotrWeb" {
   count      = "${var.with_cloudfront ? 1 : 0}"
   name       = "${var.environment}.motr"
   zone_id    = "${data.aws_route53_zone.Route53Zone.zone_id}"
-  type       = "CNAME"
-  ttl        = "300"
-  records    = ["${aws_cloudfront_distribution.MotrWebCFDistro.domain_name}"]
+  type       = "A"
+  alias {
+    name                   = "${aws_cloudfront_distribution.MotrWebCFDistro.domain_name}"
+    zone_id                = "Z2FDTNDATAQYW2" # official cloudfront.net zone_id
+    evaluate_target_health = false            # has to be false for CF
+  }
   depends_on = [ "data.aws_route53_zone.Route53Zone"
                , "aws_cloudfront_distribution.MotrWebCFDistro"
   ]
@@ -646,6 +648,7 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
   enabled     = true
   aliases     = ["${var.environment}.motr.${var.public_dns_domain}"]
   price_class = "PriceClass_100" # US+EU
+  web_acl_id  = "${var.waf_acl_id}"
   origin { # API Gateway
     domain_name   = "${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com"
     origin_id     = "motr-web-${var.environment}"
@@ -658,18 +661,18 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     }
     custom_header {
       name  = "x-api-key"
-      value = "${aws_api_gateway_api_key.MotrWebApiKey.id}"   # TODO: should be value
+      value = "${var.cf_apig_channel_key}"
     }
   }
   default_cache_behavior { # for API Gateway
-    allowed_methods  = ["GET", "HEAD"]
+    allowed_methods  = ["GET", "HEAD", "POST", "DELETE", "OPTIONS", "PUT", "PATCH"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "motr-web-${var.environment}"
     compress         = true
     forwarded_values {
       query_string = false
       cookies {
-        forward = "none"
+        forward = "all"
       }
     }
     viewer_protocol_policy = "redirect-to-https"
@@ -720,8 +723,4 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }
-  depends_on = [ "aws_api_gateway_rest_api.MotrWeb"
-               , "aws_api_gateway_api_key.MotrWebApiKey"
-               , "aws_api_gateway_deployment.Deployment"
-  ]
 }
