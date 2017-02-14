@@ -86,7 +86,7 @@ resource "aws_lambda_function" "MotrWebHandler" {
   publish           = "${var.MotrWebHandler_publish}"
   memory_size       = "${var.MotrWebHandler_mem_size}"
   timeout           = "${var.MotrWebHandler_timeout}"
-  kms_key_arn       = "${aws_kms_key.MOTR_WebHandler_Lambda_Key.arn}"
+  kms_key_arn       = "${aws_kms_key.MOTR_Lambda_Key.arn}"
   environment {
     variables = {
       LOG_LEVEL                      = "${var.webapp_log_level}"
