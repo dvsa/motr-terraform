@@ -163,6 +163,11 @@ variable "mot_test_reminder_info_endpoint" {
   description = "MOT test reminder info endpoint"
 }
 
+variable "trade_api_token" {
+  type        = "string"
+  description = "Token for trade API"
+}
+
 variable "MotrSubscriptionLoader_s3_key" {
   type        = "string"
   description = "MotrSubscriptionLoader Lambda Handler S3 key"

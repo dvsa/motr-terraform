@@ -21,12 +21,13 @@ resource "aws_lambda_function" "MotrWebHandler" {
       STATIC_ASSETS_URL              = "https://s3-${var.aws_region}.amazonaws.com/${aws_s3_bucket.MOTRS3Bucket.bucket}/assets/"
       DB_TABLE_SUBSCRIPTION          = "motr-${var.environment}-subscription"
       DB_TABLE_PENDING_SUBSCRIPTION  = "motr-${var.environment}-pending_subscription"
-      MOT_TEST_REMINDER_INFO_API_URI = "${var.mot_test_reminder_info_endpoint == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mock-moth" : var.mot_test_reminder_info_endpoint}"
+      MOT_TEST_REMINDER_INFO_API_URI = "${var.mot_test_reminder_info_endpoint == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mock-moth/{registration}" : var.mot_test_reminder_info_endpoint}"
       GOV_NOTIFY_API_TOKEN           = "${var.gov_notify_api_token}"
       CONFIRMATION_TEMPLATE_ID       = "${var.confirmation_template_id}"
       BASE_URL                       = "${var.base_url == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/" : var.base_url}"
       WARM_UP                        = "${var.webapp_warm_up}"
       WARM_UP_TIMEOUT_SEC            = "${var.webapp_warm_up_timeout_sec}"
+      TRADE_API_TOKEN                = "${var.trade_api_token}"
     }
   }
   depends_on        = ["aws_api_gateway_rest_api.MotrWeb"]
