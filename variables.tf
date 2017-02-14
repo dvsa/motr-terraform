@@ -127,7 +127,7 @@ variable "mot_test_reminder_info_endpoint" {
   type        = "string"
   description = "MOT test reminder info endpoint"
 }
-  
+
 variable "MotrSubscriptionLoader_s3_key" {
   type        = "string"
   description = "MotrSubscriptionLoader Lambda Handler S3 key"
@@ -236,4 +236,9 @@ variable "confirmation_template_id" {
 variable "gov_notify_api_token" {
   type        = "string"
   description = "Gov Notify API key"
+}
+
+variable "base_url" {
+  type        = "string"
+  description = "MOT reminder base url"
 }
