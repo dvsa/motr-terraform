@@ -8,7 +8,7 @@
         "AWS": "${kms_role_arn}"
       },
       "Action": [ 
-        "kms:Decrypt",
+        "kms:Decrypt"
       ],
       "Resource": "arn:aws:kms:${aws_region}:${account_id}:key/*"
     },
