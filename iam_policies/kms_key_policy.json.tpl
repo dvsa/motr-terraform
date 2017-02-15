@@ -10,7 +10,7 @@
       "Action": [ 
         "kms:Decrypt",
       ],
-      "Resource": "*"
+      "Resource": "arn:aws:kms:${aws_region}:${account_id}:key/*"
     },
     {
       "Sid": "Enable key management Permissions",
@@ -19,7 +19,7 @@
         "AWS": "arn:aws:iam::${account_id}:root"
       },
       "Action": "kms:*",
-      "Resource": "*"
+      "Resource": "arn:aws:kms:${aws_region}:${account_id}:key/*"
     }
   ]
 }
