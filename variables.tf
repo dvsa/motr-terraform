@@ -252,3 +252,13 @@ variable "base_url" {
   type        = "string"
   description = "MOT reminder base url"
 }
+
+variable "kms_key_rotation" {
+  type        = "string"
+  description = "KMS key rotation enable"
+}
+
+variable "kms_deletion_window" {
+  type        = "string"
+  description = "KMS key deletion window"
+}

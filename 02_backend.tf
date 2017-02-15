@@ -133,6 +133,7 @@ resource "aws_lambda_function" "MotrSubscriptionLoader" {
   publish       = "${var.MotrSubscriptionLoader_publish}"
   memory_size   = "${var.MotrSubscriptionLoader_mem_size}"
   timeout       = "${var.MotrSubscriptionLoader_timeout}"
+  kms_key_arn   = "${aws_kms_key.MOTR_Lambda_Key.arn}"
   environment {
     variables = {
       LOG_LEVEL               = "${var.subscr_loader_log_level}"
@@ -162,6 +163,7 @@ resource "aws_lambda_function" "MotrNotifier" {
   publish       = "${var.MotrNotifier_publish}"
   memory_size   = "${var.MotrNotifier_mem_size}"
   timeout       = "${var.MotrNotifier_timeout}"
+  kms_key_arn   = "${aws_kms_key.MOTR_Lambda_Key.arn}"
   environment {
     variables = {
       LOG_LEVEL               = "${var.notifier_log_level}"
