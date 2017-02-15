@@ -10,8 +10,7 @@
       "Effect": "Allow",
       "Action": [
         "logs:CreateLogStream",
-        "logs:PutLogEvents",
-        "kms:Decrypt"
+        "logs:PutLogEvents"
       ],
       "Resource": [
         "arn:aws:logs:${aws_region}:${account_id}:log-group:/aws/lambda/${lambda_function}:*"
