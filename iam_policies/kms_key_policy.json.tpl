@@ -8,12 +8,7 @@
         "AWS": "${kms_role_arn}"
       },
       "Action": [ 
-        "kms:Enable*",
-        "kms:Get*",
-        "kms:Describe*",
-        "kms:Encrypt",
         "kms:Decrypt",
-        "kms:ReEncrypt*"
       ],
       "Resource": "*"
     },

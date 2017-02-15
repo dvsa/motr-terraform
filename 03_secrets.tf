@@ -10,13 +10,13 @@ data "template_file" "kms_lambda_policy" {
 }
 
 resource "aws_kms_key" "MOTR_Lambda_Key" {
-    description              = "MOTR_Key-${var.environment}"
-    enable_key_rotation      = "${var.kms_key_rotation ? true : false}"
-    deletion_window_in_days  = "${var.kms_deletion_window}"
-    policy                   = "${data.template_file.kms_lambda_policy.rendered}"
+  description              = "motr-${var.environment}"
+  enable_key_rotation      = "${var.kms_key_rotation ? true : false}"
+  deletion_window_in_days  = "${var.kms_deletion_window}"
+  policy                   = "${data.template_file.kms_lambda_policy.rendered}"
 }
 
 resource "aws_kms_alias" "MOTR_Lambda_Alias" {
-  name = "alias/MOTR-${var.environment}"
+  name = "alias/motr-${var.environment}"
   target_key_id = "${aws_kms_key.MOTR_Lambda_Key.key_id}"
 }

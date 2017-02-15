@@ -256,11 +256,9 @@ variable "base_url" {
 variable "kms_key_rotation" {
   type        = "string"
   description = "KMS key rotation enable"
-  default     = "false"
 }
 
 variable "kms_deletion_window" {
   type        = "string"
   description = "KMS key deletion window"
-  default     = "30"
 }
