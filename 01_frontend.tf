@@ -123,6 +123,16 @@ resource "aws_lambda_permission" "Allow_APIGateway" {
   ]
 }
 
+resource "aws_cloudwatch_log_group" "MotrWebHandler" {
+  count             = "${var.manage_cw_lg_web_lambda ? 1 : 0}"
+  name              = "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"
+  retention_in_days = "${var.cw_lg_web_lambda_retention}"
+  tags {
+    Project     = "${var.project}"
+    Environment = "${var.environment}"
+  }
+}
+
 ####################################################################################################################################
 # API GATEWAY
 

@@ -83,6 +83,16 @@ variable "webapp_log_level" {
   description = "WebApp Lambda log level"
 }
 
+variable "manage_cw_lg_web_lambda" {
+  type        = "string"
+  description = "Enable CloudWatch Log Group for MOTR WebHandler Lambda to be managed by Terraform"
+}
+
+variable "cw_lg_web_lambda_retention" {
+  type        = "string"
+  description = "Specifies the number of days you want to retain log events"
+}
+
 variable "tb_subscr_read_capacity" {
   type        = "string"
   description = "Table motr-subscription read capacity"
@@ -168,6 +178,16 @@ variable "subscr_loader_log_level" {
   description = "MotrSubscriptionNotifier Lambda log level"
 }
 
+variable "manage_cw_lg_subscr_lambda" {
+  type        = "string"
+  description = "Enable CloudWatch Log Group for MOTR Subscription Loader Lambda to be managed by Terraform"
+}
+
+variable "cw_lg_subscr_lambda_retention" {
+  type        = "string"
+  description = "Specifies the number of days you want to retain log events"
+}
+
 variable "MotrNotifier_s3_key" {
   type        = "string"
   description = "MotrNotifier Lambda Handler S3 key"
@@ -196,6 +216,16 @@ variable "MotrNotifier_timeout" {
 variable "notifier_log_level" {
   type        = "string"
   description = "MotrNotifier Lambda log level"
+}
+
+variable "manage_cw_lg_notifier_lambda" {
+  type        = "string"
+  description = "Enable CloudWatch Log Group for MOTR Notifier Lambda to be managed by Terraform"
+}
+
+variable "cw_lg_notifier_lambda_retention" {
+  type        = "string"
+  description = "Specifies the number of days you want to retain log events"
 }
 
 variable "motr_loader_enabled" {

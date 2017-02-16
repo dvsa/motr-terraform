@@ -151,6 +151,16 @@ resource "aws_lambda_alias" "MotrSubscriptionLoader" {
   function_version = "${var.MotrSubscriptionLoader_ver}"
 }
 
+resource "aws_cloudwatch_log_group" "MotrSubscriptionLoader" {
+  count             = "${var.manage_cw_lg_subscr_lambda ? 1 : 0}"
+  name              = "/aws/lambda/${aws_lambda_function.MotrSubscriptionLoader.function_name}"
+  retention_in_days = "${var.cw_lg_subscr_lambda_retention}"
+  tags {
+    Project     = "${var.project}"
+    Environment = "${var.environment}"
+  }
+}
+
 # Notifier
 resource "aws_lambda_function" "MotrNotifier" {
   description   = "MotrNotifier"
@@ -179,6 +189,16 @@ resource "aws_lambda_alias" "MotrNotifier" {
   description      = "Alias for ${aws_lambda_function.MotrNotifier.function_name}"
   function_name    = "${aws_lambda_function.MotrNotifier.arn}"
   function_version = "${var.MotrNotifier_ver}"
+}
+
+resource "aws_cloudwatch_log_group" "MotrNotifier" {
+  count             = "${var.manage_cw_lg_notifier_lambda ? 1 : 0}"
+  name              = "/aws/lambda/${aws_lambda_function.MotrNotifier.function_name}"
+  retention_in_days = "${var.cw_lg_notifier_lambda_retention}"
+  tags {
+    Project     = "${var.project}"
+    Environment = "${var.environment}"
+  }
 }
 
 ####################################################################################################################################
