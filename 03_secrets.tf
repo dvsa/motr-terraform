@@ -25,5 +25,4 @@ resource "aws_kms_key" "MOTR_Lambda_Key" {
 resource "aws_kms_alias" "MOTR_Lambda_Alias" {
   name          = "alias/motr-${var.environment}"
   target_key_id = "${aws_kms_key.MOTR_Lambda_Key.key_id}"
-  depends_on    = "${aws_kms_key.MOTR_Lambda_Key}"
 }
