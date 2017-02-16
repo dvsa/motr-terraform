@@ -9,6 +9,10 @@ data "template_file" "kms_lambda_policy" {
     MotrNotifierLambda_role_arn           = "${aws_iam_role.MotrNotifierLambda.arn}"
     account_id                            = "${data.aws_caller_identity.current.account_id}"
   }
+  depends_on                              = ["aws_iam_role.MotrWebAppLambda",
+                                             "aws_iam_role.MotrSubscriptionLoaderLambda",
+                                             "aws_iam_role.MotrNotifierLambda"
+                                            ]
 }
 
 resource "aws_kms_key" "MOTR_Lambda_Key" {
@@ -16,13 +20,10 @@ resource "aws_kms_key" "MOTR_Lambda_Key" {
   enable_key_rotation     = "${var.kms_key_rotation ? true : false}"
   deletion_window_in_days = "${var.kms_deletion_window}"
   policy                  = "${data.template_file.kms_lambda_policy.rendered}"
-  depends_on              = ["aws_iam_role.MotrWebAppLambda",
-                             "aws_iam_role.MotrSubscriptionLoaderLambda",
-                             "aws_iam_role.MotrNotifierLambda"
-                            ]
 }
 
 resource "aws_kms_alias" "MOTR_Lambda_Alias" {
   name          = "alias/motr-${var.environment}"
   target_key_id = "${aws_kms_key.MOTR_Lambda_Key.key_id}"
+  depends_on    = "${aws_kms_key.MOTR_Lambda_Key}"
 }
