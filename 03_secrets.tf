@@ -9,11 +9,6 @@ data "template_file" "kms_lambda_policy" {
     MotrNotifierLambda_role_arn           = "${aws_iam_role.MotrNotifierLambda.arn}"
     account_id                            = "${data.aws_caller_identity.current.account_id}"
   }
-  depends_on                              = [
-                                             "aws_iam_role_policy.MotrWebAppLambda",
-                                             "aws_iam_role_policy.MotrSubscriptionLoaderLambda",
-                                             "aws_iam_role_policy.MotrNotifierLambda"
-                                            ]
 }
 
 resource "aws_kms_key" "MOTR_Lambda_Key" {
