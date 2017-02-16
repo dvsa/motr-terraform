@@ -5,7 +5,11 @@
       "Sid": "Enable Lambda permissions",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "${kms_role_arn}"
+        "AWS": [
+          "${MotrWebAppLambda_role_arn}",
+          "${MotrSubscriptionLoaderLambda_role_arn}",
+          "${MotrNotifierLambda_role_arn}"
+        ]
       },
       "Action": [ 
         "kms:Decrypt"
