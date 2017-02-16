@@ -14,6 +14,7 @@ resource "aws_kms_key" "MOTR_Lambda_Key" {
   enable_key_rotation     = "${var.kms_key_rotation ? true : false}"
   deletion_window_in_days = "${var.kms_deletion_window}"
   policy                  = "${data.template_file.kms_lambda_policy.rendered}"
+  depends_on              = ["aws_iam_role.MotrWebAppLambda"]
 }
 
 resource "aws_kms_alias" "MOTR_Lambda_Alias" {
