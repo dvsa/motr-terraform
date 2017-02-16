@@ -11,7 +11,10 @@ data "template_file" "kms_lambda_policy" {
   }
   depends_on                              = ["aws_iam_role.MotrWebAppLambda",
                                              "aws_iam_role.MotrSubscriptionLoaderLambda",
-                                             "aws_iam_role.MotrNotifierLambda"
+                                             "aws_iam_role.MotrNotifierLambda",
+                                             "aws_iam_role_policy.MotrWebAppLambda",
+                                             "aws_iam_role_policy.MotrSubscriptionLoaderLambda",
+                                             "aws_iam_role_policy.MotrNotifierLambda",
                                             ]
 }
 
