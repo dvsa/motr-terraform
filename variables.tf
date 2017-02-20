@@ -43,6 +43,11 @@ variable "public_dns_domain" {
   description = "Public DNS domain name"
 }
 
+variable "alias_record_name" {
+  type        = "string"
+  description = "DNS alias record name that will be appended in front of the public_dns_domain"
+}
+
 variable "static_assets_hash" {
   type        = "string"
   description = "Static assets current commit hash"
