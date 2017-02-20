@@ -83,6 +83,16 @@ variable "webapp_log_level" {
   description = "WebApp Lambda log level"
 }
 
+variable "webapp_warm_up" {
+  type        = "string"
+  description = "WebApp Lambda warm up flag; allowable values: true or false"
+}
+
+variable "webapp_warm_up_timeout_sec" {
+  type        = "string"
+  description = "WebApp Lambda warm up timeout in seconds"
+}
+
 variable "manage_cw_lg_web_lambda" {
   type        = "string"
   description = "Enable CloudWatch Log Group for MOTR WebHandler Lambda to be managed by Terraform"
