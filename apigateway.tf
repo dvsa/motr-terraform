@@ -424,7 +424,7 @@ resource "aws_api_gateway_deployment" "Deployment" {
 # API KEY
 
 resource "aws_api_gateway_api_key" "MotrWebApiKey" {
-  count      = "${var.with_cloudfront ? 1 : 0}"
+  # count      = "${var.with_cloudfront ? 1 : 0}"       # TEMP: because of known CF bug
   name       = "motr-web-${var.environment}-key"
   stage_key {
     rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"

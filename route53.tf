@@ -6,7 +6,7 @@ data "aws_route53_zone" "Route53Zone" {
 
 resource "aws_route53_record" "MotrWeb" {
   count      = "${var.with_cloudfront ? 1 : 0}"
-  name       = "${var.environment}.motr"
+  name       = "${var.environment}"
   zone_id    = "${data.aws_route53_zone.Route53Zone.zone_id}"
   type       = "A"
   alias {
