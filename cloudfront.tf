@@ -2,7 +2,7 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
   count       = "${var.with_cloudfront ? 1 : 0}"
   comment     = "CF distro for MOTR ${var.environment} environment"
   enabled     = true
-  aliases     = ["${var.environment}.motr.${var.public_dns_domain}"]
+  aliases     = ["${var.environment}.${var.public_dns_domain}"]
   price_class = "PriceClass_100" # US+EU
   web_acl_id  = "${var.waf_acl_id}"
   origin { # API Gateway
