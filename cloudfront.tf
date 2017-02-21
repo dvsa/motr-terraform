@@ -1,3 +1,9 @@
+# data "aws_acm_certificate" "MotrCertificate" {
+#   count    = "${var.with_cloudfront ? 1 : 0}"
+#   domain   = "${var.alias_record_name}.${var.public_dns_domain}"
+#   statuses = ["ISSUED"]
+# }
+
 resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
   count       = "${var.with_cloudfront ? 1 : 0}"
   comment     = "CF distro for MOTR ${var.environment} environment"
@@ -41,7 +47,6 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     origin_id     = "motr-s3-${var.environment}"
     origin_path   = "/${aws_s3_bucket.MOTRS3Bucket.bucket}"
     custom_origin_config {
-      #origin_access_identity = "origin-access-identity/cloudfront/ABCDEFG1234567"
       http_port              = "80"
       https_port             = "443"
       origin_protocol_policy = "https-only"
@@ -66,7 +71,10 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     default_ttl            = 86400
   }
   viewer_certificate {
-    cloudfront_default_certificate = true   # TODO: replace with custom cert
+    #cloudfront_default_certificate = "true"
+    acm_certificate_arn      = "${var.certificate_arn}"
+    minimum_protocol_version = "TLSv1"
+    ssl_support_method       = "sni-only"
   }
   restrictions {
     geo_restriction {
