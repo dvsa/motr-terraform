@@ -274,40 +274,40 @@ resource "aws_api_gateway_integration_response" "AssetsWildcardGET_404" {
 }
 
 ####################################################################################################################################
-# API GATEWAY MOTH-MOCK RESOURCE
+# API GATEWAY MOT TEST REMINDER ENDPOINT MOCK RESOURCE
 
-resource "aws_api_gateway_resource" "MothMock" {
-  count       = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
+resource "aws_api_gateway_resource" "MotTestReminderMock" {
+  count       = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
   rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
   parent_id   = "${aws_api_gateway_rest_api.MotrWeb.root_resource_id}"
-  path_part   = "mock-moth"
+  path_part   = "mot-test-reminder-mock"
 }
 
-resource "aws_api_gateway_resource" "MothMockRegistration" {
-  count       = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
+resource "aws_api_gateway_resource" "MotTestReminderMockRegistration" {
+  count       = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
   rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  parent_id   = "${aws_api_gateway_resource.MothMock.id}"
+  parent_id   = "${aws_api_gateway_resource.MotTestReminderMock.id}"
   path_part   = "{registration}"
 }
 
-# GET method -> Lambda /mock-moth
-resource "aws_api_gateway_method" "MothMockRegistrationGET" {
-  count         = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
+# GET method -> Lambda /mot-test-reminder-mock
+resource "aws_api_gateway_method" "MotTestReminderMockRegistrationGET" {
+  count         = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
   rest_api_id   = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id   = "${aws_api_gateway_resource.MothMockRegistration.id}"
+  resource_id   = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
   http_method   = "GET"
   authorization = "NONE"
   request_parameters {"method.request.path.registration" = true}
 }
 
-# integration between MothMock resource's GET method and Lambda function (back-end)
-resource "aws_api_gateway_integration" "MothMockRegistrationGET" {
-  count                   = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
+# integration between MotTestReminderMock resource's GET method and Lambda function (back-end)
+resource "aws_api_gateway_integration" "MotTestReminderMockRegistrationGET" {
+  count                   = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
   rest_api_id             = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id             = "${aws_api_gateway_resource.MothMockRegistration.id}"
+  resource_id             = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
   type                    = "MOCK"
-  uri                     = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/${var.environment}/${aws_api_gateway_method.MothMockRegistrationGET.http_method}/mock-moth/{registration}"
-  http_method             = "${aws_api_gateway_method.MothMockRegistrationGET.http_method}"
+  uri                     = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/${var.environment}/${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}/mot-test-reminder-mock/{registration}"
+  http_method             = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
   request_templates {
     "application/json" = <<EOF
 {
@@ -322,11 +322,11 @@ EOF
   }
 }
 
-resource "aws_api_gateway_method_response" "MothMockRegistrationGET_200" {
-  count           = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
+resource "aws_api_gateway_method_response" "MotTestReminderMockRegistrationGET_200" {
+  count           = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
   rest_api_id     = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id     = "${aws_api_gateway_resource.MothMockRegistration.id}"
-  http_method     = "${aws_api_gateway_method.MothMockRegistrationGET.http_method}"
+  resource_id     = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
+  http_method     = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
   status_code     = "200"
   response_models = {
     "application/json" = "Empty"
@@ -340,11 +340,11 @@ resource "aws_api_gateway_method_response" "MothMockRegistrationGET_200" {
   }
 }
 
-resource "aws_api_gateway_method_response" "MothMockRegistrationGET_404" {
-  count               = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
+resource "aws_api_gateway_method_response" "MotTestReminderMockRegistrationGET_404" {
+  count               = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
   rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.MothMockRegistration.id}"
-  http_method         = "${aws_api_gateway_method.MothMockRegistrationGET.http_method}"
+  resource_id         = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
+  http_method         = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
   status_code         = "404"
   response_parameters = {
     "method.response.header.Date"           = true
@@ -355,22 +355,22 @@ resource "aws_api_gateway_method_response" "MothMockRegistrationGET_404" {
   }
 }
 
-resource "aws_api_gateway_integration_response" "MothMockRegistrationGET_404" {
-  count             = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
+resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistrationGET_404" {
+  count             = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
   rest_api_id       = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id       = "${aws_api_gateway_resource.MothMockRegistration.id}"
-  http_method       = "${aws_api_gateway_method.MothMockRegistrationGET.http_method}"
-  status_code       = "${aws_api_gateway_method_response.MothMockRegistrationGET_404.status_code}"
+  resource_id       = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
+  http_method       = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
+  status_code       = "${aws_api_gateway_method_response.MotTestReminderMockRegistrationGET_404.status_code}"
   selection_pattern = "404"
-  depends_on        = ["aws_api_gateway_integration.MothMockRegistrationGET"]
+  depends_on        = ["aws_api_gateway_integration.MotTestReminderMockRegistrationGET"]
 }
 
-resource "aws_api_gateway_integration_response" "MothMockRegistrationGET_200" {
-  count             = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
+resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistrationGET_200" {
+  count             = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
   rest_api_id       = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id       = "${aws_api_gateway_resource.MothMockRegistration.id}"
-  http_method       = "${aws_api_gateway_method.MothMockRegistrationGET.http_method}"
-  status_code       = "${aws_api_gateway_method_response.MothMockRegistrationGET_200.status_code}"
+  resource_id       = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
+  http_method       = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
+  status_code       = "${aws_api_gateway_method_response.MotTestReminderMockRegistrationGET_200.status_code}"
   selection_pattern = "200"
   response_templates {
     "application/json" = <<EOF
@@ -413,7 +413,7 @@ resource "aws_api_gateway_integration_response" "MothMockRegistrationGET_200" {
 }
 EOF
   }
-  depends_on          = ["aws_api_gateway_integration.MothMockRegistrationGET"]
+  depends_on          = ["aws_api_gateway_integration.MotTestReminderMockRegistrationGET"]
 }
 
 ####################################################################################################################################
@@ -426,7 +426,7 @@ resource "aws_api_gateway_deployment" "Deployment" {
                 , "aws_api_gateway_integration.LambdaWildcardGET"
                 , "aws_api_gateway_integration.LambdaWildcardPOST"
                 , "aws_api_gateway_integration.AssetsWildcardGET"                
-                , "aws_api_gateway_integration.MothMockRegistrationGET"
+                , "aws_api_gateway_integration.MotTestReminderMockRegistrationGET"
                 ]
 }
 

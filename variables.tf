@@ -163,14 +163,14 @@ variable "ix_pending_subscr_ig_write_capacity" {
   description = "Index id-gsi (motr-pending_subscription) write capacity"
 }
 
-variable "mot_test_reminder_info_endpoint" {
+variable "mot_test_reminder_info_api_uri" {
   type        = "string"
-  description = "MOT test reminder info endpoint"
+  description = "MOT test reminder info api uri"
 }
 
-variable "trade_api_token" {
+variable "mot_test_reminder_info_token" {
   type        = "string"
-  description = "Token for trade API"
+  description = "Auth token for getting mot test information"
 }
 
 variable "MotrSubscriptionLoader_s3_key" {
