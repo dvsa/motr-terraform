@@ -283,28 +283,35 @@ resource "aws_api_gateway_resource" "MothMock" {
   path_part   = "mock-moth"
 }
 
+resource "aws_api_gateway_resource" "MothMockRegistration" {
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  parent_id = "${aws_api_gateway_resource.MothMock.id}"
+  path_part = "{registration}"
+}
+
 # GET method -> Lambda /mock-moth
-resource "aws_api_gateway_method" "MothMockGET" {
+resource "aws_api_gateway_method" "MothMockRegistrationGET" {
   count         = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
   rest_api_id   = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id   = "${aws_api_gateway_resource.MothMock.id}"
+  resource_id   = "${aws_api_gateway_resource.MothMockRegistration.id}"
   http_method   = "GET"
   authorization = "NONE"
-  request_parameters = { "method.request.querystring.vrm" = true }
+  request_parameters {"method.request.path.registration" = true}
 }
 
 # integration between MothMock resource's GET method and Lambda function (back-end)
-resource "aws_api_gateway_integration" "MothMockGET" {
+resource "aws_api_gateway_integration" "MothMockRegistrationGET" {
   count                   = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
   rest_api_id             = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id             = "${aws_api_gateway_resource.MothMock.id}"
+  resource_id             = "${aws_api_gateway_resource.MothMockRegistration.id}"
   type                    = "MOCK"
-  http_method             = "${aws_api_gateway_method.MothMockGET.http_method}"
+  uri                     = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/${var.environment}/${aws_api_gateway_method.MothMockRegistrationGET.http_method}/mock-moth/{registration}"
+  http_method             = "${aws_api_gateway_method.MothMockRegistrationGET.http_method}"
   request_templates {
     "application/json" = <<EOF
 {
     "statusCode":
-    #if($input.params('vrm').contains("12345"))
+    #if($input.params('registration').contains("12345"))
         404
     #else
         200
@@ -314,11 +321,11 @@ EOF
   }
 }
 
-resource "aws_api_gateway_method_response" "MothMockGET_200" {
+resource "aws_api_gateway_method_response" "MothMockRegistrationGET_200" {
   count           = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
   rest_api_id     = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id     = "${aws_api_gateway_resource.MothMock.id}"
-  http_method     = "${aws_api_gateway_method.MothMockGET.http_method}"
+  resource_id     = "${aws_api_gateway_resource.MothMockRegistration.id}"
+  http_method     = "${aws_api_gateway_method.MothMockRegistrationGET.http_method}"
   status_code     = "200"
   response_models = {
     "application/json" = "Empty"
@@ -332,11 +339,11 @@ resource "aws_api_gateway_method_response" "MothMockGET_200" {
   }
 }
 
-resource "aws_api_gateway_method_response" "MothMockGET_404" {
+resource "aws_api_gateway_method_response" "MothMockRegistrationGET_404" {
   count               = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
   rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.MothMock.id}"
-  http_method         = "${aws_api_gateway_method.MothMockGET.http_method}"
+  resource_id         = "${aws_api_gateway_resource.MothMockRegistration.id}"
+  http_method         = "${aws_api_gateway_method.MothMockRegistrationGET.http_method}"
   status_code         = "404"
   response_parameters = {
     "method.response.header.Date"           = true
@@ -347,63 +354,65 @@ resource "aws_api_gateway_method_response" "MothMockGET_404" {
   }
 }
 
-resource "aws_api_gateway_integration_response" "MothMockGET_404" {
+resource "aws_api_gateway_integration_response" "MothMockRegistrationGET_404" {
   count             = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
   rest_api_id       = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id       = "${aws_api_gateway_resource.MothMock.id}"
-  http_method       = "${aws_api_gateway_method.MothMockGET.http_method}"
-  status_code       = "${aws_api_gateway_method_response.MothMockGET_404.status_code}"
+  resource_id       = "${aws_api_gateway_resource.MothMockRegistration.id}"
+  http_method       = "${aws_api_gateway_method.MothMockRegistrationGET.http_method}"
+  status_code       = "${aws_api_gateway_method_response.MothMockRegistrationGET_404.status_code}"
   selection_pattern = "404"
-  depends_on        = ["aws_api_gateway_integration.MothMockGET"]
+  depends_on        = ["aws_api_gateway_integration.MothMockRegistrationGET"]
 }
 
-resource "aws_api_gateway_integration_response" "MothMockGET_200" {
+resource "aws_api_gateway_integration_response" "MothMockRegistrationGET_200" {
   count             = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
   rest_api_id       = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id       = "${aws_api_gateway_resource.MothMock.id}"
-  http_method       = "${aws_api_gateway_method.MothMockGET.http_method}"
-  status_code       = "${aws_api_gateway_method_response.MothMockGET_200.status_code}"
+  resource_id       = "${aws_api_gateway_resource.MothMockRegistration.id}"
+  http_method       = "${aws_api_gateway_method.MothMockRegistrationGET.http_method}"
+  status_code       = "${aws_api_gateway_method_response.MothMockRegistrationGET_200.status_code}"
   selection_pattern = "200"
   response_templates {
     "application/json" = <<EOF
 {
-    #if($input.params('vrm').contains("WDD2040022A65"))
+    #if($input.params('registration').contains("WDD2040022A65"))
         "make": "MERCEDES-BENZ",
         "model": "C220 ELEGANCE ED125 CDI BLU-CY",
         "primaryColour": "Silver",
-        "secondaryColour": "",
-        "regNumber": "$input.params('vrm')",
-        "yearOfManufacture": "2006",
-        "motExpiryDate": "2016-11-26"
-    #elseif($input.params('vrm').contains("YN13NTX"))
+        "registration": "$input.params('registration')",
+        "manufactureYear": "2006",
+        "motTestExpiryDate": "2016-11-26",
+        "motTestNumber": "12345"
+    #elseif($input.params('registration').contains("YN13NTX"))
         "make": "HARLEY-DAVIDSON CVO ROAD GLIDE FLTRXSE2 ANV 13",
         "model": "",
         "primaryColour": "Multi-colour",
         "secondaryColour": "Multi-colour",
-        "regNumber": "$input.params('vrm')",
-        "yearOfManufacture": "2004",
-        "motExpiryDate": "2017-12-01"
-    #elseif($input.params('vrm').contains("LOY-500"))
+        "registration": "$input.params('registration')",
+        "manufactureYear": "2004",
+        "motTestExpiryDate": "2017-12-01",
+        "motTestNumber": "12345"
+    #elseif($input.params('registration').contains("LOY-500"))
         "make": "TOJEIRO BRISTOL 2.0L",
         "model": "1 DR MANUAL CONVERTIBLE SPORTS",
         "primaryColour": "Red",
-        "secondaryColour": "",
-        "regNumber": "$input.params('vrm')",
-        "yearOfManufacture": "1999",
-        "motExpiryDate": "2017-03-14"
+        "registration": "$input.params('registration')",
+        "manufactureYear": "1999",
+        "motTestExpiryDate": "2017-03-14",
+        "motTestNumber": "12345"
     #else
         "make": "testMake",
         "model": "testModel",
         "primaryColour": "testPrimaryColour",
         "secondaryColour": "testSecondaryColour",
-        "regNumber": "$input.params('vrm')",
-        "yearOfManufacture": "1998",
-        "motExpiryDate": "2019-12-23"
+        "registration": "$input.params('registration')",
+        "manufactureYear": "1998",
+        "motTestExpiryDate": "2019-12-23",
+        "motTestNumber": "12345"
     #end
 }
 EOF
   }
-  depends_on          = ["aws_api_gateway_integration.MothMockGET"]
+  depends_on          = ["aws_api_gateway_integration.MothMockRegistrationGET"]
 }
 
 ####################################################################################################################################
@@ -416,7 +425,7 @@ resource "aws_api_gateway_deployment" "Deployment" {
                 , "aws_api_gateway_integration.LambdaWildcardGET"
                 , "aws_api_gateway_integration.LambdaWildcardPOST"
                 , "aws_api_gateway_integration.AssetsWildcardGET"                
-                , "aws_api_gateway_integration.MothMockGET"
+                , "aws_api_gateway_integration.MothMockRegistrationGET"
                 ]
 }
 
