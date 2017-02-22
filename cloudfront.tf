@@ -1,9 +1,3 @@
-# data "aws_acm_certificate" "MotrCertificate" {
-#   count    = "${var.with_cloudfront ? 1 : 0}"
-#   domain   = "${var.alias_record_name}.${var.public_dns_domain}"
-#   statuses = ["ISSUED"]
-# }
-
 resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
   count       = "${var.with_cloudfront ? 1 : 0}"
   comment     = "CF distro for MOTR ${var.environment} environment"
@@ -71,7 +65,6 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     default_ttl            = 86400
   }
   viewer_certificate {
-    #cloudfront_default_certificate = "true"
     acm_certificate_arn      = "${var.certificate_arn}"
     minimum_protocol_version = "TLSv1"
     ssl_support_method       = "sni-only"
