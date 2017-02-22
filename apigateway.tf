@@ -305,7 +305,7 @@ resource "aws_api_gateway_integration" "MothMockRegistrationGET" {
   rest_api_id             = "${aws_api_gateway_rest_api.MotrWeb.id}"
   resource_id             = "${aws_api_gateway_resource.MothMockRegistration.id}"
   type                    = "MOCK"
-  uri                     = "/mock-moth/{registration}"
+  uri                     = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/${var.environment}/${aws_api_gateway_method.MothMockRegistrationGET.http_method}/mock-moth/{registration}"
   http_method             = "${aws_api_gateway_method.MothMockRegistrationGET.http_method}"
   request_templates {
     "application/json" = <<EOF
