@@ -284,9 +284,10 @@ resource "aws_api_gateway_resource" "MothMock" {
 }
 
 resource "aws_api_gateway_resource" "MothMockRegistration" {
+  count       = "${var.mot_test_reminder_info_endpoint == "" ? 1 : 0}"
   rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  parent_id = "${aws_api_gateway_resource.MothMock.id}"
-  path_part = "{registration}"
+  parent_id   = "${aws_api_gateway_resource.MothMock.id}"
+  path_part   = "{registration}"
 }
 
 # GET method -> Lambda /mock-moth
