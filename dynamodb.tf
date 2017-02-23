@@ -26,7 +26,7 @@ resource "aws_dynamodb_table" "motr-subscription" {
     read_capacity      = "${var.ix_subscr_ddg_read_capacity}"
     write_capacity     = "${var.ix_subscr_ddg_write_capacity}"
     projection_type    = "INCLUDE"
-    non_key_attributes = [ "id" ]
+    non_key_attributes = [ "id", "mot_due_date" ]
   }
   global_secondary_index {
     name               = "id-gsi"
