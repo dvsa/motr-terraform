@@ -76,6 +76,12 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
       # locations        = ["GB"]
     }
   }
+  custom_error_response {
+    error_caching_min_ttl = 300
+    error_code            = "503"
+    response_code         = "503"
+    response_page_path    = "https://s3-${var.aws_region}.amazonaws.com/${aws_s3_bucket.MOTRS3Bucket.bucket}/assets/errorpages/index.html"
+  }
   tags {
     Project     = "${var.project}"
     Environment = "${var.environment}"
