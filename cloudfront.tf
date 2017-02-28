@@ -80,19 +80,19 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     error_caching_min_ttl = 10
     error_code            = "403"
     response_code         = "403"
-    response_page_path    = "https://s3-${var.aws_region}.amazonaws.com/${aws_s3_bucket.MOTRS3Bucket.bucket}/assets/errorpages/index.html"
+    response_page_path    = "/assets/errorpages/index.html"
   }
   custom_error_response {
     error_caching_min_ttl = 10
     error_code            = "500"
     response_code         = "500"
-    response_page_path    = "https://s3-${var.aws_region}.amazonaws.com/${aws_s3_bucket.MOTRS3Bucket.bucket}/assets/errorpages/index.html"
+    response_page_path    = "/assets/errorpages/index.html"
   }
   custom_error_response {
     error_caching_min_ttl = 10
     error_code            = "503"
     response_code         = "503"
-    response_page_path    = "https://s3-${var.aws_region}.amazonaws.com/${aws_s3_bucket.MOTRS3Bucket.bucket}/assets/errorpages/index.html"
+    response_page_path    = "/assets/errorpages/index.html"
   }
   tags {
     Project     = "${var.project}"
