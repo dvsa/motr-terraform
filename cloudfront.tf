@@ -76,6 +76,24 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
       # locations        = ["GB"]
     }
   }
+  custom_error_response {
+    error_caching_min_ttl = 10
+    error_code            = "403"
+    response_code         = "403"
+    response_page_path    = "/assets/errorpages/index.html"
+  }
+  custom_error_response {
+    error_caching_min_ttl = 10
+    error_code            = "500"
+    response_code         = "500"
+    response_page_path    = "/assets/errorpages/index.html"
+  }
+  custom_error_response {
+    error_caching_min_ttl = 10
+    error_code            = "503"
+    response_code         = "503"
+    response_page_path    = "/assets/errorpages/index.html"
+  }
   tags {
     Project     = "${var.project}"
     Environment = "${var.environment}"
