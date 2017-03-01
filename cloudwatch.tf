@@ -6,6 +6,7 @@ resource "aws_cloudwatch_log_group" "MotrWebHandler" {
   name              = "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"
   retention_in_days = "${var.cw_lg_web_lambda_retention}"
   tags {
+    Name        = "${var.project}-${var.environment}-MotrWebHandler"
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }
@@ -19,6 +20,7 @@ resource "aws_cloudwatch_log_group" "MotrSubscriptionLoader" {
   name              = "/aws/lambda/${aws_lambda_function.MotrSubscriptionLoader.function_name}"
   retention_in_days = "${var.cw_lg_subscr_lambda_retention}"
   tags {
+    Name        = "${var.project}-${var.environment}-MotrSubscriptionLoader"
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }
@@ -45,6 +47,7 @@ resource "aws_cloudwatch_log_group" "MotrNotifier" {
   name              = "/aws/lambda/${aws_lambda_function.MotrNotifier.function_name}"
   retention_in_days = "${var.cw_lg_notifier_lambda_retention}"
   tags {
+    Name        = "${var.project}-${var.environment}-MotrNotifier"
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }

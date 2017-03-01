@@ -492,6 +492,7 @@ resource "aws_cloudformation_stack" "MotrApiUsagePlan" {
 }
 STACK
   tags {
+    Name        = "${var.project}-${var.environment}-MotrApiUsagePlan"
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }
