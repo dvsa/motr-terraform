@@ -70,7 +70,7 @@ resource "aws_dynamodb_table" "motr-pending_subscription" {
     non_key_attributes = [ "mot_due_date" ]
   }
   tags {
-    Name        = "${var.project}-{var.environment}-motr-pending_subscription"
+    Name        = "${var.project}-{$var.environment}-motr-pending_subscription"
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }
