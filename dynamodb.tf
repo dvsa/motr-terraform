@@ -36,6 +36,11 @@ resource "aws_dynamodb_table" "motr-subscription" {
     projection_type    = "INCLUDE"
     non_key_attributes = [ "mot_due_date" ]
   }
+  tags {
+    Name        = "${var.environment}-${var.project}-motr-subscription"
+    Project     = "${var.project}"
+    Environment = "${var.environment}"
+  }
 }
 
 resource "aws_dynamodb_table" "motr-pending_subscription" {
@@ -63,5 +68,10 @@ resource "aws_dynamodb_table" "motr-pending_subscription" {
     read_capacity      = "${var.ix_pending_subscr_ig_write_capacity}"
     projection_type    = "INCLUDE"
     non_key_attributes = [ "mot_due_date" ]
+  }
+  tags {
+    Name        = "$${var.project}-{var.environment}-motr-pending_subscription"
+    Project     = "${var.project}"
+    Environment = "${var.environment}"
   }
 }

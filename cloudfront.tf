@@ -95,6 +95,7 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     response_page_path    = "/assets/errorpages/index.html"
   }
   tags {
+    Name        = "$${var.project}-{var.environment}-MotrWebCFDistro"
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }

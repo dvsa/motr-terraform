@@ -23,7 +23,8 @@ resource "aws_s3_bucket" "MOTRS3Bucket" {
 }
 EOF
   tags {
-    Name        = "motr-${var.environment}"
-    environment = "${var.environment}"
+    Name        = "${var.project}-${var.environment}-MOTRS3Bucket"
+    Project     = "${var.project}"
+    Environment = "${var.environment}"
   }
 }
