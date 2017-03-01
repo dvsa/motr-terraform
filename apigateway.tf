@@ -407,7 +407,7 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
         "secondaryColour": "testSecondaryColour",
         "registration": "$input.params('registration')",
         "manufactureYear": "1998",
-        "motTestExpiryDate": "2019-12-23",
+        "motTestExpiryDate": "2017-03-09",
         "motTestNumber": "12345"
     #end
 }

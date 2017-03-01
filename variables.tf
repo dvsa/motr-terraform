@@ -295,7 +295,7 @@ variable "motr_subscribtion_q_receive_wait_s" {
 
 variable "confirmation_template_id" {
   type        = "string"
-  description = "Gov Notify template ID"
+  description = "Gov Notify Template ID for confirmation email"
 }
 
 variable "gov_notify_api_token" {
@@ -316,4 +316,29 @@ variable "kms_key_rotation" {
 variable "kms_deletion_window" {
   type        = "string"
   description = "KMS key deletion window"
+}
+
+variable "one_month_notification_template_id" {
+  type        = "string"
+  description = "Gov Notify Template ID for one month reminder email"
+}
+
+variable "two_week_notification_template_id" {
+  type        = "string"
+  description = "Gov Notify Template ID for two week reminder email"
+}
+
+variable "inflight_batches_loader" {
+  type        = "string"
+  description = "The maximum number of concurrent message batches that can be put on the Amazon SQS queue"
+}
+
+variable "inflight_batches_notifier" {
+  type        = "string"
+  description = "The maximum number of concurrent message batches that can be received from the Amazon SQS queue"
+}
+
+variable "post_purge_delay_loader" {
+  type        = "string"
+  description = "Amount of time to wait while purging of the Amazon SQS queue"
 }
