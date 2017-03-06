@@ -433,6 +433,11 @@ resource "aws_api_gateway_deployment" "Deployment" {
                 , "aws_api_gateway_method.LambdaWildcardPOST"
                 , "aws_api_gateway_method.AssetsWildcardGET"
                 , "aws_api_gateway_method.MotTestReminderMockRegistrationGET"
+                , "aws_api_gateway_integration.LambdaRootGET"
+                , "aws_api_gateway_integration.LambdaWildcardGET"
+                , "aws_api_gateway_integration.LambdaWildcardPOST"
+                , "aws_api_gateway_integration.AssetsWildcardGET"                
+                , "aws_api_gateway_integration.MotTestReminderMockRegistrationGET"
                 ]
 }
 
