@@ -214,6 +214,7 @@ resource "aws_api_gateway_integration" "AssetsWildcardGET" {
   request_parameters      = {
     "integration.request.path.object" = "method.request.path.item"
   }
+  depends_on              = ["aws_api_gateway_method.AssetsWildcardGET"]
 }
 
 resource "aws_api_gateway_method_response" "AssetsWildcardGET_200" {
@@ -229,6 +230,7 @@ resource "aws_api_gateway_method_response" "AssetsWildcardGET_200" {
     "method.response.header.Last-Modified"  = true
     "method.response.header.Cache-Control"  = true
   }
+  depends_on          = ["aws_api_gateway_integration.AssetsWildcardGET"]
 }
 
 resource "aws_api_gateway_integration_response" "AssetsWildcardGET_200" {
@@ -258,6 +260,7 @@ resource "aws_api_gateway_method_response" "AssetsWildcardGET_404" {
     "method.response.header.Date"         = true
     "method.response.header.Content-Type" = true
   }
+  depends_on          = ["aws_api_gateway_method_response.AssetsWildcardGET_200"]
 }
 
 resource "aws_api_gateway_integration_response" "AssetsWildcardGET_404" {
@@ -270,7 +273,7 @@ resource "aws_api_gateway_integration_response" "AssetsWildcardGET_404" {
     "method.response.header.Date"         = "integration.response.header.Date"
     "method.response.header.Content-Type" = "integration.response.header.Content-Type"
   }
-  depends_on          = ["aws_api_gateway_integration.AssetsWildcardGET"]
+  depends_on          = ["aws_api_gateway_integration_response.AssetsWildcardGET_200"]
 }
 
 ####################################################################################################################################
@@ -320,6 +323,7 @@ resource "aws_api_gateway_integration" "MotTestReminderMockRegistrationGET" {
 }
 EOF
   }
+  depends_on              = ["aws_api_gateway_method.MotTestReminderMockRegistrationGET"]
 }
 
 resource "aws_api_gateway_method_response" "MotTestReminderMockRegistrationGET_200" {
@@ -338,6 +342,7 @@ resource "aws_api_gateway_method_response" "MotTestReminderMockRegistrationGET_2
     "method.response.header.Content-Type"   = true
     "method.response.header.Last-Modified"  = true
   }
+  depends_on      = ["aws_api_gateway_integration.MotTestReminderMockRegistrationGET"]
 }
 
 resource "aws_api_gateway_method_response" "MotTestReminderMockRegistrationGET_404" {
@@ -353,16 +358,7 @@ resource "aws_api_gateway_method_response" "MotTestReminderMockRegistrationGET_4
     "method.response.header.Content-Type"   = true
     "method.response.header.Last-Modified"  = true
   }
-}
-
-resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistrationGET_404" {
-  count             = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
-  rest_api_id       = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id       = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
-  http_method       = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
-  status_code       = "${aws_api_gateway_method_response.MotTestReminderMockRegistrationGET_404.status_code}"
-  selection_pattern = "404"
-  depends_on        = ["aws_api_gateway_integration.MotTestReminderMockRegistrationGET"]
+  depends_on          = ["aws_api_gateway_method_response.MotTestReminderMockRegistrationGET_200"]
 }
 
 resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistrationGET_200" {
@@ -413,7 +409,17 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
 }
 EOF
   }
-  depends_on          = ["aws_api_gateway_integration.MotTestReminderMockRegistrationGET"]
+  depends_on        = ["aws_api_gateway_integration.MotTestReminderMockRegistrationGET"]
+}
+
+resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistrationGET_404" {
+  count             = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
+  rest_api_id       = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id       = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
+  http_method       = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
+  status_code       = "${aws_api_gateway_method_response.MotTestReminderMockRegistrationGET_404.status_code}"
+  selection_pattern = "404"
+  depends_on        = ["aws_api_gateway_integration_response.MotTestReminderMockRegistrationGET_200"]
 }
 
 ####################################################################################################################################
@@ -422,11 +428,17 @@ EOF
 resource "aws_api_gateway_deployment" "Deployment" {
   rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
   stage_name  = "${var.environment}"
-  depends_on  = [ "aws_api_gateway_integration.LambdaRootGET"
+  depends_on  = [ "aws_api_gateway_method.LambdaRootGET"
+                , "aws_api_gateway_integration.LambdaRootGET"
+                , "aws_api_gateway_method.LambdaWildcardGET"
                 , "aws_api_gateway_integration.LambdaWildcardGET"
+                , "aws_api_gateway_method.LambdaWildcardPOST"
                 , "aws_api_gateway_integration.LambdaWildcardPOST"
-                , "aws_api_gateway_integration.AssetsWildcardGET"                
+                , "aws_api_gateway_method.AssetsWildcardGET"
+                , "aws_api_gateway_integration.AssetsWildcardGET"
+                , "aws_api_gateway_method.MotTestReminderMockRegistrationGET"
                 , "aws_api_gateway_integration.MotTestReminderMockRegistrationGET"
+                , "aws_api_gateway_integration_response.MotTestReminderMockRegistrationGET_200"
                 ]
 }
 
