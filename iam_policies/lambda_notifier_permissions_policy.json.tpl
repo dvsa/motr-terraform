@@ -8,6 +8,11 @@
     },
     {
       "Effect": "Allow",
+      "Action": "kms:Decrypt",
+      "Resource": "arn:aws:kms:${aws_region}:${account_id}:key/*"
+    },
+    {
+      "Effect": "Allow",
       "Action": [
         "logs:CreateLogStream",
         "logs:PutLogEvents"

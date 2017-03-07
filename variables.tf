@@ -308,16 +308,6 @@ variable "base_url" {
   description = "MOT reminder base url"
 }
 
-variable "kms_key_rotation" {
-  type        = "string"
-  description = "KMS key rotation enable"
-}
-
-variable "kms_deletion_window" {
-  type        = "string"
-  description = "KMS key deletion window"
-}
-
 variable "one_month_notification_template_id" {
   type        = "string"
   description = "Gov Notify Template ID for one month reminder email"
@@ -341,4 +331,9 @@ variable "inflight_batches_notifier" {
 variable "post_purge_delay_loader" {
   type        = "string"
   description = "Amount of time to wait while purging of the Amazon SQS queue"
+}
+
+variable "kms_key_arn" {
+  type        = "string"
+  description = "KMS key ARN"
 }
