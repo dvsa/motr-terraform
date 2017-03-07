@@ -98,10 +98,15 @@ resource "aws_lambda_function" "MotrNotifier" {
       SUBSCRIPTIONS_QUEUE_URL            = "${aws_sqs_queue.MotrSubscriptionsQueue.id}"
       ONE_MONTH_NOTIFICATION_TEMPLATE_ID = "${var.one_month_notification_template_id}"
       TWO_WEEK_NOTIFICATION_TEMPLATE_ID  = "${var.two_week_notification_template_id}"
-      INFLIGHT_BATCHES                   = "${var.inflight_batches_notifier}"
       MOT_TEST_REMINDER_INFO_API_URI     = "${var.mot_test_reminder_info_api_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/{registration}" : var.mot_test_reminder_info_api_uri}"
       GOV_NOTIFY_API_TOKEN               = "${var.gov_notify_api_token}"
       MOT_TEST_REMINDER_INFO_TOKEN       = "${var.mot_test_reminder_info_token}"
+      WORKER_COUNT                       = "${var.worker_count_notifier}"
+      MESSAGE_VISIBILITY_TIMEOUT         = "${var.message_visibility_timeout_notifier}"
+      VEHICLE_API_CLIENT_TIMEOUT         = "${var.vehicle_api_client_timeout_notifier}"
+      MESSAGE_RECEIVE_TIMEOUT            = "${var.message_receive_timeout_notifier}"
+      REMAINING_TIME_THRESHOLD           = "${var.remaining_time_threshold_notifier}"
+      WEB_BASE_URL                       = "${var.base_url == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/" : var.base_url}"
     }
   }
 }

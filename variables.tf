@@ -333,14 +333,34 @@ variable "inflight_batches_loader" {
   description = "The maximum number of concurrent message batches that can be put on the Amazon SQS queue"
 }
 
-variable "inflight_batches_notifier" {
-  type        = "string"
-  description = "The maximum number of concurrent message batches that can be received from the Amazon SQS queue"
-}
-
 variable "post_purge_delay_loader" {
   type        = "string"
   description = "Amount of time to wait while purging of the Amazon SQS queue"
+}
+
+variable "worker_count_notifier" {
+  type        = "string"
+  description = "Number of threads for subscription processing in the Notifier lambda"
+}
+
+variable "message_visibility_timeout_notifier" {
+  type        = "string"
+  description = "Length of time in seconds before a read message becomes visible again on queue"
+}
+
+variable "vehicle_api_client_timeout_notifier" {
+  type        = "string"
+  description = "Timeout in seconds of the call to the vehicle api within the notifier"
+}
+
+variable "message_receive_timeout_notifier" {
+  type        = "string"
+  description = "Timeout in seconds of the call to the queue for each batch of subscription messages"
+}
+
+variable "remaining_time_threshold_notifier" {
+  type        = "string"
+  description = "The threshold for the lambda remaining time the notifier uses to cease further message processing"
 }
 
 variable "kms_key_arn" {
