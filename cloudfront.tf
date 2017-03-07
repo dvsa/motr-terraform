@@ -71,8 +71,8 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
   }
   logging_config {
     include_cookies = false
-    bucket          = "${var.bucket_prefix}${var.environment}.s3.amazonaws.com"
-    prefix          = "logs/cloudfront/"
+    bucket          = "${var.logging_bucket == "" ? "${var.bucket_prefix}${var.environment}.s3.amazonaws.com" : var.logging_bucket}"
+    prefix          = "${var.logging_bucket == "" ? "logs/cloudfront/" : "${var.environment}/cloudfront"}"
   }
   restrictions {
     geo_restriction {
