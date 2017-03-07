@@ -6,7 +6,7 @@ variable "aws_region" {
 variable "project" {
   type        = "string"
   description = "Project name"
-  }
+}
 
 variable "environment" {
   type        = "string"
@@ -26,6 +26,11 @@ variable "bucket_versioning_enabled" {
 variable "with_cloudfront" {
   type        = "string"
   description = "CloudFront on/off switch"
+}
+
+variable "logging_bucket" {
+  type        = "string"
+  description = "Separate S3 bucket for storing logs"
 }
 
 variable "waf_acl_id" {
