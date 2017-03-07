@@ -69,6 +69,11 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     minimum_protocol_version = "TLSv1"
     ssl_support_method       = "sni-only"
   }
+  logging_config {
+    include_cookies = false
+    bucket          = "${var.bucket_prefix}${var.environment}.s3.amazonaws.com"
+    prefix          = "logs/cloudfront/"
+  }
   restrictions {
     geo_restriction {
       restriction_type = "none"
