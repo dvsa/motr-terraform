@@ -429,15 +429,16 @@ resource "aws_api_gateway_deployment" "Deployment" {
   rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
   stage_name  = "${var.environment}"
   depends_on  = [ "aws_api_gateway_method.LambdaRootGET"
-                , "aws_api_gateway_method.LambdaWildcardGET"
-                , "aws_api_gateway_method.LambdaWildcardPOST"
-                , "aws_api_gateway_method.AssetsWildcardGET"
-                , "aws_api_gateway_method.MotTestReminderMockRegistrationGET"
                 , "aws_api_gateway_integration.LambdaRootGET"
+                , "aws_api_gateway_method.LambdaWildcardGET"
                 , "aws_api_gateway_integration.LambdaWildcardGET"
+                , "aws_api_gateway_method.LambdaWildcardPOST"
                 , "aws_api_gateway_integration.LambdaWildcardPOST"
-                , "aws_api_gateway_integration.AssetsWildcardGET"                
+                , "aws_api_gateway_method.AssetsWildcardGET"
+                , "aws_api_gateway_integration.AssetsWildcardGET"
+                , "aws_api_gateway_method.MotTestReminderMockRegistrationGET"
                 , "aws_api_gateway_integration.MotTestReminderMockRegistrationGET"
+                , "aws_api_gateway_integration_response.MotTestReminderMockRegistrationGET_200"
                 ]
 }
 
