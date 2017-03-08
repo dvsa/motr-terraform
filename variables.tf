@@ -342,3 +342,8 @@ variable "kms_key_arn" {
   type        = "string"
   description = "KMS key ARN"
 }
+
+variable "enable_warmup" {
+  type        = "string"
+  description = "MOTR Enable Lambda WarmUp"
+}
