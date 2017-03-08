@@ -342,3 +342,13 @@ variable "kms_key_arn" {
   type        = "string"
   description = "KMS key ARN"
 }
+
+variable "web_enable_warmup" {
+  type        = "string"
+  description = "Enable WebLambda for WarmUp"
+}
+
+variable "web_warmup_rate" {
+  type        = "string"
+  description = "Web WarmUp rate"
+}
