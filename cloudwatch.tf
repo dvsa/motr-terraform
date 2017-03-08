@@ -21,7 +21,7 @@ resource "aws_cloudwatch_event_target" "MOTRWebHandler-WarmUpEventTarget" {
 resource "aws_cloudwatch_event_rule" "MOTR-WarmUpEventRule" {
   name                = "MOTR-${var.environment}-WarmUpEventRule"
   description         = "MOTR WarmUp event rule"
-  schedule_expression = "rate(1 minute)"
+  schedule_expression = "${var.warmup_rate}"
   is_enabled          = "${var.enable_warmup ? 1 : 0}"
 }
 

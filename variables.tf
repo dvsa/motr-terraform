@@ -347,3 +347,8 @@ variable "enable_warmup" {
   type        = "string"
   description = "MOTR Enable Lambda WarmUp"
 }
+
+variable "warmup_rate" {
+  type        = "string"
+  description = "MOTR WarmUp rate"
+}
