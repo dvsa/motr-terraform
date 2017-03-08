@@ -30,7 +30,7 @@ resource "aws_cloudwatch_event_rule" "MOTR-WarmUpEventRule" {
 resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_coldstart_log_metric_filter" {
   name           = "MotrWebHandler_coldstart_log_metric_filter"
   pattern        = "{ $.mdc.x-cold-start = true }"
-  log_group_name = "${aws_cloudwatch_log_group.MotrWebHandler.name}"
+  log_group_name = "${var.manage_cw_lg_web_lambda ? "${aws_cloudwatch_log_group.MotrWebHandler.name}" : "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"}"
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-ColdStart"
@@ -42,7 +42,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_coldstart_log_metric
 resource "aws_cloudwatch_log_metric_filter" "MOTRNotifyConfFailure_log_metric_filter" {
   name           = "MOTRNotifyConfFailure_log_metric_filter"
   pattern        = "{ $.message = NOTIFY-CONFIRMATION-FAILURE }"
-  log_group_name = "${aws_cloudwatch_log_group.MotrWebHandler.name}"
+  log_group_name = "${var.manage_cw_lg_web_lambda ? "${aws_cloudwatch_log_group.MotrWebHandler.name}" : "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"}"
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-NotifyConfirmationFailure"
@@ -54,7 +54,7 @@ resource "aws_cloudwatch_log_metric_filter" "MOTRNotifyConfFailure_log_metric_fi
 resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_MiscError_log_metric_filter" {
   name           = "MotrWebHandler_MiscError_log_metric_filter"
   pattern        = "{ $.level = ERROR && $.message != NOTIFY-CONFIRMATION-FAILURE }"
-  log_group_name = "${aws_cloudwatch_log_group.MotrWebHandler.name}"
+  log_group_name = "${var.manage_cw_lg_web_lambda ? "${aws_cloudwatch_log_group.MotrWebHandler.name}" : "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"}"
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MiscError"
