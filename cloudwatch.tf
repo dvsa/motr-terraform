@@ -12,6 +12,20 @@ resource "aws_cloudwatch_log_group" "MotrWebHandler" {
   }
 }
 
+resource "aws_cloudwatch_event_target" "MOTRWebHandler-WarmUpEventTarget" {
+  target_id = "MOTRWebHandler-WarmUpEventTarget"
+  rule      = "${aws_cloudwatch_event_rule.MOTR-WarmUpEventRule.name}"
+  arn       = "${aws_lambda_function.MotrWebHandler.arn}"
+}
+
+resource "aws_cloudwatch_event_rule" "MOTR-WarmUpEventRule" {
+  name                = "MOTR-${var.environment}-WarmUpEventRule"
+  description         = "MOTR WarmUp event rule"
+  schedule_expression = "rate(1 minute)"
+  is_enabled          = "${var.enable_warmup ? 1 : 0}"
+}
+
+
 ####################################################################################################################################
 # SUBSCRIPTION LOADER
 
