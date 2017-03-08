@@ -25,7 +25,6 @@ resource "aws_cloudwatch_event_rule" "MOTR-WarmUpEventRule" {
   is_enabled          = "${var.enable_warmup ? 1 : 0}"
 }
 
-
 ####################################################################################################################################
 # SUBSCRIPTION LOADER
 
