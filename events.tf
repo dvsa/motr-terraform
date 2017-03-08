@@ -9,6 +9,6 @@ resource "aws_cloudwatch_event_rule" "MOTR-WarmUpEventRule" {
   count               = "${var.enable_warmup ? 1 : 0}"
   name                = "MOTR-WarmUpEventRule"
   description         = "MOTR WarmUp event rule"
-  schedule_expression = "rate(1 minutes)"
+  schedule_expression = "rate(1 minute)"
   is_enabled          = "true"
 }
