@@ -29,7 +29,18 @@ resource "aws_cloudwatch_event_rule" "MOTR-WarmUpEventRule" {
 
 resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_coldstart_log_metric_filter" {
   name           = "MotrWebHandler_coldstart_log_metric_filter"
-  pattern        = "{ $.mdc.x-cold-start = true }"
+  pattern        = "{ $.mdc.x-cold-start = true && $.message = PING}"
+  log_group_name = "${var.manage_cw_lg_web_lambda ? "${aws_cloudwatch_log_group.MotrWebHandler.name}" : "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"}"
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrWebHandler-ColdStart"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler-ColdStart"
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_cs_false_lmf" {
+  name           = "MotrWebHandler_cs_false_lmf"
+  pattern        = "{ $.mdc.x-cold-start = false && $.message = PING}"
   log_group_name = "${var.manage_cw_lg_web_lambda ? "${aws_cloudwatch_log_group.MotrWebHandler.name}" : "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"}"
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-ColdStart"
