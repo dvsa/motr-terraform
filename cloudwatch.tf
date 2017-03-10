@@ -16,11 +16,7 @@ resource "aws_cloudwatch_event_target" "MOTRWebHandler-WarmUpEventTarget" {
   target_id = "MOTRWebHandler-WarmUpEventTarget"
   rule      = "${aws_cloudwatch_event_rule.MOTR-WarmUpEventRule.name}"
   arn       = "${aws_lambda_alias.MotrWebHandlerAlias.arn}"
-  input     = <<EOF 
-  { 
-    "ping": true 
-    }
-EOF
+  input     = "{ \"ping\": true }"
 }
 
 resource "aws_cloudwatch_event_rule" "MOTR-WarmUpEventRule" {

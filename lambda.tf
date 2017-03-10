@@ -126,3 +126,12 @@ resource "aws_lambda_permission" "Allow_APIGateway" {
                   , "aws_api_gateway_integration.LambdaRootGET"
   ]
 }
+
+resource "aws_lambda_permission" "Allow_CloudWatchEvent" {
+  function_name = "${aws_lambda_function.MotrWebHandler.function_name}"
+  qualifier     = "${aws_lambda_alias.MotrWebHandlerAlias.name}"
+  statement_id  = "AllowExecutionFromCloudWatchEvent"
+  action        = "lambda:InvokeFunction"
+  principal     = "events.amazonaws.com"
+  source_arn    = "${aws_cloudwatch_event_rule.MOTR-WarmUpEventRule.arn}"
+}
