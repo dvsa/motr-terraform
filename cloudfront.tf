@@ -1,3 +1,7 @@
+resource "aws_cloudfront_origin_access_identity" "oai" {
+  comment = "MOTR ${var.environment} OAI"
+}
+
 resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
   count       = "${var.with_cloudfront ? 1 : 0}"
   comment     = "CF distro for MOTR ${var.environment} environment"
@@ -37,14 +41,10 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     default_ttl            = 0
   }
   origin { # S3 Bucket
-    domain_name   = "s3-${var.aws_region}.amazonaws.com"
+    domain_name   = "${var.bucket_prefix}${var.environment}.s3.amazonaws.com"
     origin_id     = "motr-s3-${var.environment}"
-    origin_path   = "/${aws_s3_bucket.MOTRS3Bucket.bucket}"
-    custom_origin_config {
-      http_port              = "80"
-      https_port             = "443"
-      origin_protocol_policy = "https-only"
-      origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
+    s3_origin_config {
+      origin_access_identity = "${aws_cloudfront_origin_access_identity.oai.cloudfront_access_identity_path}"
     }
   }
   cache_behavior { # for S3 Bucket
@@ -104,4 +104,5 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }
+  depends_on = ["aws_cloudfront_origin_access_identity.oai"]
 }
