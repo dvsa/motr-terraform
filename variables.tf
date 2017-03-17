@@ -323,6 +323,11 @@ variable "two_week_notification_template_id" {
   description = "Gov Notify Template ID for two week reminder email"
 }
 
+variable "confirm_email_notification_template_id" {
+  type        = "string"
+  description = "Gov Notify Template ID for user email confirmation"
+}
+
 variable "inflight_batches_loader" {
   type        = "string"
   description = "The maximum number of concurrent message batches that can be put on the Amazon SQS queue"
