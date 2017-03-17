@@ -15,20 +15,20 @@ resource "aws_lambda_function" "MotrWebHandler" {
   kms_key_arn       = "${var.kms_key_arn}"
   environment {
     variables = {
-      LOG_LEVEL                      = "${var.webapp_log_level}"
-      REGION                         = "${var.aws_region}"
-      STATIC_ASSETS_HASH             = "${var.static_assets_hash}"
-      STATIC_ASSETS_URL              = "${var.with_cloudfront ? "${var.base_url}/assets" : "https://s3-${var.aws_region}.amazonaws.com/${aws_s3_bucket.MOTRS3Bucket.bucket}/assets/"}"
-      DB_TABLE_SUBSCRIPTION          = "motr-${var.environment}-subscription"
-      DB_TABLE_PENDING_SUBSCRIPTION  = "motr-${var.environment}-pending_subscription"
-      MOT_TEST_REMINDER_INFO_API_URI = "${var.mot_test_reminder_info_api_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/{registration}" : var.mot_test_reminder_info_api_uri}"
-      GOV_NOTIFY_API_TOKEN           = "${var.gov_notify_api_token}"
-      CONFIRMATION_TEMPLATE_ID       = "${var.confirmation_template_id}"
+      LOG_LEVEL                              = "${var.webapp_log_level}"
+      REGION                                 = "${var.aws_region}"
+      STATIC_ASSETS_HASH                     = "${var.static_assets_hash}"
+      STATIC_ASSETS_URL                      = "${var.with_cloudfront ? "${var.base_url}/assets" : "https://s3-${var.aws_region}.amazonaws.com/${aws_s3_bucket.MOTRS3Bucket.bucket}/assets/"}"
+      DB_TABLE_SUBSCRIPTION                  = "motr-${var.environment}-subscription"
+      DB_TABLE_PENDING_SUBSCRIPTION          = "motr-${var.environment}-pending_subscription"
+      MOT_TEST_REMINDER_INFO_API_URI         = "${var.mot_test_reminder_info_api_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/{registration}" : var.mot_test_reminder_info_api_uri}"
+      GOV_NOTIFY_API_TOKEN                   = "${var.gov_notify_api_token}"
+      CONFIRMATION_TEMPLATE_ID               = "${var.confirmation_template_id}"
       CONFIRM_EMAIL_NOTIFICATION_TEMPLATE_ID = "${var.confirm_email_notification_template_id}"
-      BASE_URL                       = "${var.base_url == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/" : var.base_url}"
-      WARM_UP                        = "${var.webapp_warm_up}"
-      WARM_UP_TIMEOUT_SEC            = "${var.webapp_warm_up_timeout_sec}"
-      MOT_TEST_REMINDER_INFO_TOKEN   = "${var.mot_test_reminder_info_token}"
+      BASE_URL                               = "${var.base_url == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/" : var.base_url}"
+      WARM_UP                                = "${var.webapp_warm_up}"
+      WARM_UP_TIMEOUT_SEC                    = "${var.webapp_warm_up_timeout_sec}"
+      MOT_TEST_REMINDER_INFO_TOKEN           = "${var.mot_test_reminder_info_token}"
     }
   }
   depends_on        = ["aws_api_gateway_rest_api.MotrWeb"]
@@ -92,17 +92,17 @@ resource "aws_lambda_function" "MotrNotifier" {
   kms_key_arn   = "${var.kms_key_arn}"
   environment {
     variables = {
-      LOG_LEVEL                          = "${var.notifier_log_level}"
-      REGION                             = "${var.aws_region}"
-      DB_TABLE_SUBSCRIPTION              = "motr-${var.environment}-subscription"
-      SUBSCRIPTIONS_QUEUE_URL            = "${aws_sqs_queue.MotrSubscriptionsQueue.id}"
-      ONE_MONTH_NOTIFICATION_TEMPLATE_ID = "${var.one_month_notification_template_id}"
-      TWO_WEEK_NOTIFICATION_TEMPLATE_ID  = "${var.two_week_notification_template_id}"
+      LOG_LEVEL                              = "${var.notifier_log_level}"
+      REGION                                 = "${var.aws_region}"
+      DB_TABLE_SUBSCRIPTION                  = "motr-${var.environment}-subscription"
+      SUBSCRIPTIONS_QUEUE_URL                = "${aws_sqs_queue.MotrSubscriptionsQueue.id}"
+      ONE_MONTH_NOTIFICATION_TEMPLATE_ID     = "${var.one_month_notification_template_id}"
+      TWO_WEEK_NOTIFICATION_TEMPLATE_ID      = "${var.two_week_notification_template_id}"
       CONFIRM_EMAIL_NOTIFICATION_TEMPLATE_ID = "${var.confirm_email_notification_template_id}"
-      INFLIGHT_BATCHES                   = "${var.inflight_batches_notifier}"
-      MOT_TEST_REMINDER_INFO_API_URI     = "${var.mot_test_reminder_info_api_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/{registration}" : var.mot_test_reminder_info_api_uri}"
-      GOV_NOTIFY_API_TOKEN               = "${var.gov_notify_api_token}"
-      MOT_TEST_REMINDER_INFO_TOKEN       = "${var.mot_test_reminder_info_token}"
+      INFLIGHT_BATCHES                       = "${var.inflight_batches_notifier}"
+      MOT_TEST_REMINDER_INFO_API_URI         = "${var.mot_test_reminder_info_api_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/{registration}" : var.mot_test_reminder_info_api_uri}"
+      GOV_NOTIFY_API_TOKEN                   = "${var.gov_notify_api_token}"
+      MOT_TEST_REMINDER_INFO_TOKEN           = "${var.mot_test_reminder_info_token}"
     }
   }
 }
