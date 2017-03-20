@@ -41,7 +41,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_coldstart_log_metric
 
 resource "aws_cloudwatch_log_metric_filter" "MOTRNotifyConfFailure_log_metric_filter" {
   name           = "MOTRNotifyConfFailure_log_metric_filter"
-  pattern        = "{ $.message = NOTIFY-CONFIRMATION-FAILURE }"
+  pattern        = "{ $.message = NOTIFY-CONFIRMATION-FAILURE || $.message = NOTIFY-CLIENT-FAILED }"
   log_group_name = "${var.manage_cw_lg_web_lambda ? "${aws_cloudwatch_log_group.MotrWebHandler.name}" : "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"}"
   metric_transformation {
     name      = "${var.project}-${var.environment}-NotifyConfirmationFailure"
@@ -50,9 +50,54 @@ resource "aws_cloudwatch_log_metric_filter" "MOTRNotifyConfFailure_log_metric_fi
   }
 }
 
+resource "aws_cloudwatch_log_metric_filter" "MOTRNotifyReminderFailure_log_metric_filter" {
+  name           = "MOTRNotifyReminderFailure_log_metric_filter"
+  pattern        = "{ $.message = NOTIFY-REMINDER-FAILED }"
+  log_group_name = "${var.manage_cw_lg_web_lambda ? "${aws_cloudwatch_log_group.MotrNotifier.name}" : "/aws/lambda/${aws_lambda_function.MotrNotifier.function_name}"}"
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-NotifyReminderFailure"
+    namespace = "${var.project}-${var.environment}-NotifyReminderFailure"
+    value     = "1"
+  }
+}
+
+
+resource "aws_cloudwatch_log_metric_filter" "MOTRSubscriptionActivationFailure_log_metric_filter" {
+  name           = "MOTRSubscriptionActivationFailure_log_metric_filter"
+  pattern        = "{ $.message = SUBSCRIPTION-ACTIVATION-FAILED }"
+  log_group_name = "${var.manage_cw_lg_web_lambda ? "${aws_cloudwatch_log_group.MotrWebHandler.name}" : "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"}"
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-SubscriptionActivationFailure"
+    namespace = "${var.project}-${var.environment}-SubscriptionActivationFailure"
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "MOTRPendingSubscriptionFailure_log_metric_filter" {
+  name           = "MOTRPendingSubscriptionFailure_log_metric_filter"
+  pattern        = "{ $.message = PENDING-SUBSCRIPTION-CREATION-FAILED }"
+  log_group_name = "${var.manage_cw_lg_web_lambda ? "${aws_cloudwatch_log_group.MotrWebHandler.name}" : "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"}"
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-PendingSubscriptionFailure"
+    namespace = "${var.project}-${var.environment}-PendingSubscriptionFailure"
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "MOTRTradeAPIFailure_log_metric_filter" {
+  name           = "MOTRTradeAPIFailure_log_metric_filter"
+  pattern        = "{ $.message = TRADE-API-ERROR }"
+  log_group_name = "${var.manage_cw_lg_web_lambda ? "${aws_cloudwatch_log_group.MotrWebHandler.name}" : "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"}"
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-TradeAPIFailure"
+    namespace = "${var.project}-${var.environment}-TradeAPIFailure"
+    value     = "1"
+  }
+}
+
 resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_MiscError_log_metric_filter" {
   name           = "MotrWebHandler_MiscError_log_metric_filter"
-  pattern        = "{ $.level = ERROR && $.message != NOTIFY-CONFIRMATION-FAILURE }"
+  pattern        = "{ $.level = ERROR && $.message != NOTIFY-CONFIRMATION-FAILURE && $.message != NOTIFY-CLIENT-FAILED && $.message != TRADE-API-ERROR && $.message != SUBSCRIPTION-ACTIVATION-FAILED && $.message != PENDING-SUBSCRIPTION-CREATION-FAILED }"
   log_group_name = "${var.manage_cw_lg_web_lambda ? "${aws_cloudwatch_log_group.MotrWebHandler.name}" : "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"}"
   metric_transformation {
     name      = "${var.project}-${var.environment}-MiscError"
