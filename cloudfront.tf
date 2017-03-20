@@ -54,7 +54,7 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     path_pattern     = "/assets/*"
     compress         = false
     forwarded_values {
-      query_string = false
+      query_string = true
       cookies {
         forward = "none"
       }
