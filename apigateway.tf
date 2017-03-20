@@ -315,8 +315,10 @@ resource "aws_api_gateway_integration" "MotTestReminderMockRegistrationGET" {
     "application/json" = <<EOF
 {
     "statusCode":
-    #if($input.params('registration').contains("12345"))
+    #if($input.params('registration').contains("ERROR404"))
         404
+    #elseif($input.params('registration').contains("ERROR503"))
+        503
     #else
         200
     #end
