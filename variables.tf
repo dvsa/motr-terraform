@@ -353,6 +353,16 @@ variable "vehicle_api_client_timeout_notifier" {
   description = "Timeout in seconds of the call to the vehicle api within the notifier"
 }
 
+variable "mot_test_reminder_info_api_client_read_timeout" {
+  type        = "string"
+  description = "Read timeout in seconds of the call to the vehicle api within the web app"
+}
+
+variable "mot_test_reminder_info_api_client_connection_timeout" {
+  type        = "string"
+  description = "Connection timeout in seconds of the call to the vehicle api within the web app"
+}
+
 variable "message_receive_timeout_notifier" {
   type        = "string"
   description = "Timeout in seconds of the call to the queue for each batch of subscription messages"
