@@ -149,7 +149,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifier_MiscError_log_metric_f
   }
 }
 
-esource "aws_cloudwatch_log_metric_filter" "MotrSubscriptionLoaderLoadingError_log_metric_filter" {
+resource "aws_cloudwatch_log_metric_filter" "MotrSubscriptionLoaderLoadingError_log_metric_filter" {
   name = "MotrSubscriptionLoaderLoadingError_log_metric_filter"
   pattern = "{ $.message = LOADING-ERROR }"
   log_group_name = "${var.manage_cw_lg_web_lambda ? "${aws_cloudwatch_log_group.MotrSubscriptionLoader.name}" : "/aws/lambda/${aws_lambda_function.MotrSubscriptionLoader.function_name}"}"
