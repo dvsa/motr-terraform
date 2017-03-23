@@ -398,7 +398,7 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
         "manufactureYear": "1999",
         "motTestExpiryDate": "2017-03-14",
         "motTestNumber": "12345"
-    #else
+    #elseif($input.params('registration').contains("OLD-EXPIRY-"))
         "make": "testMake",
         "model": "testModel",
         "primaryColour": "testPrimaryColour",
@@ -406,6 +406,15 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
         "registration": "$input.params('registration')",
         "manufactureYear": "1998",
         "motTestExpiryDate": "2017-03-09",
+        "motTestNumber": "12345"
+    #else
+        "make": "testMake",
+        "model": "testModel",
+        "primaryColour": "testPrimaryColour",
+        "secondaryColour": "testSecondaryColour",
+        "registration": "$input.params('registration')",
+        "manufactureYear": "1998",
+        "motTestExpiryDate": "2026-03-09",
         "motTestNumber": "12345"
     #end
 }
