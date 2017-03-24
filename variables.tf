@@ -422,3 +422,13 @@ variable "NPinger_lambda_filename" {
   type        = "string"
   description = "NPinger lambda filename" 
 }
+
+variable "manage_cw_lg_npinger_lambda" {
+  type        = "string"
+  description = "Enable CloudWatch Log Group for MOTR pinger Lambda to be managed by Terraform"
+}
+
+variable "cw_lg_npinger_lambda_retention" {
+  type        = "string"
+  description = "Specifies the number of days you want to retain log events"
+}

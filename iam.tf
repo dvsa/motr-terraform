@@ -109,13 +109,9 @@ resource "aws_iam_role_policy" "MotrNotifierLambda" {
 ####################################################################################################################################
 # NPINGER
 
-data "template_file" "npinger_assumerole_policy" {
-  template = "${file("${path.module}/iam_policies/npinger_assumerole_policy.json.tpl")}"
-}
-
 resource "aws_iam_role" "NPingerRole" {
   name               = "NPingerRole-${var.environment}"
-  assume_role_policy = "${data.template_file.npinger_assumerole_policy.rendered}"
+  assume_role_policy = "${data.template_file.lambda_assumerole_policy.rendered}"
 }
 
 data "template_file" "npinger_warmer_permissions_policy" {

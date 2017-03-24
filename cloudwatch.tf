@@ -114,3 +114,17 @@ resource "aws_cloudwatch_event_target" "MotrNotifierStart" {
   target_id = "${aws_cloudwatch_event_rule.MotrNotifierStart.name}-target"
   arn       = "${aws_lambda_function.MotrNotifier.arn}"
 }
+
+####################################################################################################################################
+# NPINGER
+
+resource "aws_cloudwatch_log_group" "NPinger" {
+  count             = "${var.manage_cw_lg_npinger_lambda ? 1 : 0}"
+  name              = "/aws/lambda/${aws_lambda_function.NPinger.function_name}"
+  retention_in_days = "${var.cw_lg_npinger_lambda_retention}"
+  tags {
+    Name        = "${var.project}-${var.environment}-NPinger"
+    Project     = "${var.project}"
+    Environment = "${var.environment}"
+  }
+}
