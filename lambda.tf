@@ -145,9 +145,9 @@ resource "aws_lambda_function" "NPinger" {
 
 resource "aws_lambda_alias" "NPingerAlias" {
   name             = "${var.environment}"
-  description      = "Alias for ${aws_lambda_function.MotrWebHandler.function_name}"
-  function_name    = "${aws_lambda_function.MotrNotifier.arn}"
-  function_version = "${var.MotrNotifier_ver}"
+  description      = "Alias for ${aws_lambda_function.NPinger.function_name}"
+  function_name    = "${aws_lambda_function.NPinger.arn}"
+  function_version = "${var.NPinger_ver}"
 }
 
 ####################################################################################################################################
