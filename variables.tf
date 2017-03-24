@@ -387,3 +387,48 @@ variable "web_warmup_rate" {
   type        = "string"
   description = "Web WarmUp rate"
 }
+
+variable "NPinger_publish" {
+  type        = "string"
+  description = "NPinger lambda publish switch"
+}
+
+variable "NPinger_mem_size" {
+  type        = "string"
+  description = "NPinger memory size in MB" 
+}
+
+variable "NPinger_timeout" {
+  type        = "string"
+  description = "NPinger lambda timout in seconds" 
+}
+
+variable "NPinger_ver" {
+  type        = "string"
+  description = "NPinger lambda timout in seconds" 
+}
+
+variable "NPinger_concurrent_target_count" {
+  type        = "string"
+  description = "NPinger number of target executions" 
+}
+
+variable "NPinger_payload" {
+  type        = "string"
+  description = "NPinger payload to be sent to the target lambda" 
+}
+
+variable "NPinger_lambda_filename" {
+  type        = "string"
+  description = "NPinger lambda filename" 
+}
+
+variable "manage_cw_lg_npinger_lambda" {
+  type        = "string"
+  description = "Enable CloudWatch Log Group for MOTR pinger Lambda to be managed by Terraform"
+}
+
+variable "cw_lg_npinger_lambda_retention" {
+  type        = "string"
+  description = "Specifies the number of days you want to retain log events"
+}

@@ -15,8 +15,7 @@ resource "aws_cloudwatch_log_group" "MotrWebHandler" {
 resource "aws_cloudwatch_event_target" "MOTRWebHandler-WarmUpEventTarget" {
   target_id = "MOTRWebHandler-WarmUpEventTarget"
   rule      = "${aws_cloudwatch_event_rule.MOTR-WarmUpEventRule.name}"
-  arn       = "${aws_lambda_alias.MotrWebHandlerAlias.arn}"
-  input     = "{ \"ping\": true }"
+  arn       = "${aws_lambda_alias.NPingerAlias.arn}"
 }
 
 resource "aws_cloudwatch_event_rule" "MOTR-WarmUpEventRule" {
@@ -166,6 +165,20 @@ resource "aws_cloudwatch_event_target" "MotrNotifierStart" {
   rule      = "${aws_cloudwatch_event_rule.MotrNotifierStart.name}"
   target_id = "${aws_cloudwatch_event_rule.MotrNotifierStart.name}-target"
   arn       = "${aws_lambda_function.MotrNotifier.arn}"
+}
+
+####################################################################################################################################
+# NPINGER
+
+resource "aws_cloudwatch_log_group" "NPinger" {
+  count             = "${var.manage_cw_lg_npinger_lambda ? 1 : 0}"
+  name              = "/aws/lambda/${aws_lambda_function.NPinger.function_name}"
+  retention_in_days = "${var.cw_lg_npinger_lambda_retention}"
+  tags {
+    Name        = "${var.project}-${var.environment}-NPinger"
+    Project     = "${var.project}"
+    Environment = "${var.environment}"
+  }
 }
 
 resource "aws_cloudwatch_log_metric_filter" "MotrNotifierSubscriptionProcessingFailed_log_metric_filter" {
