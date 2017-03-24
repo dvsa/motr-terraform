@@ -121,6 +121,36 @@ resource "aws_lambda_alias" "MotrNotifier" {
 }
 
 ####################################################################################################################################
+# NPINGER
+
+resource "aws_lambda_function" "NPinger" {
+  description       = "NPinger"
+  runtime           = "nodejs4.3"
+  filename          = "${var.NPinger_lambda_filename}"
+  function_name     = "npinger-${var.environment}"
+  role              = "${aws_iam_role.NPingerRole.arn}"
+  handler           = "npinger.warmup"
+  publish           = "${var.NPinger_publish}"
+  memory_size       = "${var.NPinger_mem_size}"
+  timeout           = "${var.NPinger_timeout}"
+  environment {
+    variables = {
+      REGION                  = "${var.aws_region}"
+      FUNCTION_NAME           = "${aws_lambda_function.MotrWebHandler.function_name}"
+      CONCURRENT_TARGET_COUNT = "${var.NPinger_concurrent_target_count}"
+      PAYLOAD                 = "${var.NPinger_payload}"
+    }
+  }
+}
+
+resource "aws_lambda_alias" "NPingerAlias" {
+  name             = "${var.environment}"
+  description      = "Alias for ${aws_lambda_function.MotrWebHandler.function_name}"
+  function_name    = "${aws_lambda_function.MotrNotifier.arn}"
+  function_version = "${var.MotrNotifier_ver}"
+}
+
+####################################################################################################################################
 # PERMISSIONS
 
 resource "aws_lambda_permission" "Allow_APIGateway" {
@@ -136,8 +166,8 @@ resource "aws_lambda_permission" "Allow_APIGateway" {
 }
 
 resource "aws_lambda_permission" "Allow_CloudWatchEvent" {
-  function_name = "${aws_lambda_function.MotrWebHandler.function_name}"
-  qualifier     = "${aws_lambda_alias.MotrWebHandlerAlias.name}"
+  function_name = "${aws_lambda_function.NPinger.function_name}"
+  qualifier     = "${aws_lambda_alias.NPingerAlias.name}"
   statement_id  = "AllowExecutionFromCloudWatchEvent"
   action        = "lambda:InvokeFunction"
   principal     = "events.amazonaws.com"
