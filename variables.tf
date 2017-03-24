@@ -403,6 +403,11 @@ variable "NPinger_timeout" {
   description = "NPinger lambda timout in seconds" 
 }
 
+variable "NPinger_ver" {
+  type        = "string"
+  description = "NPinger lambda timout in seconds" 
+}
+
 variable "NPinger_concurrent_target_count" {
   type        = "string"
   description = "NPinger number of target executions" 
