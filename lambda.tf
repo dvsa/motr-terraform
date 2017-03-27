@@ -126,7 +126,7 @@ resource "aws_lambda_alias" "MotrNotifier" {
 resource "aws_lambda_function" "NPinger" {
   description       = "MotrNPinger"
   runtime           = "nodejs4.3"
-  filename          = "motr_lambda_warmer/${var.NPinger_lambda_filename}"
+  filename          = "lambda_warmer/${var.NPinger_lambda_filename}"
   function_name     = "MotrNPinger-${var.environment}"
   role              = "${aws_iam_role.NPingerRole.arn}"
   handler           = "npinger.warmup"
