@@ -2,6 +2,12 @@ resource "aws_cloudfront_origin_access_identity" "oai" {
   comment = "MOTR ${var.environment} OAI"
 }
 
+data "aws_acm_certificate" "MotrWebCFDistroCert" {
+  provider = "aws.cfdistro_cert"
+  domain   = "${var.environment}.${var.public_dns_domain}"
+  statuses = ["ISSUED"]
+}
+
 resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
   count       = "${var.with_cloudfront ? 1 : 0}"
   comment     = "CF distro for MOTR ${var.environment} environment"
@@ -65,7 +71,7 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     default_ttl            = 86400
   }
   viewer_certificate {
-    acm_certificate_arn      = "${var.certificate_arn}"
+    acm_certificate_arn      = "${data.aws_acm_certificate.MotrWebCFDistroCert.arn}"
     minimum_protocol_version = "TLSv1"
     ssl_support_method       = "sni-only"
   }

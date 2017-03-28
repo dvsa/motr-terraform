@@ -3,3 +3,9 @@ provider "aws" {
 }
 
 data "aws_caller_identity" "current" { }
+
+provider "aws" {
+  # us-east-1 for CF Distro certificates
+  region = "us-east-1"
+  alias = "cfdistro_cert"
+}
