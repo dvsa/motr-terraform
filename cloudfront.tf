@@ -5,7 +5,7 @@ resource "aws_cloudfront_origin_access_identity" "oai" {
 data "aws_acm_certificate" "MotrWebCFDistroCert" {
   count    = "${var.with_cloudfront ? 1 : 0}"
   provider = "aws.cfdistro_cert"
-  domain   = "${var.environment}.${var.public_dns_domain}"
+  domain   = "${var.alias_record_name}.${var.public_dns_domain}"
   statuses = ["ISSUED"]
 }
 
