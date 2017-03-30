@@ -38,7 +38,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_coldstart_log_metric
 
 resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerNotifyConfFailure_log_metric_filter" {
   name           = "MotrWebHandlerNotifyConfFailure_log_metric_filter"
-  pattern        = "{ $.message = NOTIFY-CONFIRMATION-FAILURE || $.message = NOTIFY-CLIENT-FAILED }"
+  pattern        = "{ $.message = NOTIFY-CLIENT-FAILED }"
   log_group_name = "${var.manage_cw_lg_web_lambda ? "${aws_cloudwatch_log_group.MotrWebHandler.name}" : "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"}"
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-NotifyConfirmationFailure"
@@ -93,7 +93,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerTradeAPIFailure_log_m
 
 resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_MiscError_log_metric_filter" {
   name           = "MotrWebHandler_MiscError_log_metric_filter"
-  pattern        = "{ $.level = ERROR && $.message != NOTIFY-CONFIRMATION-FAILURE && $.message != NOTIFY-CLIENT-FAILED && $.message != TRADE-API-ERROR && $.message != SUBSCRIPTION-CONFIRMATION-FAILED && $.message != PENDING-SUBSCRIPTION-CREATION-FAILED }"
+  pattern        = "{ $.level = ERROR }"
   log_group_name = "${var.manage_cw_lg_web_lambda ? "${aws_cloudwatch_log_group.MotrWebHandler.name}" : "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"}"
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-MiscError"
@@ -153,7 +153,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrSubscriptionLoaderLoadingSucces
 
 resource "aws_cloudwatch_log_metric_filter" "MotrSubscriptionLoader_MiscError_log_metric_filter" {
   name           = "MotrSubscriptionLoader_MiscError_log_metric_filter"
-  pattern        = "{ $.level = ERROR && $.message != LOADING-ERROR && $.message != LOADING-SUCCESS }"
+  pattern        = "{ $.level = ERROR }"
   log_group_name = "${var.manage_cw_lg_subscr_lambda ? "${aws_cloudwatch_log_group.MotrSubscriptionLoader.name}" : "/aws/lambda/${aws_lambda_function.MotrSubscriptionLoader.function_name}"}"
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrSubscriptionLoader-MiscError"
@@ -235,7 +235,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierUnloadingTimedOut_log_m
 
 resource "aws_cloudwatch_log_metric_filter" "MotrNotifier_MiscError_log_metric_filter" {
   name           = "MotrNotifier_MiscError_log_metric_filter"
-  pattern        = "{ $.level = ERROR && $.message != NOTIFY-REMINDER-FAILED && $.message != SUBSCRIPTION-PROCESSING-FAILED && $.message != SUBSCRIPTION-QUEUE-ITEM-REMOVAL-FAILED && $.message != VEHICLE-DETAILS-RETRIEVAL-FAILED && $.message != UNLOADING-TIMEDOUT }"
+  pattern        = "{ $.level = ERROR && $.message }"
   log_group_name = "${var.manage_cw_lg_notifier_lambda ? "${aws_cloudwatch_log_group.MotrNotifier.name}" : "/aws/lambda/${aws_lambda_function.MotrNotifier.function_name}"}"
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-MiscError"
