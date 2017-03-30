@@ -54,7 +54,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerColdStartUserExperien
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-ColdStartUserExperience"
     namespace = "${var.project}-${var.environment}-MotrWebHandler-ColdStartUserExperience"
-    value     = "0"
+    value     = "1"
   }
 }
 
