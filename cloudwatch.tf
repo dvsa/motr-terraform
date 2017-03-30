@@ -235,7 +235,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierUnloadingTimedOut_log_m
 
 resource "aws_cloudwatch_log_metric_filter" "MotrNotifier_MiscError_log_metric_filter" {
   name           = "MotrNotifier_MiscError_log_metric_filter"
-  pattern        = "{ $.level = ERROR && $.message }"
+  pattern        = "{ $.level = ERROR }"
   log_group_name = "${var.manage_cw_lg_notifier_lambda ? "${aws_cloudwatch_log_group.MotrNotifier.name}" : "/aws/lambda/${aws_lambda_function.MotrNotifier.function_name}"}"
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-MiscError"
