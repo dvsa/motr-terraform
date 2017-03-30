@@ -71,6 +71,23 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     max_ttl                = 31536000
     default_ttl            = 86400
   }
+    cache_behavior { # for S3 Bucket
+    allowed_methods  = ["GET", "HEAD"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "motr-s3-${var.environment}"
+    path_pattern     = "/errorpages/*"
+    compress         = false
+    forwarded_values {
+      query_string = false
+      cookies {
+        forward = "none"
+      }
+    }
+    viewer_protocol_policy = "allow-all"
+    min_ttl                = 0
+    max_ttl                = 31536000
+    default_ttl            = 86400
+  }
   viewer_certificate {
     acm_certificate_arn      = "${data.aws_acm_certificate.MotrWebCFDistroCert.arn}"
     minimum_protocol_version = "TLSv1"
@@ -88,24 +105,36 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
       # locations        = ["GB"]
     }
   }
-  # custom_error_response {
-  #   error_caching_min_ttl = 10
-  #   error_code            = "403"
-  #   response_code         = "403"
-  #   response_page_path    = "/assets/errorpages/index.html"
-  # }
-  # custom_error_response {
-  #   error_caching_min_ttl = 10
-  #   error_code            = "500"
-  #   response_code         = "500"
-  #   response_page_path    = "/assets/errorpages/index.html"
-  # }
-  # custom_error_response {
-  #   error_caching_min_ttl = 10
-  #   error_code            = "503"
-  #   response_code         = "503"
-  #   response_page_path    = "/assets/errorpages/index.html"
-  # }
+  custom_error_response {
+    error_caching_min_ttl = 0
+    error_code            = "403"
+    response_code         = "403"
+    response_page_path    = "/errorpages/service-unavaliable.html"
+  }
+  custom_error_response {
+    error_caching_min_ttl = 0
+    error_code            = "500"
+    response_code         = "500"
+    response_page_path    = "/errorpages/service-unavaliable.html"
+  }
+  custom_error_response {
+    error_caching_min_ttl = 0
+    error_code            = "502"
+    response_code         = "502"
+    response_page_path    = "/errorpages/service-unavaliable.html"
+  }
+  custom_error_response {
+    error_caching_min_ttl = 0
+    error_code            = "503"
+    response_code         = "503"
+    response_page_path    = "/errorpages/service-unavaliable.html"
+  }
+  custom_error_response {
+    error_caching_min_ttl = 0
+    error_code            = "504"
+    response_code         = "504"
+    response_page_path    = "/errorpages/service-unavaliable.html"
+  }
   tags {
     Name        = "${var.project}-${var.environment}-MotrWebCFDistro"
     Project     = "${var.project}"
