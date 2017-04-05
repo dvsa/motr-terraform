@@ -53,11 +53,6 @@ variable "alias_record_name" {
   description = "DNS alias record name that will be appended in front of the public_dns_domain"
 }
 
-variable "certificate_arn" {
-  type        = "string"
-  description = "ACM issued certificate ARN"
-}
-
 variable "static_assets_hash" {
   type        = "string"
   description = "Static assets current commit hash"
