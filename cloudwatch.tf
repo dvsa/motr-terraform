@@ -34,6 +34,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_coldstart_log_metric
     namespace = "${var.project}-${var.environment}-MotrWebHandler-ColdStart"
     value     = "1"
   }
+  depends_on     = ["aws_cloudwatch_log_group.MotrWebHandler"]
 }
 
 resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerNotifyConfFailure_log_metric_filter" {
@@ -105,6 +106,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_MiscError_log_metric
     namespace = "${var.project}-${var.environment}-MotrWebHandler-MiscError"
     value     = "1"
   }
+  depends_on     = ["aws_cloudwatch_log_group.MotrWebHandler"]
 }
 
 ####################################################################################################################################
