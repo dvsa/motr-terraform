@@ -133,7 +133,7 @@ resource "aws_cloudwatch_event_rule" "MotrLoaderStart" {
 resource "aws_cloudwatch_event_target" "MotrLoaderStart" {
   rule      = "${aws_cloudwatch_event_rule.MotrLoaderStart.name}"
   target_id = "${aws_cloudwatch_event_rule.MotrLoaderStart.name}-target"
-  arn       = "${aws_lambda_function.MotrSubscriptionLoader.arn}"
+  arn       = "${aws_lambda_alias.MotrSubscriptionLoader.arn}"
 }
 
 resource "aws_cloudwatch_log_metric_filter" "MotrSubscriptionLoaderLoadingError_log_metric_filter" {
@@ -196,7 +196,7 @@ resource "aws_cloudwatch_event_rule" "MotrNotifierStart" {
 resource "aws_cloudwatch_event_target" "MotrNotifierStart" {
   rule      = "${aws_cloudwatch_event_rule.MotrNotifierStart.name}"
   target_id = "${aws_cloudwatch_event_rule.MotrNotifierStart.name}-target"
-  arn       = "${aws_lambda_function.MotrNotifier.arn}"
+  arn       = "${aws_lambda_alias.MotrNotifier.arn}"
 }
 
 resource "aws_cloudwatch_log_metric_filter" "MotrNotifierSubscriptionProcessingFailed_log_metric_filter" {
