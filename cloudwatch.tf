@@ -12,19 +12,6 @@ resource "aws_cloudwatch_log_group" "MotrWebHandler" {
   }
 }
 
-resource "aws_cloudwatch_event_target" "MOTRWebHandler-WarmUpEventTarget" {
-  target_id = "MOTRWebHandler-WarmUpEventTarget"
-  rule      = "${aws_cloudwatch_event_rule.MOTR-WarmUpEventRule.name}"
-  arn       = "${aws_lambda_alias.NPingerAlias.arn}"
-}
-
-resource "aws_cloudwatch_event_rule" "MOTR-WarmUpEventRule" {
-  name                = "MOTR-${var.environment}-WarmUpEventRule"
-  description         = "MOTR WebHandler WarmUp (${var.environment}) event rule | Schedule: ${var.web_warmup_rate}"
-  schedule_expression = "${var.web_warmup_rate}"
-  is_enabled          = "${var.web_enable_warmup ? 1 : 0}"
-}
-
 resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_coldstart_log_metric_filter" {
   name           = "MotrWebHandler_coldstart_log_metric_filter"
   pattern        = "{ $.mdc.x-cold-start = true && $.message = PING }"
@@ -271,4 +258,17 @@ resource "aws_cloudwatch_log_group" "NPinger" {
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }
+}
+
+resource "aws_cloudwatch_event_rule" "MOTR-WarmUpEventRule" {
+  name                = "MOTR-${var.environment}-WarmUpEventRule"
+  description         = "MOTR WebHandler WarmUp (${var.environment}) event rule | Schedule: ${var.web_warmup_rate}"
+  schedule_expression = "${var.web_warmup_rate}"
+  is_enabled          = "${var.web_enable_warmup ? 1 : 0}"
+}
+
+resource "aws_cloudwatch_event_target" "MOTRWebHandler-WarmUpEventTarget" {
+  target_id = "MOTRWebHandler-WarmUpEventTarget"
+  rule      = "${aws_cloudwatch_event_rule.MOTR-WarmUpEventRule.name}"
+  arn       = "${aws_lambda_alias.NPingerAlias.arn}"
 }
