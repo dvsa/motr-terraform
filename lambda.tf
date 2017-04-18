@@ -43,6 +43,18 @@ resource "aws_lambda_alias" "MotrWebHandlerAlias" {
   function_version = "${var.MotrWebHandler_ver}"
 }
 
+resource "aws_lambda_permission" "Allow_APIGateway" {
+  function_name = "${aws_lambda_function.MotrWebHandler.function_name}"
+  qualifier     = "${aws_lambda_alias.MotrWebHandlerAlias.name}"
+  statement_id  = "AllowExecutionFromApiGateway"
+  action        = "lambda:InvokeFunction"
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/*/*/*"
+  depends_on    = [ "aws_api_gateway_rest_api.MotrWeb"
+                  , "aws_api_gateway_integration.LambdaRootGET"
+  ]
+}
+
 ####################################################################################################################################
 # SUBSCRIPTION LOADER
 
@@ -75,6 +87,15 @@ resource "aws_lambda_alias" "MotrSubscriptionLoader" {
   description      = "Alias for ${aws_lambda_function.MotrSubscriptionLoader.function_name}"
   function_name    = "${aws_lambda_function.MotrSubscriptionLoader.arn}"
   function_version = "${var.MotrSubscriptionLoader_ver}"
+}
+
+resource "aws_lambda_permission" "Loader_Allow_CloudWatchEvent" {
+  function_name = "${aws_lambda_function.MotrSubscriptionLoader.function_name}"
+  qualifier     = "${aws_lambda_alias.MotrSubscriptionLoader.name}"
+  statement_id  = "AllowExecutionFromCloudWatchEvent"
+  action        = "lambda:InvokeFunction"
+  principal     = "events.amazonaws.com"
+  source_arn    = "${aws_cloudwatch_event_rule.MotrLoaderStart.arn}"
 }
 
 ####################################################################################################################################
@@ -120,6 +141,15 @@ resource "aws_lambda_alias" "MotrNotifier" {
   function_version = "${var.MotrNotifier_ver}"
 }
 
+resource "aws_lambda_permission" "Notifier_Allow_CloudWatchEvent" {
+  function_name = "${aws_lambda_function.MotrNotifier.function_name}"
+  qualifier     = "${aws_lambda_alias.MotrNotifier.name}"
+  statement_id  = "AllowExecutionFromCloudWatchEvent"
+  action        = "lambda:InvokeFunction"
+  principal     = "events.amazonaws.com"
+  source_arn    = "${aws_cloudwatch_event_rule.MotrNotifierStart.arn}"
+}
+
 ####################################################################################################################################
 # NPINGER
 
@@ -148,21 +178,6 @@ resource "aws_lambda_alias" "NPingerAlias" {
   description      = "Alias for ${aws_lambda_function.NPinger.function_name}"
   function_name    = "${aws_lambda_function.NPinger.arn}"
   function_version = "${var.NPinger_ver}"
-}
-
-####################################################################################################################################
-# PERMISSIONS
-
-resource "aws_lambda_permission" "Allow_APIGateway" {
-  function_name = "${aws_lambda_function.MotrWebHandler.function_name}"
-  qualifier     = "${aws_lambda_alias.MotrWebHandlerAlias.name}"
-  statement_id  = "AllowExecutionFromApiGateway"
-  action        = "lambda:InvokeFunction"
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/*/*/*"
-  depends_on    = [ "aws_api_gateway_rest_api.MotrWeb"
-                  , "aws_api_gateway_integration.LambdaRootGET"
-  ]
 }
 
 resource "aws_lambda_permission" "Allow_CloudWatchEvent" {
