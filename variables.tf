@@ -123,6 +123,16 @@ variable "tb_subscr_write_capacity" {
   description = "Table motr-subscription write capacity"
 }
 
+variable "tb_canc_subscr_read_capacity" {
+  type        = "string"
+  description = "Table motr-unsubscription-history read capacity"
+}
+
+variable "tb_canc_subscr_write_capacity" {
+  type        = "string"
+  description = "Table motr-unsubscription-history write capacity"
+}
+
 variable "tb_pending_subscr_read_capacity" {
   type        = "string"
   description = "Table motr-pending_subscription read capacity"
@@ -161,6 +171,26 @@ variable "ix_pending_subscr_ig_read_capacity" {
 variable "ix_pending_subscr_ig_write_capacity" {
   type        = "string"
   description = "Index id-gsi (motr-pending_subscription) write capacity"
+}
+
+variable "ix_canc_subscr_vrmg_read_capacity" {
+  type        = "string"
+  description = "Index vrm-gsi (motr-unsubscription-history) read capacity"
+}
+
+variable "ix_canc_subscr_vrmg_write_capacity" {
+  type        = "string"
+  description = "Index vrm-gsi (motr-unsubscription-history) write capacity"
+}
+
+variable "ix_canc_subscr_emailg_read_capacity" {
+  type        = "string"
+  description = "Index email-gsi (motr-unsubscription-history) read capacity"
+}
+
+variable "ix_canc_subscr_emailg_write_capacity" {
+  type        = "string"
+  description = "Index email-gsi (motr-unsubscription-history) write capacity"
 }
 
 variable "mot_test_reminder_info_api_uri" {
