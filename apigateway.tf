@@ -469,55 +469,28 @@ resource "aws_api_gateway_api_key" "MotrWebApiKey" {
 ####################################################################################################################################
 # API USAGE PLAN
 
-resource "aws_cloudformation_stack" "MotrApiUsagePlan" {
+resource "aws_api_gateway_usage_plan" "MotrApiUsagePlan" {
   count         = "${var.with_cloudfront ? 1 : 0}"
-  name          = "motr-cf-${var.environment}-up"
-  parameters {
-    UPName   = "motr-web-${var.environment}-up"
-    ApiID    = "${aws_api_gateway_rest_api.MotrWeb.id}"
-    ApiStage = "${aws_api_gateway_deployment.Deployment.stage_name}"
+  name          = "motr-web-${var.environment}-up"
+  description   = "motr-web-${var.environment}-up"
+  api_stages {
+    api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+    stage  = "${aws_api_gateway_deployment.Deployment.stage_name}"
   }
-  template_body = <<STACK
-{
-  "Parameters": {
-    "UPName": {
-      "Type": "String",
-      "Description": "UsagePlan name"
-    },
-    "ApiID": {
-      "Type": "String",
-      "Description": "Associated API Gateway ID"
-    },
-    "ApiStage": {
-      "Type": "String",
-      "Description": "Associated API Gateway stage"
-    }
-  },
-  "Resources": {
-    "MotrWebUsagePlan": {
-      "Type": "AWS::ApiGateway::UsagePlan",
-      "Properties": {
-        "UsagePlanName": { "Ref": "UPName" },
-        "Description": "MotrWeb usage plan",
-        "ApiStages": [
-          {
-            "ApiId": { "Ref": "ApiID" },
-            "Stage": { "Ref": "ApiStage" }
-          }
-        ],
-        "Throttle": {
-          "RateLimit": 1000,
-          "BurstLimit": 979
-        }
-      }
-    }
+  throttle_settings {
+    burst_limit = 979
+    rate_limit  = 1000
   }
-}
-STACK
   tags {
     Name        = "${var.project}-${var.environment}-MotrApiUsagePlan"
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }
   depends_on = ["aws_api_gateway_deployment.Deployment"]
+}
+
+resource "aws_api_gateway_usage_plan_key" "main" {
+  key_id        = "${aws_api_gateway_api_key.MotrWebApiKey.id}"
+  key_type      = "API_KEY"
+  usage_plan_id = "${aws_api_gateway_usage_plan.MotrApiUsagePlan.id}"
 }
