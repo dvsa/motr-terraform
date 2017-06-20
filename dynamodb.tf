@@ -61,7 +61,6 @@ resource "aws_dynamodb_table" "motr-subscription" {
     name = "mot_due_date_md"
     type = "S"
   }
-
   global_secondary_index {
     name               = "due-date-md-gsi"
     hash_key           = "mot_due_date_md"
