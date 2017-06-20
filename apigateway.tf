@@ -21,7 +21,7 @@ resource "aws_api_gateway_integration" "LambdaRootGET" {
   rest_api_id             = "${aws_api_gateway_rest_api.MotrWeb.id}"
   resource_id             = "${aws_api_gateway_rest_api.MotrWeb.root_resource_id}"
   http_method             = "${aws_api_gateway_method.LambdaRootGET.http_method}"
-  type                    = "AWS_PROXY" 
+  type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${aws_lambda_function.MotrWebHandler.arn}:${aws_lambda_alias.MotrWebHandlerAlias.name}/invocations"
   integration_http_method = "POST"
   #credentials             = "${aws_iam_role.Lambda.arn}"
@@ -82,7 +82,7 @@ resource "aws_api_gateway_integration" "LambdaWildcardGET" {
   rest_api_id             = "${aws_api_gateway_rest_api.MotrWeb.id}"
   resource_id             = "${aws_api_gateway_resource.LambdaWildcard.id}"
   http_method             = "${aws_api_gateway_method.LambdaWildcardGET.http_method}"
-  type                    = "AWS_PROXY" 
+  type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${aws_lambda_function.MotrWebHandler.arn}:${aws_lambda_alias.MotrWebHandlerAlias.name}/invocations"
   integration_http_method = "POST"
   #credentials             = "${aws_iam_role.Lambda.arn}"
@@ -286,10 +286,17 @@ resource "aws_api_gateway_resource" "MotTestReminderMock" {
   path_part   = "mot-test-reminder-mock"
 }
 
-resource "aws_api_gateway_resource" "MotTestReminderMockRegistration" {
+resource "aws_api_gateway_resource" "MotTestReminderMockVehicles" {
   count       = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
   rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
   parent_id   = "${aws_api_gateway_resource.MotTestReminderMock.id}"
+  path_part   = "vehicles"
+}
+
+resource "aws_api_gateway_resource" "MotTestReminderMockRegistration" {
+  count       = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  parent_id   = "${aws_api_gateway_resource.MotTestReminderMockVehicles.id}"
   path_part   = "{registration}"
 }
 
@@ -309,7 +316,7 @@ resource "aws_api_gateway_integration" "MotTestReminderMockRegistrationGET" {
   rest_api_id             = "${aws_api_gateway_rest_api.MotrWeb.id}"
   resource_id             = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
   type                    = "MOCK"
-  uri                     = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/${var.environment}/${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}/mot-test-reminder-mock/{registration}"
+  uri                     = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/${var.environment}/${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}/mot-test-reminder-mock/vehicles/{registration}"
   http_method             = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
   request_templates {
     "application/json" = <<EOF
@@ -433,24 +440,160 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
   depends_on        = ["aws_api_gateway_integration_response.MotTestReminderMockRegistrationGET_200"]
 }
 
+###### Vehicle by mot number ######
+
+resource "aws_api_gateway_resource" "MotTestReminderMockMotTests" {
+  count       = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  parent_id   = "${aws_api_gateway_resource.MotTestReminderMock.id}"
+  path_part   = "mot-tests"
+}
+
+resource "aws_api_gateway_resource" "MotTestReminderMockMotNumber" {
+  count       = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  parent_id   = "${aws_api_gateway_resource.MotTestReminderMockMotTests.id}"
+  path_part   = "{number}"
+}
+
+# GET method -> Lambda /mot-test-reminder-mock
+resource "aws_api_gateway_method" "MotTestReminderMockMotNumberGET" {
+  count         = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
+  rest_api_id   = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id   = "${aws_api_gateway_resource.MotTestReminderMockMotNumber.id}"
+  http_method   = "GET"
+  authorization = "NONE"
+  request_parameters {"method.request.path.number" = true}
+}
+
+# integration between MotTestReminderMock resource's GET method and Lambda function (back-end)
+resource "aws_api_gateway_integration" "MotTestReminderMockMotNumberGET" {
+  count                   = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
+  rest_api_id             = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id             = "${aws_api_gateway_resource.MotTestReminderMockMotNumber.id}"
+  type                    = "MOCK"
+  uri                     = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/${var.environment}/${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}/mot-test-reminder-mock/mot-tests/{number}"
+  http_method             = "${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}"
+  request_templates {
+    "application/json" = <<EOF
+{
+    "statusCode":
+    #if($input.params('number').contains("ERROR404"))
+        404
+    #elseif($input.params('number').contains("ERROR503"))
+        503
+    #else
+        200
+    #end
+}
+EOF
+  }
+  depends_on              = ["aws_api_gateway_method.MotTestReminderMockMotNumberGET"]
+}
+
+resource "aws_api_gateway_method_response" "MotTestReminderMockMotNumberGET_200" {
+  count           = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
+  rest_api_id     = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id     = "${aws_api_gateway_resource.MotTestReminderMockMotNumber.id}"
+  http_method     = "${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}"
+  status_code     = "200"
+  response_models = {
+    "application/json" = "Empty"
+  }
+  response_parameters = {
+    "method.response.header.Date"           = true
+    "method.response.header.ETag"           = true
+    "method.response.header.Content-Length" = true
+    "method.response.header.Content-Type"   = true
+    "method.response.header.Last-Modified"  = true
+  }
+  depends_on      = ["aws_api_gateway_integration.MotTestReminderMockMotNumberGET"]
+}
+
+resource "aws_api_gateway_method_response" "MotTestReminderMockMotNumberGET_404" {
+  count               = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
+  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id         = "${aws_api_gateway_resource.MotTestReminderMockMotNumber.id}"
+  http_method         = "${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}"
+  status_code         = "404"
+  response_parameters = {
+    "method.response.header.Date"           = true
+    "method.response.header.ETag"           = true
+    "method.response.header.Content-Length" = true
+    "method.response.header.Content-Type"   = true
+    "method.response.header.Last-Modified"  = true
+  }
+  depends_on          = ["aws_api_gateway_method_response.MotTestReminderMockMotNumberGET_200"]
+}
+
+resource "aws_api_gateway_integration_response" "MotTestReminderMockMotNumberGET_200" {
+  count             = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
+  rest_api_id       = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id       = "${aws_api_gateway_resource.MotTestReminderMockMotNumber.id}"
+  http_method       = "${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}"
+  status_code       = "${aws_api_gateway_method_response.MotTestReminderMockMotNumberGET_200.status_code}"
+  selection_pattern = "200"
+  response_templates {
+    "application/json" = <<EOF
+{
+    #if($input.params('number').contains("12345"))
+        "make": "MERCEDES-BENZ",
+        "model": "C220 ELEGANCE ED125 CDI BLU-CY",
+        "primaryColour": "Silver",
+        "registration": "WDD2040022A65",
+        "manufactureYear": "2006",
+        "motTestExpiryDate": "2016-11-26",
+        "motTestNumber": "$input.params('number')"
+    #else
+        "make": "testMakeX",
+        "model": "testModel",
+        "primaryColour": "testPrimaryColour",
+        "secondaryColour": "testSecondaryColour",
+        "registration": "XXXYYY",
+        "manufactureYear": "1998",
+        "motTestExpiryDate": "2026-03-09",
+        "motTestNumber": "123456"
+    #end
+}
+EOF
+  }
+  depends_on        = ["aws_api_gateway_integration.MotTestReminderMockMotNumberGET"]
+}
+
+resource "aws_api_gateway_integration_response" "MotTestReminderMockMotNumberGET_404" {
+  count             = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
+  rest_api_id       = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id       = "${aws_api_gateway_resource.MotTestReminderMockMotNumber.id}"
+  http_method       = "${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}"
+  status_code       = "${aws_api_gateway_method_response.MotTestReminderMockMotNumberGET_404.status_code}"
+  selection_pattern = "404"
+  depends_on        = ["aws_api_gateway_integration_response.MotTestReminderMockMotNumberGET_200"]
+}
+
+
+
 ####################################################################################################################################
 # API GATEWAY DEPLOYMENT
 
 resource "aws_api_gateway_deployment" "Deployment" {
   rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
   stage_name  = "${var.environment}"
-  depends_on  = [ "aws_api_gateway_method.LambdaRootGET"
-                , "aws_api_gateway_integration.LambdaRootGET"
-                , "aws_api_gateway_method.LambdaWildcardGET"
-                , "aws_api_gateway_integration.LambdaWildcardGET"
-                , "aws_api_gateway_method.LambdaWildcardPOST"
-                , "aws_api_gateway_integration.LambdaWildcardPOST"
-                , "aws_api_gateway_method.AssetsWildcardGET"
-                , "aws_api_gateway_integration.AssetsWildcardGET"
-                , "aws_api_gateway_method.MotTestReminderMockRegistrationGET"
-                , "aws_api_gateway_integration.MotTestReminderMockRegistrationGET"
-                , "aws_api_gateway_integration_response.MotTestReminderMockRegistrationGET_200"
-                ]
+  depends_on  = [
+    "aws_api_gateway_method.LambdaRootGET",
+    "aws_api_gateway_integration.LambdaRootGET",
+    "aws_api_gateway_method.LambdaWildcardGET",
+    "aws_api_gateway_integration.LambdaWildcardGET",
+    "aws_api_gateway_method.LambdaWildcardPOST",
+    "aws_api_gateway_integration.LambdaWildcardPOST",
+    "aws_api_gateway_method.AssetsWildcardGET",
+    "aws_api_gateway_integration.AssetsWildcardGET",
+    "aws_api_gateway_method.MotTestReminderMockRegistrationGET",
+    "aws_api_gateway_integration.MotTestReminderMockRegistrationGET",
+    "aws_api_gateway_integration_response.MotTestReminderMockRegistrationGET_200",
+    "aws_api_gateway_method.MotTestReminderMockMotNumberGET",
+    "aws_api_gateway_integration.MotTestReminderMockMotNumberGET",
+    "aws_api_gateway_integration_response.MotTestReminderMockMotNumberGET_200"
+  ]
 }
 
 ####################################################################################################################################

@@ -198,6 +198,11 @@ variable "mot_test_reminder_info_api_uri" {
   description = "MOT test reminder info api uri"
 }
 
+variable "mot_api_mot_test_number_uri" {
+  type        = "string"
+  description = "Vehicle data by mot test number api uri"
+}
+
 variable "mot_test_reminder_info_token" {
   type        = "string"
   description = "Auth token for getting mot test information"
