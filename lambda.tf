@@ -22,7 +22,7 @@ resource "aws_lambda_function" "MotrWebHandler" {
       DB_TABLE_SUBSCRIPTION                                = "motr-${var.environment}-subscription"
       DB_TABLE_PENDING_SUBSCRIPTION                        = "motr-${var.environment}-pending_subscription"
       DB_TABLE_CANCELLED_SUBSCRIPTION                      = "motr-${var.environment}-cancelled_subscription"
-      MOT_TEST_REMINDER_INFO_API_URI                       = "${var.mot_test_reminder_info_api_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/{registration}" : var.mot_test_reminder_info_api_uri}"
+      MOT_TEST_REMINDER_INFO_API_URI                       = "${var.mot_test_reminder_info_api_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/vehicles/{registration}" : var.mot_test_reminder_info_api_uri}"
       GOV_NOTIFY_API_TOKEN                                 = "${var.gov_notify_api_token}"
       CONFIRM_EMAIL_NOTIFICATION_TEMPLATE_ID               = "${var.confirm_email_notification_template_id}"
       CONFIRMATION_TEMPLATE_ID                             = "${var.confirmation_template_id}"
@@ -122,7 +122,7 @@ resource "aws_lambda_function" "MotrNotifier" {
       SUBSCRIPTIONS_QUEUE_URL            = "${aws_sqs_queue.MotrSubscriptionsQueue.id}"
       ONE_MONTH_NOTIFICATION_TEMPLATE_ID = "${var.one_month_notification_template_id}"
       TWO_WEEK_NOTIFICATION_TEMPLATE_ID  = "${var.two_week_notification_template_id}"
-      MOT_TEST_REMINDER_INFO_API_URI     = "${var.mot_test_reminder_info_api_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/{registration}" : var.mot_test_reminder_info_api_uri}"
+      MOT_API_MOT_TEST_NUMBER_URI        = "${var.mot_api_mot_test_number_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/mot-tests/{number}" : var.mot_api_mot_test_number_uri}"
       GOV_NOTIFY_API_TOKEN               = "${var.gov_notify_api_token}"
       MOT_TEST_REMINDER_INFO_TOKEN       = "${var.mot_test_reminder_info_token}"
       WORKER_COUNT                       = "${var.worker_count_notifier}"
@@ -189,3 +189,4 @@ resource "aws_lambda_permission" "Allow_CloudWatchEvent" {
   principal     = "events.amazonaws.com"
   source_arn    = "${aws_cloudwatch_event_rule.MOTR-WarmUpEventRule.arn}"
 }
+
