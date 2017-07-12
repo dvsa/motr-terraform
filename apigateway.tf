@@ -387,7 +387,7 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
         "registration": "$input.params('registration')",
         "manufactureYear": "2006",
         "motTestExpiryDate": "2016-11-26",
-        "motTestNumber": "12345"
+        "motTestNumber": "42343234"
     #elseif($input.params('registration').contains("YN13NTX"))
         "make": "HARLEY-DAVIDSON CVO ROAD GLIDE FLTRXSE2 ANV 13",
         "model": "",
@@ -396,7 +396,7 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
         "registration": "$input.params('registration')",
         "manufactureYear": "2004",
         "motTestExpiryDate": "2017-12-01",
-        "motTestNumber": "12345"
+        "motTestNumber": "42343234"
     #elseif($input.params('registration').contains("LOY-500"))
         "make": "TOJEIRO BRISTOL 2.0L",
         "model": "1 DR MANUAL CONVERTIBLE SPORTS",
@@ -404,7 +404,7 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
         "registration": "$input.params('registration')",
         "manufactureYear": "1999",
         "motTestExpiryDate": "2017-03-14",
-        "motTestNumber": "12345"
+        "motTestNumber": "3243432"
     #elseif($input.params('registration').contains("OLD-EXPIRY-"))
         "make": "testMake",
         "model": "testModel",
@@ -413,7 +413,7 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
         "registration": "$input.params('registration')",
         "manufactureYear": "1998",
         "motTestExpiryDate": "2017-03-09",
-        "motTestNumber": "12345"
+        "motTestNumber": "532523"
     #else
         "make": "testMake",
         "model": "testModel",
@@ -422,7 +422,7 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
         "registration": "$input.params('registration')",
         "manufactureYear": "1998",
         "motTestExpiryDate": "2026-03-09",
-        "motTestNumber": "12345"
+        "motTestNumber": "2325325"
     #end
 }
 EOF
@@ -552,7 +552,7 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockMotNumberGET
         "registration": "XXXYYY",
         "manufactureYear": "1998",
         "motTestExpiryDate": "2026-03-09",
-        "motTestNumber": "123456"
+        "motTestNumber": "2321321"
     #end
 }
 EOF
