@@ -273,6 +273,56 @@ variable "notifier_log_level" {
   description = "MotrNotifier Lambda log level"
 }
 
+variable "MotrBouncingEmailCleaner_s3_key" {
+  type        = "string"
+  description = "MotrBouncingEmailCleaner Lambda Handler S3 key"
+}
+
+variable "MotrBouncingEmailCleaner_ver" {
+  type        = "string"
+  description = "MotrBouncingEmailCleaner Lambda version"
+}
+
+variable "MotrBouncingEmailCleaner_publish" {
+  type        = "string"
+  description = "MotrBouncingEmailCleaner Lambda publish switch"
+}
+
+variable "MotrBouncingEmailCleaner_mem_size" {
+  type        = "string"
+  description = "Amount of memory in MB Lambda Function can use at runtime"
+}
+
+variable "MotrBouncingEmailCleaner_timeout" {
+  type        = "string"
+  description = "The amount of time Lambda Function has to run in seconds"
+}
+
+variable "bouncing_email_cleaner_log_level" {
+  type        = "string"
+  description = "WebApp Lambda log level"
+}
+
+variable "manage_cw_lg_cleaner_lambda" {
+  type        = "string"
+  description = "Enable CloudWatch Log Group for MOTR Bouncing Email Cleaner Lambda to be managed by Terraform"
+}
+
+variable "cw_lg_cleaner_lambda_retention" {
+  type        = "string"
+  description = "Specifies the number of days you want to retain log events"
+}
+
+variable "motr_cleaner_schedule" {
+  type        = "string"
+  description = "The scheduling expression. For example, cron(0 3 * * ? *)"
+}
+
+variable "motr_cleaner_enabled" {
+  type        = "string"
+  description = "Whether the rule should be enabled"
+}
+
 variable "manage_cw_lg_notifier_lambda" {
   type        = "string"
   description = "Enable CloudWatch Log Group for MOTR Notifier Lambda to be managed by Terraform"
