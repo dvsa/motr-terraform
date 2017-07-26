@@ -28,7 +28,7 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     }
     custom_header {
       name  = "x-api-key"
-      value = "${var.cf_apig_channel_key}"
+      value = "${aws_api_gateway_api_key.MotrWebApiKey.value}"
     }
   }
   default_cache_behavior { # for API Gateway
@@ -140,5 +140,7 @@ resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }
-  depends_on = ["aws_cloudfront_origin_access_identity.oai"]
+  depends_on = [ "aws_cloudfront_origin_access_identity.oai"
+               , "aws_api_gateway_api_key.MotrWebApiKey"
+               ]
 }
