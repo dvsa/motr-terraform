@@ -24,17 +24,20 @@ resource "aws_api_gateway_integration" "LambdaRootGET" {
   type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${aws_lambda_function.MotrWebHandler.arn}:${aws_lambda_alias.MotrWebHandlerAlias.name}/invocations"
   integration_http_method = "POST"
+
   #credentials             = "${aws_iam_role.Lambda.arn}"
 }
 
 resource "aws_api_gateway_method_response" "LambdaRootGET_200" {
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_rest_api.MotrWeb.root_resource_id}"
-  http_method         = "${aws_api_gateway_method.LambdaRootGET.http_method}"
-  status_code         = "200"
-  response_models     = {
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_rest_api.MotrWeb.root_resource_id}"
+  http_method = "${aws_api_gateway_method.LambdaRootGET.http_method}"
+  status_code = "200"
+
+  response_models = {
     "application/json" = "Empty"
   }
+
   response_parameters = {
     "method.response.header.Date"           = true
     "method.response.header.ETag"           = true
@@ -45,10 +48,11 @@ resource "aws_api_gateway_method_response" "LambdaRootGET_200" {
 }
 
 resource "aws_api_gateway_integration_response" "LambdaRootGET_200" {
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_rest_api.MotrWeb.root_resource_id}"
-  http_method         = "${aws_api_gateway_method.LambdaRootGET.http_method}"
-  status_code         = "${aws_api_gateway_method_response.LambdaRootGET_200.status_code}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_rest_api.MotrWeb.root_resource_id}"
+  http_method = "${aws_api_gateway_method.LambdaRootGET.http_method}"
+  status_code = "${aws_api_gateway_method_response.LambdaRootGET_200.status_code}"
+
   response_parameters = {
     "method.response.header.Content-Length" = "integration.response.header.Content-Length"
     "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
@@ -56,7 +60,8 @@ resource "aws_api_gateway_integration_response" "LambdaRootGET_200" {
     "method.response.header.ETag"           = "integration.response.header.ETag"
     "method.response.header.Last-Modified"  = "integration.response.header.Last-Modified"
   }
-  depends_on          = ["aws_api_gateway_integration.LambdaRootGET"]
+
+  depends_on = ["aws_api_gateway_integration.LambdaRootGET"]
 }
 
 ####################################################################################################################################
@@ -64,8 +69,8 @@ resource "aws_api_gateway_integration_response" "LambdaRootGET_200" {
 
 resource "aws_api_gateway_resource" "LambdaWildcard" {
   rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  parent_id = "${aws_api_gateway_rest_api.MotrWeb.root_resource_id}"
-  path_part = "{proxy+}"
+  parent_id   = "${aws_api_gateway_rest_api.MotrWeb.root_resource_id}"
+  path_part   = "{proxy+}"
 }
 
 # GET method -> Lambda Wildcard/{proxy}
@@ -85,17 +90,20 @@ resource "aws_api_gateway_integration" "LambdaWildcardGET" {
   type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${aws_lambda_function.MotrWebHandler.arn}:${aws_lambda_alias.MotrWebHandlerAlias.name}/invocations"
   integration_http_method = "POST"
+
   #credentials             = "${aws_iam_role.Lambda.arn}"
 }
 
 resource "aws_api_gateway_method_response" "LambdaWildcardGET_200" {
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.LambdaWildcard.id}"
-  http_method         = "${aws_api_gateway_method.LambdaWildcardGET.http_method}"
-  status_code         = "200"
-  response_models     = {
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.LambdaWildcard.id}"
+  http_method = "${aws_api_gateway_method.LambdaWildcardGET.http_method}"
+  status_code = "200"
+
+  response_models = {
     "application/json" = "Empty"
   }
+
   response_parameters = {
     "method.response.header.Date"           = true
     "method.response.header.ETag"           = true
@@ -106,10 +114,11 @@ resource "aws_api_gateway_method_response" "LambdaWildcardGET_200" {
 }
 
 resource "aws_api_gateway_integration_response" "LambdaWildcardGET_200" {
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.LambdaWildcard.id}"
-  http_method         = "${aws_api_gateway_method.LambdaWildcardGET.http_method}"
-  status_code         = "${aws_api_gateway_method_response.LambdaWildcardGET_200.status_code}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.LambdaWildcard.id}"
+  http_method = "${aws_api_gateway_method.LambdaWildcardGET.http_method}"
+  status_code = "${aws_api_gateway_method_response.LambdaWildcardGET_200.status_code}"
+
   response_parameters = {
     "method.response.header.Content-Length" = "integration.response.header.Content-Length"
     "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
@@ -117,7 +126,8 @@ resource "aws_api_gateway_integration_response" "LambdaWildcardGET_200" {
     "method.response.header.ETag"           = "integration.response.header.ETag"
     "method.response.header.Last-Modified"  = "integration.response.header.Last-Modified"
   }
-  depends_on          = ["aws_api_gateway_integration.LambdaWildcardGET"]
+
+  depends_on = ["aws_api_gateway_integration.LambdaWildcardGET"]
 }
 
 # POST method -> Lambda Wildcard/{proxy}
@@ -137,18 +147,20 @@ resource "aws_api_gateway_integration" "LambdaWildcardPOST" {
   type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${aws_lambda_function.MotrWebHandler.arn}:${aws_lambda_alias.MotrWebHandlerAlias.name}/invocations"
   integration_http_method = "POST"
+
   #credentials             = "${aws_iam_role.Lambda.arn}"
 }
 
-
 resource "aws_api_gateway_method_response" "LambdaWildcardPOST_200" {
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.LambdaWildcard.id}"
-  http_method         = "${aws_api_gateway_method.LambdaWildcardPOST.http_method}"
-  status_code         = "200"
-  response_models     = {
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.LambdaWildcard.id}"
+  http_method = "${aws_api_gateway_method.LambdaWildcardPOST.http_method}"
+  status_code = "200"
+
+  response_models = {
     "application/json" = "Empty"
   }
+
   response_parameters = {
     "method.response.header.Date"           = true
     "method.response.header.ETag"           = true
@@ -159,10 +171,11 @@ resource "aws_api_gateway_method_response" "LambdaWildcardPOST_200" {
 }
 
 resource "aws_api_gateway_integration_response" "LambdaWildcardPOST_200" {
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.LambdaWildcard.id}"
-  http_method         = "${aws_api_gateway_method.LambdaWildcardPOST.http_method}"
-  status_code         = "${aws_api_gateway_method_response.LambdaWildcardPOST_200.status_code}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.LambdaWildcard.id}"
+  http_method = "${aws_api_gateway_method.LambdaWildcardPOST.http_method}"
+  status_code = "${aws_api_gateway_method_response.LambdaWildcardPOST_200.status_code}"
+
   response_parameters = {
     "method.response.header.Content-Length" = "integration.response.header.Content-Length"
     "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
@@ -170,7 +183,8 @@ resource "aws_api_gateway_integration_response" "LambdaWildcardPOST_200" {
     "method.response.header.ETag"           = "integration.response.header.ETag"
     "method.response.header.Last-Modified"  = "integration.response.header.Last-Modified"
   }
-  depends_on          = ["aws_api_gateway_integration.LambdaWildcardPOST"]
+
+  depends_on = ["aws_api_gateway_integration.LambdaWildcardPOST"]
 }
 
 ####################################################################################################################################
@@ -192,11 +206,12 @@ resource "aws_api_gateway_resource" "AssetsWildcard" {
 
 # GET method -> /assets/{item+}
 resource "aws_api_gateway_method" "AssetsWildcardGET" {
-  rest_api_id        = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id        = "${aws_api_gateway_resource.AssetsWildcard.id}"
-  http_method        = "GET"
-  authorization      = "NONE"
-  api_key_required   = "${var.with_cloudfront ? true : false}"
+  rest_api_id      = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id      = "${aws_api_gateway_resource.AssetsWildcard.id}"
+  http_method      = "GET"
+  authorization    = "NONE"
+  api_key_required = "${var.with_cloudfront ? true : false}"
+
   request_parameters = {
     "method.request.path.item" = true
   }
@@ -211,17 +226,20 @@ resource "aws_api_gateway_integration" "AssetsWildcardGET" {
   uri                     = "arn:aws:apigateway:${var.aws_region}:s3:path/${aws_s3_bucket.MOTRS3Bucket.bucket}/assets/{object}"
   integration_http_method = "${aws_api_gateway_method.AssetsWildcardGET.http_method}"
   credentials             = "${aws_iam_role.APIGateway.arn}"
-  request_parameters      = {
+
+  request_parameters = {
     "integration.request.path.object" = "method.request.path.item"
   }
-  depends_on              = ["aws_api_gateway_method.AssetsWildcardGET"]
+
+  depends_on = ["aws_api_gateway_method.AssetsWildcardGET"]
 }
 
 resource "aws_api_gateway_method_response" "AssetsWildcardGET_200" {
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.AssetsWildcard.id}"
-  http_method         = "${aws_api_gateway_method.AssetsWildcardGET.http_method}"
-  status_code         = "200"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.AssetsWildcard.id}"
+  http_method = "${aws_api_gateway_method.AssetsWildcardGET.http_method}"
+  status_code = "200"
+
   response_parameters = {
     "method.response.header.Date"           = true
     "method.response.header.ETag"           = true
@@ -230,15 +248,17 @@ resource "aws_api_gateway_method_response" "AssetsWildcardGET_200" {
     "method.response.header.Last-Modified"  = true
     "method.response.header.Cache-Control"  = true
   }
-  depends_on          = ["aws_api_gateway_integration.AssetsWildcardGET"]
+
+  depends_on = ["aws_api_gateway_integration.AssetsWildcardGET"]
 }
 
 resource "aws_api_gateway_integration_response" "AssetsWildcardGET_200" {
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.AssetsWildcard.id}"
-  http_method         = "${aws_api_gateway_method.AssetsWildcardGET.http_method}"
-  status_code         = "${aws_api_gateway_method_response.AssetsWildcardGET_200.status_code}"
-  selection_pattern   = "200"
+  rest_api_id       = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id       = "${aws_api_gateway_resource.AssetsWildcard.id}"
+  http_method       = "${aws_api_gateway_method.AssetsWildcardGET.http_method}"
+  status_code       = "${aws_api_gateway_method_response.AssetsWildcardGET_200.status_code}"
+  selection_pattern = "200"
+
   response_parameters = {
     "method.response.header.Content-Length" = "integration.response.header.Content-Length"
     "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
@@ -247,33 +267,38 @@ resource "aws_api_gateway_integration_response" "AssetsWildcardGET_200" {
     "method.response.header.Last-Modified"  = "integration.response.header.Last-Modified"
     "method.response.header.Cache-Control"  = "integration.response.header.Cache-Control"
   }
-  content_handling    = "CONVERT_TO_BINARY"
-  depends_on          = ["aws_api_gateway_integration.AssetsWildcardGET"]
+
+  content_handling = "CONVERT_TO_BINARY"
+  depends_on       = ["aws_api_gateway_integration.AssetsWildcardGET"]
 }
 
 resource "aws_api_gateway_method_response" "AssetsWildcardGET_404" {
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.AssetsWildcard.id}"
-  http_method         = "${aws_api_gateway_method.AssetsWildcardGET.http_method}"
-  status_code         = "404"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.AssetsWildcard.id}"
+  http_method = "${aws_api_gateway_method.AssetsWildcardGET.http_method}"
+  status_code = "404"
+
   response_parameters = {
     "method.response.header.Date"         = true
     "method.response.header.Content-Type" = true
   }
-  depends_on          = ["aws_api_gateway_method_response.AssetsWildcardGET_200"]
+
+  depends_on = ["aws_api_gateway_method_response.AssetsWildcardGET_200"]
 }
 
 resource "aws_api_gateway_integration_response" "AssetsWildcardGET_404" {
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.AssetsWildcard.id}"
-  http_method         = "${aws_api_gateway_method.AssetsWildcardGET.http_method}"
-  status_code         = "${aws_api_gateway_method_response.AssetsWildcardGET_404.status_code}"
-  selection_pattern   = "404"
+  rest_api_id       = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id       = "${aws_api_gateway_resource.AssetsWildcard.id}"
+  http_method       = "${aws_api_gateway_method.AssetsWildcardGET.http_method}"
+  status_code       = "${aws_api_gateway_method_response.AssetsWildcardGET_404.status_code}"
+  selection_pattern = "404"
+
   response_parameters = {
     "method.response.header.Date"         = "integration.response.header.Date"
     "method.response.header.Content-Type" = "integration.response.header.Content-Type"
   }
-  depends_on          = ["aws_api_gateway_integration_response.AssetsWildcardGET_200"]
+
+  depends_on = ["aws_api_gateway_integration_response.AssetsWildcardGET_200"]
 }
 
 ####################################################################################################################################
@@ -307,17 +332,21 @@ resource "aws_api_gateway_method" "MotTestReminderMockRegistrationGET" {
   resource_id   = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
   http_method   = "GET"
   authorization = "NONE"
-  request_parameters {"method.request.path.registration" = true}
+
+  request_parameters {
+    "method.request.path.registration" = true
+  }
 }
 
 # integration between MotTestReminderMock resource's GET method and Lambda function (back-end)
 resource "aws_api_gateway_integration" "MotTestReminderMockRegistrationGET" {
-  count                   = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
-  rest_api_id             = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id             = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
-  type                    = "MOCK"
-  uri                     = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/${var.environment}/${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}/mot-test-reminder-mock/vehicles/{registration}"
-  http_method             = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
+  count       = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
+  type        = "MOCK"
+  uri         = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/${var.environment}/${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}/mot-test-reminder-mock/vehicles/{registration}"
+  http_method = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
+
   request_templates {
     "application/json" = <<EOF
 {
@@ -332,18 +361,21 @@ resource "aws_api_gateway_integration" "MotTestReminderMockRegistrationGET" {
 }
 EOF
   }
-  depends_on              = ["aws_api_gateway_method.MotTestReminderMockRegistrationGET"]
+
+  depends_on = ["aws_api_gateway_method.MotTestReminderMockRegistrationGET"]
 }
 
 resource "aws_api_gateway_method_response" "MotTestReminderMockRegistrationGET_200" {
-  count           = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
-  rest_api_id     = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id     = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
-  http_method     = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
-  status_code     = "200"
+  count       = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
+  http_method = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
+  status_code = "200"
+
   response_models = {
     "application/json" = "Empty"
   }
+
   response_parameters = {
     "method.response.header.Date"           = true
     "method.response.header.ETag"           = true
@@ -351,15 +383,17 @@ resource "aws_api_gateway_method_response" "MotTestReminderMockRegistrationGET_2
     "method.response.header.Content-Type"   = true
     "method.response.header.Last-Modified"  = true
   }
-  depends_on      = ["aws_api_gateway_integration.MotTestReminderMockRegistrationGET"]
+
+  depends_on = ["aws_api_gateway_integration.MotTestReminderMockRegistrationGET"]
 }
 
 resource "aws_api_gateway_method_response" "MotTestReminderMockRegistrationGET_404" {
-  count               = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
-  http_method         = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
-  status_code         = "404"
+  count       = "${var.mot_test_reminder_info_api_uri == "" ? 1 : 0}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.MotTestReminderMockRegistration.id}"
+  http_method = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
+  status_code = "404"
+
   response_parameters = {
     "method.response.header.Date"           = true
     "method.response.header.ETag"           = true
@@ -367,7 +401,8 @@ resource "aws_api_gateway_method_response" "MotTestReminderMockRegistrationGET_4
     "method.response.header.Content-Type"   = true
     "method.response.header.Last-Modified"  = true
   }
-  depends_on          = ["aws_api_gateway_method_response.MotTestReminderMockRegistrationGET_200"]
+
+  depends_on = ["aws_api_gateway_method_response.MotTestReminderMockRegistrationGET_200"]
 }
 
 resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistrationGET_200" {
@@ -377,6 +412,7 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
   http_method       = "${aws_api_gateway_method.MotTestReminderMockRegistrationGET.http_method}"
   status_code       = "${aws_api_gateway_method_response.MotTestReminderMockRegistrationGET_200.status_code}"
   selection_pattern = "200"
+
   response_templates {
     "application/json" = <<EOF
 {
@@ -427,7 +463,8 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
 }
 EOF
   }
-  depends_on        = ["aws_api_gateway_integration.MotTestReminderMockRegistrationGET"]
+
+  depends_on = ["aws_api_gateway_integration.MotTestReminderMockRegistrationGET"]
 }
 
 resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistrationGET_404" {
@@ -463,17 +500,21 @@ resource "aws_api_gateway_method" "MotTestReminderMockMotNumberGET" {
   resource_id   = "${aws_api_gateway_resource.MotTestReminderMockMotNumber.id}"
   http_method   = "GET"
   authorization = "NONE"
-  request_parameters {"method.request.path.number" = true}
+
+  request_parameters {
+    "method.request.path.number" = true
+  }
 }
 
 # integration between MotTestReminderMock resource's GET method and Lambda function (back-end)
 resource "aws_api_gateway_integration" "MotTestReminderMockMotNumberGET" {
-  count                   = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
-  rest_api_id             = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id             = "${aws_api_gateway_resource.MotTestReminderMockMotNumber.id}"
-  type                    = "MOCK"
-  uri                     = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/${var.environment}/${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}/mot-test-reminder-mock/mot-tests/{number}"
-  http_method             = "${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}"
+  count       = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.MotTestReminderMockMotNumber.id}"
+  type        = "MOCK"
+  uri         = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/${var.environment}/${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}/mot-test-reminder-mock/mot-tests/{number}"
+  http_method = "${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}"
+
   request_templates {
     "application/json" = <<EOF
 {
@@ -488,18 +529,21 @@ resource "aws_api_gateway_integration" "MotTestReminderMockMotNumberGET" {
 }
 EOF
   }
-  depends_on              = ["aws_api_gateway_method.MotTestReminderMockMotNumberGET"]
+
+  depends_on = ["aws_api_gateway_method.MotTestReminderMockMotNumberGET"]
 }
 
 resource "aws_api_gateway_method_response" "MotTestReminderMockMotNumberGET_200" {
-  count           = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
-  rest_api_id     = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id     = "${aws_api_gateway_resource.MotTestReminderMockMotNumber.id}"
-  http_method     = "${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}"
-  status_code     = "200"
+  count       = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.MotTestReminderMockMotNumber.id}"
+  http_method = "${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}"
+  status_code = "200"
+
   response_models = {
     "application/json" = "Empty"
   }
+
   response_parameters = {
     "method.response.header.Date"           = true
     "method.response.header.ETag"           = true
@@ -507,15 +551,17 @@ resource "aws_api_gateway_method_response" "MotTestReminderMockMotNumberGET_200"
     "method.response.header.Content-Type"   = true
     "method.response.header.Last-Modified"  = true
   }
-  depends_on      = ["aws_api_gateway_integration.MotTestReminderMockMotNumberGET"]
+
+  depends_on = ["aws_api_gateway_integration.MotTestReminderMockMotNumberGET"]
 }
 
 resource "aws_api_gateway_method_response" "MotTestReminderMockMotNumberGET_404" {
-  count               = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
-  rest_api_id         = "${aws_api_gateway_rest_api.MotrWeb.id}"
-  resource_id         = "${aws_api_gateway_resource.MotTestReminderMockMotNumber.id}"
-  http_method         = "${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}"
-  status_code         = "404"
+  count       = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.MotTestReminderMockMotNumber.id}"
+  http_method = "${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}"
+  status_code = "404"
+
   response_parameters = {
     "method.response.header.Date"           = true
     "method.response.header.ETag"           = true
@@ -523,7 +569,8 @@ resource "aws_api_gateway_method_response" "MotTestReminderMockMotNumberGET_404"
     "method.response.header.Content-Type"   = true
     "method.response.header.Last-Modified"  = true
   }
-  depends_on          = ["aws_api_gateway_method_response.MotTestReminderMockMotNumberGET_200"]
+
+  depends_on = ["aws_api_gateway_method_response.MotTestReminderMockMotNumberGET_200"]
 }
 
 resource "aws_api_gateway_integration_response" "MotTestReminderMockMotNumberGET_200" {
@@ -533,6 +580,7 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockMotNumberGET
   http_method       = "${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}"
   status_code       = "${aws_api_gateway_method_response.MotTestReminderMockMotNumberGET_200.status_code}"
   selection_pattern = "200"
+
   response_templates {
     "application/json" = <<EOF
 {
@@ -557,7 +605,8 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockMotNumberGET
 }
 EOF
   }
-  depends_on        = ["aws_api_gateway_integration.MotTestReminderMockMotNumberGET"]
+
+  depends_on = ["aws_api_gateway_integration.MotTestReminderMockMotNumberGET"]
 }
 
 resource "aws_api_gateway_integration_response" "MotTestReminderMockMotNumberGET_404" {
@@ -570,15 +619,14 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockMotNumberGET
   depends_on        = ["aws_api_gateway_integration_response.MotTestReminderMockMotNumberGET_200"]
 }
 
-
-
 ####################################################################################################################################
 # API GATEWAY DEPLOYMENT
 
 resource "aws_api_gateway_deployment" "Deployment" {
   rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
   stage_name  = "${var.environment}"
-  depends_on  = [
+
+  depends_on = [
     "aws_api_gateway_method.LambdaRootGET",
     "aws_api_gateway_integration.LambdaRootGET",
     "aws_api_gateway_method.LambdaWildcardGET",
@@ -592,7 +640,7 @@ resource "aws_api_gateway_deployment" "Deployment" {
     "aws_api_gateway_integration_response.MotTestReminderMockRegistrationGET_200",
     "aws_api_gateway_method.MotTestReminderMockMotNumberGET",
     "aws_api_gateway_integration.MotTestReminderMockMotNumberGET",
-    "aws_api_gateway_integration_response.MotTestReminderMockMotNumberGET_200"
+    "aws_api_gateway_integration_response.MotTestReminderMockMotNumberGET_200",
   ]
 }
 
@@ -612,10 +660,12 @@ resource "aws_api_gateway_usage_plan" "MotrApiUsagePlan" {
   count       = "${var.with_cloudfront ? 1 : 0}"
   name        = "motr-web-${var.environment}-up"
   description = "Usage Plan for MOTR ${var.environment}"
+
   api_stages {
     api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
     stage  = "${aws_api_gateway_deployment.Deployment.stage_name}"
   }
+
   throttle_settings {
     burst_limit = 979
     rate_limit  = 1000
