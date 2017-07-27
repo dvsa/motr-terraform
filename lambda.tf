@@ -2,17 +2,18 @@
 # WEBAPP
 
 resource "aws_lambda_function" "MotrWebHandler" {
-  description       = "MotrWebHandler"
-  runtime           = "java8"
-  s3_bucket         = "${aws_s3_bucket.MOTRS3Bucket.bucket}"
-  s3_key            = "lambdas/${var.MotrWebHandler_s3_key}"
-  function_name     = "MotrWebHandler-${var.environment}"
-  role              = "${aws_iam_role.MotrWebAppLambda.arn}"
-  handler           = "uk.gov.dvsa.motr.web.handler.MotrWebHandler::handleRequest"
-  publish           = "${var.MotrWebHandler_publish}"
-  memory_size       = "${var.MotrWebHandler_mem_size}"
-  timeout           = "${var.MotrWebHandler_timeout}"
-  kms_key_arn       = "${var.kms_key_arn}"
+  description   = "MotrWebHandler"
+  runtime       = "java8"
+  s3_bucket     = "${aws_s3_bucket.MOTRS3Bucket.bucket}"
+  s3_key        = "lambdas/${var.MotrWebHandler_s3_key}"
+  function_name = "MotrWebHandler-${var.environment}"
+  role          = "${aws_iam_role.MotrWebAppLambda.arn}"
+  handler       = "uk.gov.dvsa.motr.web.handler.MotrWebHandler::handleRequest"
+  publish       = "${var.MotrWebHandler_publish}"
+  memory_size   = "${var.MotrWebHandler_mem_size}"
+  timeout       = "${var.MotrWebHandler_timeout}"
+  kms_key_arn   = "${var.kms_key_arn}"
+
   environment {
     variables = {
       LOG_LEVEL                                            = "${var.webapp_log_level}"
@@ -34,7 +35,8 @@ resource "aws_lambda_function" "MotrWebHandler" {
       MOT_TEST_REMINDER_INFO_TOKEN                         = "${var.mot_test_reminder_info_token}"
     }
   }
-  depends_on        = ["aws_api_gateway_rest_api.MotrWeb"]
+
+  depends_on = ["aws_api_gateway_rest_api.MotrWeb"]
 }
 
 resource "aws_lambda_alias" "MotrWebHandlerAlias" {
@@ -51,8 +53,9 @@ resource "aws_lambda_permission" "Allow_APIGateway" {
   action        = "lambda:InvokeFunction"
   principal     = "apigateway.amazonaws.com"
   source_arn    = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/*/*/*"
-  depends_on    = [ "aws_api_gateway_rest_api.MotrWeb"
-                  , "aws_api_gateway_integration.LambdaRootGET"
+
+  depends_on = ["aws_api_gateway_rest_api.MotrWeb",
+    "aws_api_gateway_integration.LambdaRootGET",
   ]
 }
 
@@ -71,6 +74,7 @@ resource "aws_lambda_function" "MotrSubscriptionLoader" {
   memory_size   = "${var.MotrSubscriptionLoader_mem_size}"
   timeout       = "${var.MotrSubscriptionLoader_timeout}"
   kms_key_arn   = "${var.kms_key_arn}"
+
   environment {
     variables = {
       LOG_LEVEL               = "${var.subscr_loader_log_level}"
@@ -114,24 +118,25 @@ resource "aws_lambda_function" "MotrNotifier" {
   memory_size   = "${var.MotrNotifier_mem_size}"
   timeout       = "${var.MotrNotifier_timeout}"
   kms_key_arn   = "${var.kms_key_arn}"
+
   environment {
     variables = {
-      LOG_LEVEL                          = "${var.notifier_log_level}"
-      REGION                             = "${var.aws_region}"
-      DB_TABLE_SUBSCRIPTION              = "motr-${var.environment}-subscription"
-      SUBSCRIPTIONS_QUEUE_URL            = "${aws_sqs_queue.MotrSubscriptionsQueue.id}"
-      ONE_MONTH_NOTIFICATION_TEMPLATE_ID = "${var.one_month_notification_template_id}"
-      TWO_WEEK_NOTIFICATION_TEMPLATE_ID  = "${var.two_week_notification_template_id}"
-      ONE_DAY_AFTER_NOTIFICATION_TEMPLATE_ID  = "${var.one_day_after_notification_template_id}"
-      MOT_API_MOT_TEST_NUMBER_URI        = "${var.mot_api_mot_test_number_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/mot-tests/{number}" : var.mot_api_mot_test_number_uri}"
-      GOV_NOTIFY_API_TOKEN               = "${var.gov_notify_api_token}"
-      MOT_TEST_REMINDER_INFO_TOKEN       = "${var.mot_test_reminder_info_token}"
-      WORKER_COUNT                       = "${var.worker_count_notifier}"
-      MESSAGE_VISIBILITY_TIMEOUT         = "${var.message_visibility_timeout_notifier}"
-      VEHICLE_API_CLIENT_TIMEOUT         = "${var.vehicle_api_client_timeout_notifier}"
-      MESSAGE_RECEIVE_TIMEOUT            = "${var.message_receive_timeout_notifier}"
-      REMAINING_TIME_THRESHOLD           = "${var.remaining_time_threshold_notifier}"
-      WEB_BASE_URL                       = "${var.base_url == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/" : var.base_url}"
+      LOG_LEVEL                              = "${var.notifier_log_level}"
+      REGION                                 = "${var.aws_region}"
+      DB_TABLE_SUBSCRIPTION                  = "motr-${var.environment}-subscription"
+      SUBSCRIPTIONS_QUEUE_URL                = "${aws_sqs_queue.MotrSubscriptionsQueue.id}"
+      ONE_MONTH_NOTIFICATION_TEMPLATE_ID     = "${var.one_month_notification_template_id}"
+      TWO_WEEK_NOTIFICATION_TEMPLATE_ID      = "${var.two_week_notification_template_id}"
+      ONE_DAY_AFTER_NOTIFICATION_TEMPLATE_ID = "${var.one_day_after_notification_template_id}"
+      MOT_API_MOT_TEST_NUMBER_URI            = "${var.mot_api_mot_test_number_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/mot-tests/{number}" : var.mot_api_mot_test_number_uri}"
+      GOV_NOTIFY_API_TOKEN                   = "${var.gov_notify_api_token}"
+      MOT_TEST_REMINDER_INFO_TOKEN           = "${var.mot_test_reminder_info_token}"
+      WORKER_COUNT                           = "${var.worker_count_notifier}"
+      MESSAGE_VISIBILITY_TIMEOUT             = "${var.message_visibility_timeout_notifier}"
+      VEHICLE_API_CLIENT_TIMEOUT             = "${var.vehicle_api_client_timeout_notifier}"
+      MESSAGE_RECEIVE_TIMEOUT                = "${var.message_receive_timeout_notifier}"
+      REMAINING_TIME_THRESHOLD               = "${var.remaining_time_threshold_notifier}"
+      WEB_BASE_URL                           = "${var.base_url == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/" : var.base_url}"
     }
   }
 }
@@ -156,15 +161,16 @@ resource "aws_lambda_permission" "Notifier_Allow_CloudWatchEvent" {
 # NPINGER
 
 resource "aws_lambda_function" "NPinger" {
-  description       = "MotrNPinger"
-  runtime           = "nodejs4.3"
-  filename          = "lambda_warmer/${var.NPinger_lambda_filename}"
-  function_name     = "MotrNPinger-${var.environment}"
-  role              = "${aws_iam_role.NPingerRole.arn}"
-  handler           = "npinger.warmup"
-  publish           = "${var.NPinger_publish}"
-  memory_size       = "${var.NPinger_mem_size}"
-  timeout           = "${var.NPinger_timeout}"
+  description   = "MotrNPinger"
+  runtime       = "nodejs4.3"
+  filename      = "lambda_warmer/${var.NPinger_lambda_filename}"
+  function_name = "MotrNPinger-${var.environment}"
+  role          = "${aws_iam_role.NPingerRole.arn}"
+  handler       = "npinger.warmup"
+  publish       = "${var.NPinger_publish}"
+  memory_size   = "${var.NPinger_mem_size}"
+  timeout       = "${var.NPinger_timeout}"
+
   environment {
     variables = {
       REGION                  = "${var.aws_region}"
@@ -190,4 +196,3 @@ resource "aws_lambda_permission" "Allow_CloudWatchEvent" {
   principal     = "events.amazonaws.com"
   source_arn    = "${aws_cloudwatch_event_rule.MOTR-WarmUpEventRule.arn}"
 }
-

@@ -3,12 +3,14 @@
 
 data "aws_iam_policy_document" "s3_policy" {
   statement {
-    sid       = "Grant CF OAI access to static assets on S3"
-    actions   = ["s3:GetObject"]
+    sid     = "Grant CF OAI access to static assets on S3"
+    actions = ["s3:GetObject"]
+
     resources = [
-                  "arn:aws:s3:::${var.bucket_prefix}${var.environment}/assets/*", 
-                  "arn:aws:s3:::${var.bucket_prefix}${var.environment}/errorpages/*"
-                ]
+      "arn:aws:s3:::${var.bucket_prefix}${var.environment}/assets/*",
+      "arn:aws:s3:::${var.bucket_prefix}${var.environment}/errorpages/*",
+    ]
+
     principals {
       type        = "AWS"
       identifiers = ["${var.with_cloudfront ? "${aws_cloudfront_origin_access_identity.oai.iam_arn}" : "*"}"]
@@ -45,6 +47,7 @@ resource "aws_iam_role" "MotrWebAppLambda" {
 # IAM policy that grants WebApp Lambda required permissons
 data "template_file" "lambda_webapp_permissions_policy" {
   template = "${file("${path.module}/iam_policies/lambda_webapp_permissions_policy.json.tpl")}"
+
   vars {
     aws_region      = "${var.aws_region}"
     environment     = "${var.environment}"
@@ -69,6 +72,7 @@ resource "aws_iam_role" "MotrSubscriptionLoaderLambda" {
 
 data "template_file" "lambda_subscr_loader_permissions_policy" {
   template = "${file("${path.module}/iam_policies/lambda_subscr_loader_permissions_policy.json.tpl")}"
+
   vars {
     aws_region      = "${var.aws_region}"
     environment     = "${var.environment}"
@@ -94,6 +98,7 @@ resource "aws_iam_role" "MotrNotifierLambda" {
 
 data "template_file" "lambda_notifier_permissions_policy" {
   template = "${file("${path.module}/iam_policies/lambda_notifier_permissions_policy.json.tpl")}"
+
   vars {
     aws_region      = "${var.aws_region}"
     environment     = "${var.environment}"
@@ -119,6 +124,7 @@ resource "aws_iam_role" "NPingerRole" {
 
 data "template_file" "npinger_warmer_permissions_policy" {
   template = "${file("${path.module}/iam_policies/npinger_warmer_permissions_policy.json.tpl")}"
+
   vars {
     aws_region              = "${var.aws_region}"
     environment             = "${var.environment}"

@@ -285,22 +285,22 @@ variable "cw_lg_notifier_lambda_retention" {
 
 variable "motr_loader_enabled" {
   type        = "string"
-  description = "Whether the rule should be enabled"       
+  description = "Whether the rule should be enabled"
 }
 
 variable "motr_loader_schedule" {
   type        = "string"
-  description = "The scheduling expression. For example, cron(0 3 * * ? *)" 
+  description = "The scheduling expression. For example, cron(0 3 * * ? *)"
 }
 
 variable "motr_notifier_enabled" {
   type        = "string"
-  description = "Whether the rule should be enabled" 
+  description = "Whether the rule should be enabled"
 }
 
 variable "motr_notifier_schedule" {
   type        = "string"
-  description = "The scheduling expression. For example, rate(5 minutes)" 
+  description = "The scheduling expression. For example, rate(5 minutes)"
 }
 
 variable "motr_subscribtion_q_delay_s" {
@@ -425,32 +425,32 @@ variable "NPinger_publish" {
 
 variable "NPinger_mem_size" {
   type        = "string"
-  description = "NPinger memory size in MB" 
+  description = "NPinger memory size in MB"
 }
 
 variable "NPinger_timeout" {
   type        = "string"
-  description = "NPinger lambda timout in seconds" 
+  description = "NPinger lambda timout in seconds"
 }
 
 variable "NPinger_ver" {
   type        = "string"
-  description = "NPinger lambda timout in seconds" 
+  description = "NPinger lambda timout in seconds"
 }
 
 variable "NPinger_concurrent_target_count" {
   type        = "string"
-  description = "NPinger number of target executions" 
+  description = "NPinger number of target executions"
 }
 
 variable "NPinger_payload" {
   type        = "string"
-  description = "NPinger payload to be sent to the target lambda" 
+  description = "NPinger payload to be sent to the target lambda"
 }
 
 variable "NPinger_lambda_filename" {
   type        = "string"
-  description = "NPinger lambda filename" 
+  description = "NPinger lambda filename"
 }
 
 variable "manage_cw_lg_npinger_lambda" {
