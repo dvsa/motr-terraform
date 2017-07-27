@@ -24,8 +24,6 @@ resource "aws_api_gateway_integration" "LambdaRootGET" {
   type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${aws_lambda_function.MotrWebHandler.arn}:${aws_lambda_alias.MotrWebHandlerAlias.name}/invocations"
   integration_http_method = "POST"
-
-  #credentials             = "${aws_iam_role.Lambda.arn}"
 }
 
 resource "aws_api_gateway_method_response" "LambdaRootGET_200" {
@@ -90,8 +88,6 @@ resource "aws_api_gateway_integration" "LambdaWildcardGET" {
   type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${aws_lambda_function.MotrWebHandler.arn}:${aws_lambda_alias.MotrWebHandlerAlias.name}/invocations"
   integration_http_method = "POST"
-
-  #credentials             = "${aws_iam_role.Lambda.arn}"
 }
 
 resource "aws_api_gateway_method_response" "LambdaWildcardGET_200" {
@@ -147,8 +143,6 @@ resource "aws_api_gateway_integration" "LambdaWildcardPOST" {
   type                    = "AWS_PROXY"
   uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${aws_lambda_function.MotrWebHandler.arn}:${aws_lambda_alias.MotrWebHandlerAlias.name}/invocations"
   integration_http_method = "POST"
-
-  #credentials             = "${aws_iam_role.Lambda.arn}"
 }
 
 resource "aws_api_gateway_method_response" "LambdaWildcardPOST_200" {
