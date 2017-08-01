@@ -97,6 +97,48 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerTradeAPIFailure_log_m
   depends_on = ["aws_cloudwatch_log_group.MotrWebHandler"]
 }
 
+resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerPendingSubscriptionCreated_log_metric_filter" {
+  name           = "MotrWebHandlerPendingSubscriptionCreated_log_metric_filter"
+  pattern        = "{ $.message = PENDING-SUBSCRIPTION-CREATED }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrWebHandler-PendingSubscriptionCreated"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler-PendingSubscriptionCreated"
+    value     = "1"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrWebHandler"]
+}
+
+resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerSubscriptionConfirmed_log_metric_filter" {
+  name           = "MotrWebHandlerSubscriptionConfirmed_log_metric_filter"
+  pattern        = "{ $.message = SUBSCRIPTION-CONFIRMED }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrWebHandler-SubscriptionConfirmed"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler-SubscriptionConfirmed"
+    value     = "1"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrWebHandler"]
+}
+
+resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerSessionMalformedError_log_metric_filter" {
+  name           = "MotrWebHandlerSessionMalformedError_log_metric_filter"
+  pattern        = "{ $.message = SESSION-MALFORMED-ERROR }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrWebHandler-SessionMalformedError"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler-SessionMalformedError"
+    value     = "1"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrWebHandler"]
+}
+
 resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_MiscError_log_metric_filter" {
   name           = "MotrWebHandler_MiscError_log_metric_filter"
   pattern        = "{ $.level = ERROR }"
@@ -259,6 +301,48 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierUnloadingTimedOut_log_m
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-UnloadingTimedOut"
     namespace = "${var.project}-${var.environment}-MotrNotifier-UnloadingTimedOut"
+    value     = "1"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrNotifier"]
+}
+
+resource "aws_cloudwatch_log_metric_filter" "MotrNotifierOneMonthReminderSuccess_log_metric_filter" {
+  name           = "MotrNotifierOneMonthReminderSuccess_log_metric_filter"
+  pattern        = "{ $.message = ONE-MONTH-EMAIL-SUCCESS }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrNotifier.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrNotifier-OneMonthReminderSuccess"
+    namespace = "${var.project}-${var.environment}-MotrNotifier-OneMonthReminderSuccess"
+    value     = "1"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrNotifier"]
+}
+
+resource "aws_cloudwatch_log_metric_filter" "MotrNotifierTwoWeekReminderSuccess_log_metric_filter" {
+  name           = "MotrNotifierTwoWeekReminderSuccess_log_metric_filter"
+  pattern        = "{ $.message = TWO-WEEK-EMAIL-SUCCESS }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrNotifier.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrNotifier-TwoWeekReminderSuccess"
+    namespace = "${var.project}-${var.environment}-MotrNotifier-TwoWeekReminderSuccess"
+    value     = "1"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrNotifier"]
+}
+
+resource "aws_cloudwatch_log_metric_filter" "MotrNotifierOneDayAfterReminderSuccess_log_metric_filter" {
+  name           = "MotrNotifierOneDayAfterReminderSuccess_log_metric_filter"
+  pattern        = "{ $.message = ONE-DAY-AFTER-EMAIL-SUCCESS }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrNotifier.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrNotifier-OneDayAfterReminderSuccess"
+    namespace = "${var.project}-${var.environment}-MotrNotifier-OneDayAfterReminderSuccess"
     value     = "1"
   }
 
