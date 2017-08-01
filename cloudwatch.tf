@@ -390,3 +390,29 @@ resource "aws_cloudwatch_event_target" "MOTRWebHandler-WarmUpEventTarget" {
   rule      = "${aws_cloudwatch_event_rule.MOTR-WarmUpEventRule.name}"
   arn       = "${aws_lambda_alias.NPingerAlias.arn}"
 }
+
+###################################################################################################################################
+resource "aws_cloudwatch_log_group" "MotrBouncingEmailCleaner" {
+  count             = "${var.manage_cw_lg_cleaner_lambda ? 1 : 0}"
+  name              = "/aws/lambda/${aws_lambda_function.MotrBouncingEmailCleaner.function_name}"
+  retention_in_days = "${var.cw_lg_cleaner_lambda_retention}"
+
+  tags {
+    Name        = "${var.project}-${var.environment}-MotrBouncingEmailCleaner"
+    Project     = "${var.project}"
+    Environment = "${var.environment}"
+  }
+}
+
+resource "aws_cloudwatch_event_rule" "MotrBouncingEmailCleanerStart" {
+  name                = "motr-cleaner-start-${var.environment}"
+  description         = "MOTR MotrBouncingEmailCleanerStart Start (${var.environment}) event rule | Schedule: ${var.motr_cleaner_schedule}"
+  is_enabled          = "${var.motr_cleaner_enabled}"
+  schedule_expression = "${var.motr_cleaner_schedule}"
+}
+
+resource "aws_cloudwatch_event_target" "MotrBouncingEmailCleanerStart" {
+  rule      = "${aws_cloudwatch_event_rule.MotrBouncingEmailCleanerStart.name}"
+  target_id = "${aws_cloudwatch_event_rule.MotrBouncingEmailCleanerStart.name}-target"
+  arn       = "${aws_lambda_alias.MotrBouncingEmailCleaner.arn}"
+}
