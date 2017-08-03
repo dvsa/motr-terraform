@@ -265,6 +265,20 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierSubscriptionProcessingF
   depends_on = ["aws_cloudwatch_log_group.MotrNotifier"]
 }
 
+resource "aws_cloudwatch_log_metric_filter" "MotrNotifierDvlaIdUpdatedToMotTestNumber_log_metric_filter" {
+  name           = "MotrNotifierDvlaIdUpdatedToMotTestNumber_log_metric_filter"
+  pattern        = "{ $.message = DVLA-ID-UPDATED-TO-MOT-TEST-NUMBER }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrNotifier.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrNotifier-DvlaIdUpdatedToMotTestNumber"
+    namespace = "${var.project}-${var.environment}-MotrNotifier-DvlaIdUpdatedToMotTestNumber"
+    value     = "1"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrNotifier"]
+}
+
 resource "aws_cloudwatch_log_metric_filter" "MotrNotifierSubscriptionQueueItemRemovalFailed_log_metric_filter" {
   name           = "MotrNotifierSubscriptionQueueItemRemovalFailed_log_metric_filter"
   pattern        = "{ $.message = SUBSCRIPTION-QUEUE-ITEM-REMOVAL-FAILED }"
