@@ -4,8 +4,14 @@ resource "aws_api_gateway_rest_api" "MotrWeb" {
   binary_media_types = "${var.binary_media_types}"
 }
 
+resource "aws_api_gateway_rest_api" "MotrSmsReceiver" {
+  name               = "motr-sms-receiver-${var.environment}"
+  description        = "MOTR SMS Receiver ${var.environment}"
+  binary_media_types = "${var.binary_media_types}"
+}
+
 ####################################################################################################################################
-# API GATEWAY ROOT RESOURCE
+# API GATEWAY ROOT RESOURCE FOR WEBAPP
 
 # GET method -> ROOT (/)
 resource "aws_api_gateway_method" "LambdaRootGET" {
@@ -63,7 +69,65 @@ resource "aws_api_gateway_integration_response" "LambdaRootGET_200" {
 }
 
 ####################################################################################################################################
-# API GATEWAY LAMBDA WILDCARD RESOURCE
+# API GATEWAY ROOT RESOURCE FOR SMS RECEIVER
+
+# GET method -> ROOT (/)
+resource "aws_api_gateway_method" "LambdaRootSmsReceiverGET" {
+  rest_api_id      = "${aws_api_gateway_rest_api.MotrSmsReceiver.id}"
+  resource_id      = "${aws_api_gateway_rest_api.MotrSmsReceiver.root_resource_id}"
+  http_method      = "GET"
+  authorization    = "NONE"
+  api_key_required = "${var.with_cloudfront ? true : false}"
+}
+
+# integration between ROOT resource's GET method and Lambda function (back-end)
+resource "aws_api_gateway_integration" "LambdaRootSmsReceiverGET" {
+  rest_api_id             = "${aws_api_gateway_rest_api.MotrSmsReceiver.id}"
+  resource_id             = "${aws_api_gateway_rest_api.MotrSmsReceiver.root_resource_id}"
+  http_method             = "${aws_api_gateway_method.LambdaRootSmsReceiverGET.http_method}"
+  type                    = "AWS_PROXY"
+  uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${aws_lambda_function.MotrSmsReceiver.arn}:${aws_lambda_alias.MotrSmsReceiverAlias.name}/invocations"
+  integration_http_method = "POST"
+}
+
+resource "aws_api_gateway_method_response" "LambdaRootSmsReceiverGET_200" {
+  rest_api_id = "${aws_api_gateway_rest_api.MotrSmsReceiver.id}"
+  resource_id = "${aws_api_gateway_rest_api.MotrSmsReceiver.root_resource_id}"
+  http_method = "${aws_api_gateway_method.LambdaRootSmsReceiverGET.http_method}"
+  status_code = "200"
+
+  response_models = {
+    "application/json" = "Empty"
+  }
+
+  response_parameters = {
+    "method.response.header.Date"           = true
+    "method.response.header.ETag"           = true
+    "method.response.header.Content-Length" = true
+    "method.response.header.Content-Type"   = true
+    "method.response.header.Last-Modified"  = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "LambdaRootSmsReceiverGET_200" {
+  rest_api_id = "${aws_api_gateway_rest_api.MotrSmsReceiver.id}"
+  resource_id = "${aws_api_gateway_rest_api.MotrSmsReceiver.root_resource_id}"
+  http_method = "${aws_api_gateway_method.LambdaRootSmsReceiverGET.http_method}"
+  status_code = "${aws_api_gateway_method_response.LambdaRootSmsReceiverGET_200.status_code}"
+
+  response_parameters = {
+    "method.response.header.Content-Length" = "integration.response.header.Content-Length"
+    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+    "method.response.header.Date"           = "integration.response.header.Date"
+    "method.response.header.ETag"           = "integration.response.header.ETag"
+    "method.response.header.Last-Modified"  = "integration.response.header.Last-Modified"
+  }
+
+  depends_on = ["aws_api_gateway_integration.LambdaRootSmsReceiverGET"]
+}
+
+####################################################################################################################################
+# API GATEWAY LAMBDA WILDCARD RESOURCE FOR WEB APP
 
 resource "aws_api_gateway_resource" "LambdaWildcard" {
   rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
@@ -179,6 +243,125 @@ resource "aws_api_gateway_integration_response" "LambdaWildcardPOST_200" {
   }
 
   depends_on = ["aws_api_gateway_integration.LambdaWildcardPOST"]
+}
+
+####################################################################################################################################
+# API GATEWAY LAMBDA WILDCARD RESOURCE FOR WEB APP
+
+resource "aws_api_gateway_resource" "LambdaWildcardSmsReceiver" {
+  rest_api_id = "${aws_api_gateway_rest_api.MotrSmsReceiver.id}"
+  parent_id   = "${aws_api_gateway_rest_api.MotrSmsReceiver.root_resource_id}"
+  path_part   = "{proxy+}"
+}
+
+# GET method -> Lambda Wildcard/{proxy}
+resource "aws_api_gateway_method" "LambdaWildcardSmsReceiverGET" {
+  rest_api_id      = "${aws_api_gateway_rest_api.MotrSmsReceiver.id}"
+  resource_id      = "${aws_api_gateway_resource.LambdaWildcardSmsReceiver.id}"
+  http_method      = "GET"
+  authorization    = "NONE"
+  api_key_required = "${var.with_cloudfront ? true : false}"
+}
+
+# integration between Lambda Wildcard resource's GET method and Lambda function (back-end)
+resource "aws_api_gateway_integration" "LambdaWildcardSmsReceiverGET" {
+  rest_api_id             = "${aws_api_gateway_rest_api.MotrSmsReceiver.id}"
+  resource_id             = "${aws_api_gateway_resource.LambdaWildcardSmsReceiver.id}"
+  http_method             = "${aws_api_gateway_method.LambdaWildcardSmsReceiverGET.http_method}"
+  type                    = "AWS_PROXY"
+  uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${aws_lambda_function.MotrSmsReceiver.arn}:${aws_lambda_alias.MotrSmsReceiverAlias.name}/invocations"
+  integration_http_method = "POST"
+}
+
+resource "aws_api_gateway_method_response" "LambdaWildcardSmsReceiverGET_200" {
+  rest_api_id = "${aws_api_gateway_rest_api.MotrSmsReceiver.id}"
+  resource_id = "${aws_api_gateway_resource.LambdaWildcardSmsReceiver.id}"
+  http_method = "${aws_api_gateway_method.LambdaWildcardSmsReceiverGET.http_method}"
+  status_code = "200"
+
+  response_models = {
+    "application/json" = "Empty"
+  }
+
+  response_parameters = {
+    "method.response.header.Date"           = true
+    "method.response.header.ETag"           = true
+    "method.response.header.Content-Length" = true
+    "method.response.header.Content-Type"   = true
+    "method.response.header.Last-Modified"  = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "LambdaWildcardSmsReceiverGET_200" {
+  rest_api_id = "${aws_api_gateway_rest_api.MotrSmsReceiver.id}"
+  resource_id = "${aws_api_gateway_resource.LambdaWildcardSmsReceiver.id}"
+  http_method = "${aws_api_gateway_method.LambdaWildcardSmsReceiverGET.http_method}"
+  status_code = "${aws_api_gateway_method_response.LambdaRootSmsReceiverGET_200.status_code}"
+
+  response_parameters = {
+    "method.response.header.Content-Length" = "integration.response.header.Content-Length"
+    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+    "method.response.header.Date"           = "integration.response.header.Date"
+    "method.response.header.ETag"           = "integration.response.header.ETag"
+    "method.response.header.Last-Modified"  = "integration.response.header.Last-Modified"
+  }
+
+  depends_on = ["aws_api_gateway_integration.LambdaRootSmsReceiverGET"]
+}
+
+# POST method -> Lambda Wildcard/{proxy}
+resource "aws_api_gateway_method" "LambdaWildcardSmsReceiverPOST" {
+  rest_api_id      = "${aws_api_gateway_rest_api.MotrSmsReceiver.id}"
+  resource_id      = "${aws_api_gateway_resource.LambdaWildcardSmsReceiver.id}"
+  http_method      = "POST"
+  authorization    = "NONE"
+  api_key_required = "${var.with_cloudfront ? true : false}"
+}
+
+# integration between Lambda Wildcard resource's POST method and Lambda function (back-end)
+resource "aws_api_gateway_integration" "LambdaWildcardSmsReceiverPOST" {
+  rest_api_id             = "${aws_api_gateway_rest_api.MotrSmsReceiver.id}"
+  resource_id             = "${aws_api_gateway_resource.LambdaWildcardSmsReceiver.id}"
+  http_method             = "${aws_api_gateway_method.LambdaWildcardSmsReceiverPOST.http_method}"
+  type                    = "AWS_PROXY"
+  uri                     = "arn:aws:apigateway:${var.aws_region}:lambda:path/2015-03-31/functions/${aws_lambda_function.MotrSmsReceiver.arn}:${aws_lambda_alias.MotrSmsReceiverAlias.name}/invocations"
+  integration_http_method = "POST"
+}
+
+resource "aws_api_gateway_method_response" "LambdaWildcardSmsReceiverPOST_200" {
+  rest_api_id = "${aws_api_gateway_rest_api.MotrSmsReceiver.id}"
+  resource_id = "${aws_api_gateway_resource.LambdaWildcardSmsReceiver.id}"
+  http_method = "${aws_api_gateway_method.LambdaWildcardSmsReceiverPOST.http_method}"
+  status_code = "200"
+
+  response_models = {
+    "application/json" = "Empty"
+  }
+
+  response_parameters = {
+    "method.response.header.Date"           = true
+    "method.response.header.ETag"           = true
+    "method.response.header.Content-Length" = true
+    "method.response.header.Content-Type"   = true
+    "method.response.header.Last-Modified"  = true
+  }
+}
+
+resource "aws_api_gateway_integration_response" "LambdaWildcardSmsReceiverPOST_200" {
+  rest_api_id = "${aws_api_gateway_rest_api.MotrSmsReceiver.id}"
+  resource_id = "${aws_api_gateway_resource.LambdaWildcardSmsReceiver.id}"
+  http_method = "${aws_api_gateway_method.LambdaWildcardSmsReceiverPOST.http_method}"
+  status_code = "${aws_api_gateway_method_response.LambdaWildcardSmsReceiverPOST_200.status_code}"
+
+  response_parameters = {
+    "method.response.header.Content-Length" = "integration.response.header.Content-Length"
+    "method.response.header.Content-Type"   = "integration.response.header.Content-Type"
+    "method.response.header.Date"           = "integration.response.header.Date"
+    "method.response.header.ETag"           = "integration.response.header.ETag"
+    "method.response.header.Last-Modified"  = "integration.response.header.Last-Modified"
+  }
+
+  depends_on = ["aws_api_gateway_integration.LambdaWildcardSmsReceiverPOST"]
 }
 
 ####################################################################################################################################
@@ -796,7 +979,7 @@ resource "aws_api_gateway_deployment" "Deployment" {
 }
 
 ####################################################################################################################################
-# API KEY
+# API KEYS
 
 resource "aws_api_gateway_api_key" "MotrWebApiKey" {
   count      = "${var.with_cloudfront ? 1 : 0}"
@@ -804,8 +987,14 @@ resource "aws_api_gateway_api_key" "MotrWebApiKey" {
   depends_on = ["aws_api_gateway_deployment.Deployment"]
 }
 
+resource "aws_api_gateway_api_key" "MotrSmsReceiverKey" {
+  count      = "${var.with_cloudfront ? 1 : 0}"
+  name       = "motr-sms-receiver-${var.environment}-key"
+  depends_on = ["aws_api_gateway_deployment.Deployment"]
+}
+
 ####################################################################################################################################
-# USAGE PLAN
+# USAGE PLANS
 
 resource "aws_api_gateway_usage_plan" "MotrApiUsagePlan" {
   count       = "${var.with_cloudfront ? 1 : 0}"
@@ -828,4 +1017,27 @@ resource "aws_api_gateway_usage_plan_key" "MotrUPApiKey" {
   key_id        = "${aws_api_gateway_api_key.MotrWebApiKey.id}"
   key_type      = "API_KEY"
   usage_plan_id = "${aws_api_gateway_usage_plan.MotrApiUsagePlan.id}"
+}
+
+resource "aws_api_gateway_usage_plan" "MotrSmsReceiverApiUsagePlan" {
+  count       = "${var.with_cloudfront ? 1 : 0}"
+  name        = "motr-sms-receiver-${var.environment}-up"
+  description = "Usage Plan for MOTR ${var.environment} SMS Receiver"
+
+  api_stages {
+    api_id = "${aws_api_gateway_rest_api.MotrSmsReceiver.id}"
+    stage  = "${aws_api_gateway_deployment.Deployment.stage_name}"
+  }
+
+  throttle_settings {
+    burst_limit = 979
+    rate_limit  = 1000
+  }
+}
+
+resource "aws_api_gateway_usage_plan_key" "MotrSmsReceiverUPApiKey" {
+  count         = "${var.with_cloudfront ? 1 : 0}"
+  key_id        = "${aws_api_gateway_api_key.MotrSmsReceiverKey.id}"
+  key_type      = "API_KEY"
+  usage_plan_id = "${aws_api_gateway_usage_plan.MotrSmsReceiverApiUsagePlan.id}"
 }
