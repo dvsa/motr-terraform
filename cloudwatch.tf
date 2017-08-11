@@ -20,7 +20,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_coldstart_log_metric
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-ColdStart"
-    namespace = "${var.project}-${var.environment}-MotrWebHandler-ColdStart"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler"
     value     = "1"
   }
 
@@ -34,7 +34,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerNotifyConfFailure_log
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-NotifyConfirmationFailure"
-    namespace = "${var.project}-${var.environment}-MotrWebHandler-NotifyConfirmationFailure"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler"
     value     = "1"
   }
 
@@ -48,7 +48,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerColdStartUserExperien
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-ColdStartUserExperience"
-    namespace = "${var.project}-${var.environment}-MotrWebHandler-ColdStartUserExperience"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler"
     value     = "1"
   }
 
@@ -62,7 +62,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerSubscriptionActivatio
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-SubscriptionActivationFailure"
-    namespace = "${var.project}-${var.environment}-MotrWebHandler-SubscriptionActivationFailure"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler"
     value     = "1"
   }
 
@@ -76,7 +76,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerPendingSubscriptionFa
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-PendingSubscriptionFailure"
-    namespace = "${var.project}-${var.environment}-MotrWebHandler-PendingSubscriptionFailure"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler"
     value     = "1"
   }
 
@@ -90,7 +90,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerTradeAPIFailure_log_m
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-TradeAPIFailure"
-    namespace = "${var.project}-${var.environment}-MotrWebHandler-TradeAPIFailure"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler"
     value     = "1"
   }
 
@@ -104,7 +104,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerPendingSubscriptionCr
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-PendingSubscriptionCreated"
-    namespace = "${var.project}-${var.environment}-MotrWebHandler-PendingSubscriptionCreated"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler"
     value     = "1"
   }
 
@@ -118,7 +118,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerSubscriptionConfirmed
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-SubscriptionConfirmed"
-    namespace = "${var.project}-${var.environment}-MotrWebHandler-SubscriptionConfirmed"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler"
     value     = "1"
   }
 
@@ -132,7 +132,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerSessionMalformedError
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-SessionMalformedError"
-    namespace = "${var.project}-${var.environment}-MotrWebHandler-SessionMalformedError"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler"
     value     = "1"
   }
 
@@ -146,7 +146,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_MiscError_log_metric
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrWebHandler-MiscError"
-    namespace = "${var.project}-${var.environment}-MotrWebHandler-MiscError"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler"
     value     = "1"
   }
 
@@ -188,7 +188,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrSubscriptionLoaderLoadingError_
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrSubscriptionLoader-LoadingError"
-    namespace = "${var.project}-${var.environment}-MotrSubscriptionLoader-LoadingError"
+    namespace = "${var.project}-${var.environment}-MotrSubscriptionLoader"
     value     = "1"
   }
 
@@ -202,7 +202,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrSubscriptionLoaderLoadingSucces
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrSubscriptionLoader-LoadingSuccess"
-    namespace = "${var.project}-${var.environment}-MotrSubscriptionLoader-LoadingSuccess"
+    namespace = "${var.project}-${var.environment}-MotrSubscriptionLoader"
     value     = "1"
   }
 
@@ -216,7 +216,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrSubscriptionLoader_MiscError_lo
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrSubscriptionLoader-MiscError"
-    namespace = "${var.project}-${var.environment}-MotrSubscriptionLoader-MiscError"
+    namespace = "${var.project}-${var.environment}-MotrSubscriptionLoader"
     value     = "1"
   }
 
@@ -258,7 +258,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierSubscriptionProcessingF
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-SubscriptionProcessingFailed"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-SubscriptionProcessingFailed"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -272,7 +272,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierSubscriptionQueueItemRe
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-SubscriptionQueueItemRemovalFailed"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-SubscriptionQueueItemRemovalFailed"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -286,7 +286,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierVehicleDetailsRetrieval
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-VehicleDetailsRetrievalFailed"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-VehicleDetailsRetrievalFailed"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -300,7 +300,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierUnloadingTimedOut_log_m
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-UnloadingTimedOut"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-UnloadingTimedOut"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -314,7 +314,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierOneMonthReminderSuccess
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-OneMonthReminderSuccess"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-OneMonthReminderSuccess"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -328,7 +328,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierTwoWeekReminderSuccess_
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-TwoWeekReminderSuccess"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-TwoWeekReminderSuccess"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -342,7 +342,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierOneDayAfterReminderSucc
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-OneDayAfterReminderSuccess"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-OneDayAfterReminderSuccess"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -356,7 +356,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifier_MiscError_log_metric_f
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-MiscError"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-MiscError"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
