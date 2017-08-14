@@ -444,6 +444,15 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
         "manufactureYear": "1998",
         "motTestExpiryDate": "2017-03-09",
         "motTestNumber": "532523"
+    #elseif($input.params('registration').contains("DVLA-ID-"))
+        "make": "testDVLAMake",
+        "model": "testDVLAModel",
+        "primaryColour": "testDVLAPrimaryColour",
+        "secondaryColour": "testDVLASecondaryColour",
+        "registration": "$input.params('registration')",
+        "manufactureYear": "1999",
+        "motTestExpiryDate": "2018-03-09",
+        "dvlaId": "12349876"
     #else
         "make": "testMake",
         "model": "testModel",
@@ -471,7 +480,8 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
   depends_on        = ["aws_api_gateway_integration_response.MotTestReminderMockRegistrationGET_200"]
 }
 
-###### Vehicle by mot number ######
+####################################################################################################################################
+# API GATEWAY MOT TEST REMINDER ENDPOINT BY MOT_TEST_NUMBER MOCK RESOURCE
 
 resource "aws_api_gateway_resource" "MotTestReminderMockMotTests" {
   count       = "${var.mot_api_mot_test_number_uri == "" ? 1 : 0}"
@@ -614,6 +624,150 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockMotNumberGET
 }
 
 ####################################################################################################################################
+# API GATEWAY MOT TEST REMINDER ENDPOINT BY DVLAID MOCK RESOURCE
+
+resource "aws_api_gateway_resource" "LatestMotTestMockByDvlaIds" {
+  count       = "${var.mot_api_dvla_id_uri == "" ? 1 : 0}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  parent_id   = "${aws_api_gateway_resource.MotTestReminderMock.id}"
+  path_part   = "mot-tests-by-dvla-id"
+}
+
+resource "aws_api_gateway_resource" "LatestMotTestReminderMockByDvlaId" {
+  count       = "${var.mot_api_dvla_id_uri == "" ? 1 : 0}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  parent_id   = "${aws_api_gateway_resource.LatestMotTestMockByDvlaIds.id}"
+  path_part   = "{dvlaId}"
+}
+
+# GET method -> Lambda /mot-test-reminder-mock/mot-tests-by-dvla-id/{dvlaId}
+resource "aws_api_gateway_method" "LatestMotTestReminderMockByDvlaIdGET" {
+  count         = "${var.mot_api_dvla_id_uri == "" ? 1 : 0}"
+  rest_api_id   = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id   = "${aws_api_gateway_resource.LatestMotTestReminderMockByDvlaId.id}"
+  http_method   = "GET"
+  authorization = "NONE"
+
+  request_parameters {
+    "method.request.path.number" = true
+  }
+}
+
+# integration between LatestMotTestReminderByDvlaIdMock resource's GET method and Lambda function (back-end)
+resource "aws_api_gateway_integration" "LatestMotTestReminderMockByDvlaIdGET" {
+  count       = "${var.mot_api_dvla_id_uri == "" ? 1 : 0}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.LatestMotTestReminderMockByDvlaId.id}"
+  type        = "MOCK"
+  uri         = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrWeb.id}/${var.environment}/${aws_api_gateway_method.MotTestReminderMockMotNumberGET.http_method}/mot-test-reminder-mock/mot-tests-by-dvla-id/{dvlaId}"
+  http_method = "${aws_api_gateway_method.LatestMotTestReminderMockByDvlaIdGET.http_method}"
+
+  request_templates {
+    "application/json" = <<EOF
+{
+    "statusCode": 200
+}
+EOF
+  }
+
+  depends_on = ["aws_api_gateway_method.LatestMotTestReminderMockByDvlaIdGET"]
+}
+
+resource "aws_api_gateway_method_response" "LatestMotTestReminderMockByDvlaIdGET_200" {
+  count       = "${var.mot_api_dvla_id_uri == "" ? 1 : 0}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.LatestMotTestReminderMockByDvlaId.id}"
+  http_method = "${aws_api_gateway_method.LatestMotTestReminderMockByDvlaIdGET.http_method}"
+  status_code = "200"
+
+  response_models = {
+    "application/json" = "Empty"
+  }
+
+  response_parameters = {
+    "method.response.header.Date"           = true
+    "method.response.header.ETag"           = true
+    "method.response.header.Content-Length" = true
+    "method.response.header.Content-Type"   = true
+    "method.response.header.Last-Modified"  = true
+  }
+
+  depends_on = ["aws_api_gateway_integration.LatestMotTestReminderMockByDvlaIdGET"]
+}
+
+resource "aws_api_gateway_method_response" "LatestMotTestReminderMockByDvlaIdGET_404" {
+  count       = "${var.mot_api_dvla_id_uri == "" ? 1 : 0}"
+  rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id = "${aws_api_gateway_resource.LatestMotTestReminderMockByDvlaId.id}"
+  http_method = "${aws_api_gateway_method.LatestMotTestReminderMockByDvlaIdGET.http_method}"
+  status_code = "404"
+
+  response_parameters = {
+    "method.response.header.Date"           = true
+    "method.response.header.ETag"           = true
+    "method.response.header.Content-Length" = true
+    "method.response.header.Content-Type"   = true
+    "method.response.header.Last-Modified"  = true
+  }
+
+  depends_on = ["aws_api_gateway_method_response.LatestMotTestReminderMockByDvlaIdGET_200"]
+}
+
+resource "aws_api_gateway_integration_response" "LatestMotTestReminderMockByDvlaIdGET_200" {
+  count             = "${var.mot_api_dvla_id_uri == "" ? 1 : 0}"
+  rest_api_id       = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id       = "${aws_api_gateway_resource.LatestMotTestReminderMockByDvlaId.id}"
+  http_method       = "${aws_api_gateway_method.LatestMotTestReminderMockByDvlaIdGET.http_method}"
+  status_code       = "${aws_api_gateway_method_response.LatestMotTestReminderMockByDvlaIdGET_200.status_code}"
+  selection_pattern = "200"
+
+  response_templates {
+    "application/json" = <<EOF
+{
+    #if($input.params('dvlaId').contains("12345"))
+        "make": "MERCEDES-BENZ",
+        "model": "C220 ELEGANCE ED125 CDI BLU-CY",
+        "primaryColour": "Silver",
+        "registration": "WDD2040022A65",
+        "manufactureYear": "2006",
+        "motTestExpiryDate": "2016-11-26",
+        "motTestNumber": "894329854"
+    #elseif($input.params('dvlaId').contains("412321"))
+        "make": "HYUNDAI",
+        "model": "I30 CRDI",
+        "primaryColour": "Silver",
+        "registration": "SUP4R",
+        "manufactureYear": "2006",
+        "motTestExpiryDate": "2007-11-26",
+        "dvlaId": "$input.params('dvlaId')"
+    #else
+        "make": "testMakeX",
+        "model": "testModel",
+        "primaryColour": "testPrimaryColour",
+        "secondaryColour": "testSecondaryColour",
+        "registration": "LOCA111",
+        "manufactureYear": "1998",
+        "motTestExpiryDate": "2000-03-09",
+        "dvlaId": "$input.params('dvlaId')"
+    #end
+}
+EOF
+  }
+
+  depends_on = ["aws_api_gateway_integration.LatestMotTestReminderMockByDvlaIdGET"]
+}
+
+resource "aws_api_gateway_integration_response" "LatestMotTestReminderMockByDvlaIdGET_404" {
+  count             = "${var.mot_api_dvla_id_uri == "" ? 1 : 0}"
+  rest_api_id       = "${aws_api_gateway_rest_api.MotrWeb.id}"
+  resource_id       = "${aws_api_gateway_resource.LatestMotTestReminderMockByDvlaId.id}"
+  http_method       = "${aws_api_gateway_method.LatestMotTestReminderMockByDvlaIdGET.http_method}"
+  status_code       = "${aws_api_gateway_method_response.LatestMotTestReminderMockByDvlaIdGET_404.status_code}"
+  selection_pattern = "404"
+  depends_on        = ["aws_api_gateway_integration_response.LatestMotTestReminderMockByDvlaIdGET_200"]
+}
+
+####################################################################################################################################
 # API GATEWAY DEPLOYMENT
 
 resource "aws_api_gateway_deployment" "Deployment" {
@@ -635,6 +789,9 @@ resource "aws_api_gateway_deployment" "Deployment" {
     "aws_api_gateway_method.MotTestReminderMockMotNumberGET",
     "aws_api_gateway_integration.MotTestReminderMockMotNumberGET",
     "aws_api_gateway_integration_response.MotTestReminderMockMotNumberGET_200",
+    "aws_api_gateway_method.LatestMotTestReminderMockByDvlaIdGET",
+    "aws_api_gateway_integration.LatestMotTestReminderMockByDvlaIdGET",
+    "aws_api_gateway_integration_response.LatestMotTestReminderMockByDvlaIdGET_200",
   ]
 }
 

@@ -198,6 +198,11 @@ variable "mot_api_mot_test_number_uri" {
   description = "Vehicle data by mot test number api uri"
 }
 
+variable "mot_api_dvla_id_uri" {
+  type        = "string"
+  description = "Vehicle data by dvla id api uri"
+}
+
 variable "mot_test_reminder_info_token" {
   type        = "string"
   description = "Auth token for getting mot test information"
