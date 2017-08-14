@@ -129,6 +129,7 @@ resource "aws_lambda_function" "MotrNotifier" {
       TWO_WEEK_NOTIFICATION_TEMPLATE_ID      = "${var.two_week_notification_template_id}"
       ONE_DAY_AFTER_NOTIFICATION_TEMPLATE_ID = "${var.one_day_after_notification_template_id}"
       MOT_API_MOT_TEST_NUMBER_URI            = "${var.mot_api_mot_test_number_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/mot-tests/{number}" : var.mot_api_mot_test_number_uri}"
+      MOT_API_DVLA_ID_URI                    = "${var.mot_api_dvla_id_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/mot-tests-by-dvla-id/{dvlaId}" : var.mot_api_dvla_id_uri}"
       GOV_NOTIFY_API_TOKEN                   = "${var.gov_notify_api_token}"
       MOT_TEST_REMINDER_INFO_TOKEN           = "${var.mot_test_reminder_info_token}"
       WORKER_COUNT                           = "${var.worker_count_notifier}"
