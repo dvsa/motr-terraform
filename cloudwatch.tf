@@ -349,6 +349,20 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierOneDayAfterReminderSucc
   depends_on = ["aws_cloudwatch_log_group.MotrNotifier"]
 }
 
+resource "aws_cloudwatch_log_metric_filter" "MotrNotifierSuccessfullyProcessed_log_metric_filter" {
+  name           = "MotrNotifierSuccessfullyProcessed_log_metric_filter"
+  pattern        = "{ $.message = REMINDERS-PROCESSED }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrNotifier.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrNotifier-SuccessfullyProcessed"
+    namespace = "${var.project}-${var.environment}-MotrNotifier-SuccessfullyProcessed"
+    value     = "{$.mdc.x-amount-of-reminders-successfully-processed}"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrNotifier"]
+}
+
 resource "aws_cloudwatch_log_metric_filter" "MotrNotifier_MiscError_log_metric_filter" {
   name           = "MotrNotifier_MiscError_log_metric_filter"
   pattern        = "{ $.level = ERROR }"
