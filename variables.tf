@@ -53,6 +53,16 @@ variable "static_assets_hash" {
   description = "Static assets current commit hash"
 }
 
+variable "status_email_recipients" {
+  type        = "string"
+  description = "List of email addresses which the daily failed notification count is sent"
+}
+
+variable "gov_notify_status_email_template" {
+  type        = "string"
+  description = "Notify template ID of the status report email"
+}
+
 variable "binary_media_types" {
   type        = "list"
   description = "APIG binary media types"
