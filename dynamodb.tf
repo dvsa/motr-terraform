@@ -43,9 +43,10 @@ resource "aws_dynamodb_table" "motr-cancelled_subscription" {
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }
+
   ttl {
     attribute_name = "deletion_date"
-    enabled = true
+    enabled        = true
   }
 }
 
@@ -137,8 +138,9 @@ resource "aws_dynamodb_table" "motr-pending_subscription" {
     Project     = "${var.project}"
     Environment = "${var.environment}"
   }
+
   ttl {
     attribute_name = "deletion_date"
-    enabled = true
+    enabled        = true
   }
 }
