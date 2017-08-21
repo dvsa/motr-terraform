@@ -518,6 +518,11 @@ variable "cw_lg_npinger_lambda_retention" {
   description = "Specifies the number of days you want to retain log events"
 }
 
+variable "feature_toggle_sms" {
+  type        = "string"
+  description = "Whether to enable the SMS features of MOTR"
+}
+
 variable "release_version" {
   type        = "string"
   description = "The version of the current release - will be changed on every release through the environment variables"
