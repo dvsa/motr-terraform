@@ -83,7 +83,7 @@ resource "aws_dynamodb_table" "motr-subscription" {
     read_capacity      = "${var.ix_subscr_ddg_read_capacity}"
     write_capacity     = "${var.ix_subscr_ddg_write_capacity}"
     projection_type    = "INCLUDE"
-    non_key_attributes = ["id", "mot_due_date", "mot_test_number", "dvla_id"]
+    non_key_attributes = ["id", "mot_due_date", "mot_test_number", "dvla_id", "contact_type"]
   }
 
   global_secondary_index {
@@ -92,7 +92,7 @@ resource "aws_dynamodb_table" "motr-subscription" {
     read_capacity      = "${var.ix_subscr_ig_read_capacity}"
     write_capacity     = "${var.ix_subscr_ig_write_capacity}"
     projection_type    = "INCLUDE"
-    non_key_attributes = ["mot_due_date", "mot_test_number", "dvla_id"]
+    non_key_attributes = ["mot_due_date", "mot_test_number", "dvla_id", "contact_type"]
   }
 
   tags {
@@ -130,7 +130,7 @@ resource "aws_dynamodb_table" "motr-pending_subscription" {
     write_capacity     = "${var.ix_pending_subscr_ig_read_capacity}"
     read_capacity      = "${var.ix_pending_subscr_ig_write_capacity}"
     projection_type    = "INCLUDE"
-    non_key_attributes = ["mot_due_date", "mot_test_number", "dvla_id"]
+    non_key_attributes = ["mot_due_date", "mot_test_number", "dvla_id", "contact_type"]
   }
 
   tags {
