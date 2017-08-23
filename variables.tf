@@ -148,6 +148,16 @@ variable "tb_pending_subscr_write_capacity" {
   description = "Table motr-pending_subscription write capacity"
 }
 
+variable "tb_sms_confirmation_read_capacity" {
+  type        = "string"
+  description = "Table motr-sms_confirmation read capacity"
+}
+
+variable "tb_sms_confirmation_write_capacity" {
+  type        = "string"
+  description = "Table motr-sms_confirmation write capacity"
+}
+
 variable "ix_subscr_ddg_read_capacity" {
   type        = "string"
   description = "Index due-date-md-gsi (motr-subscription) read capacity"
@@ -436,6 +446,16 @@ variable "sms_one_day_after_notification_template_id" {
 variable "confirm_email_notification_template_id" {
   type        = "string"
   description = "Gov Notify Template ID for user email confirmation"
+}
+
+variable "sms_confirm_phone_template_id" {
+  type = "string"
+  description = "Gov Notify Template ID for confirm phone SMS"
+}
+
+variable "sms_confirmation_template_id" {
+  type = "string"
+  description = "Gov Notify Template ID for subscription confirmation SMS"
 }
 
 variable "inflight_batches_loader" {
