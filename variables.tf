@@ -517,3 +517,8 @@ variable "cw_lg_npinger_lambda_retention" {
   type        = "string"
   description = "Specifies the number of days you want to retain log events"
 }
+
+variable "release_version" {
+  type        = "string"
+  description = "The version of the current release - will be changed on every release through the environment variables"
+}

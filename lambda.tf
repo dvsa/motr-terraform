@@ -32,6 +32,7 @@ resource "aws_lambda_function" "MotrWebHandler" {
       MOT_TEST_REMINDER_INFO_API_CLIENT_READ_TIMEOUT       = "${var.mot_test_reminder_info_api_client_read_timeout}"
       MOT_TEST_REMINDER_INFO_API_CLIENT_CONNECTION_TIMEOUT = "${var.mot_test_reminder_info_api_client_connection_timeout}"
       WARM_UP_TIMEOUT_SEC                                  = "${var.webapp_warm_up_timeout_sec}"
+      RELEASE_VERSION                                      = "${var.release_version}"
       MOT_TEST_REMINDER_INFO_TOKEN                         = "${var.mot_test_reminder_info_token}"
     }
   }
