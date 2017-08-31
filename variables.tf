@@ -418,6 +418,21 @@ variable "one_day_after_notification_template_id" {
   description = "Gov Notify Template ID for one day after reminder email"
 }
 
+variable "sms_one_month_notification_template_id" {
+  type        = "string"
+  description = "Gov Notify Template ID for one month reminder SMS"
+}
+
+variable "sms_two_week_notification_template_id" {
+  type        = "string"
+  description = "Gov Notify Template ID for two week reminder SMS"
+}
+
+variable "sms_one_day_after_notification_template_id" {
+  type        = "string"
+  description = "Gov Notify Template ID for one day after reminder SMS"
+}
+
 variable "confirm_email_notification_template_id" {
   type        = "string"
   description = "Gov Notify Template ID for user email confirmation"
