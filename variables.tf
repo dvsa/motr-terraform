@@ -544,7 +544,7 @@ variable "cw_lg_npinger_lambda_retention" {
 }
 
 variable "release_version" {
-  type = "string"
+  type        = "string"
   description = "The version of the current release - will be changed on every release through the environment variables"
 }
 
@@ -596,4 +596,9 @@ variable "sms_receiver_notify_bearer_token" {
 variable "sms_receiver_notify_token" {
   type        = "string"
   description = "MOTR SmsReceiver token received from GOV Notify, verified by lambda"
+}
+
+variable "sms_receiver_alias_record" {
+  type        = "string"
+  description = "DNS alias record name for SMS Receiver"
 }
