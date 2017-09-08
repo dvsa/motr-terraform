@@ -30,7 +30,7 @@ resource "aws_route53_record" "MotrSmsReceiver" {
   alias {
     name                   = "${aws_api_gateway_domain_name.SMSReceiver.cloudfront_domain_name}"
     zone_id                = "${aws_api_gateway_domain_name.SMSReceiver.cloudfront_zone_id }"
-    evaluate_target_health = false                                                                                   # has to be false for CF
+    evaluate_target_health = false                                                               # has to be false for CF
   }
 
   depends_on = ["data.aws_route53_zone.Route53Zone",

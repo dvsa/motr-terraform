@@ -426,9 +426,9 @@ resource "aws_cloudwatch_log_metric_filter" "MotrBouncingEmailCleanerTemporaryFa
   log_group_name = "/aws/lambda/${aws_lambda_function.MotrBouncingEmailCleaner.function_name}"
 
   metric_transformation {
-    name         = "${var.project}-${var.environment}-MotrBouncingEmailCleaner-TemporaryFailures"
-    namespace    = "${var.project}-${var.environment}-MotrBouncingEmailCleaner"
-    value        = "$.mdc.x-temporary-failure"
+    name      = "${var.project}-${var.environment}-MotrBouncingEmailCleaner-TemporaryFailures"
+    namespace = "${var.project}-${var.environment}-MotrBouncingEmailCleaner"
+    value     = "$.mdc.x-temporary-failure"
   }
 
   depends_on = ["aws_cloudwatch_log_group.MotrBouncingEmailCleaner"]
@@ -440,9 +440,9 @@ resource "aws_cloudwatch_log_metric_filter" "MotrBouncingEmailCleanerTechnicalFa
   log_group_name = "/aws/lambda/${aws_lambda_function.MotrBouncingEmailCleaner.function_name}"
 
   metric_transformation {
-    name         = "${var.project}-${var.environment}-MotrBouncingEmailCleaner-TechnicalFailures"
-    namespace    = "${var.project}-${var.environment}-MotrBouncingEmailCleaner"
-    value        = "$.mdc.x-technical-failure"
+    name      = "${var.project}-${var.environment}-MotrBouncingEmailCleaner-TechnicalFailures"
+    namespace = "${var.project}-${var.environment}-MotrBouncingEmailCleaner"
+    value     = "$.mdc.x-technical-failure"
   }
 
   depends_on = ["aws_cloudwatch_log_group.MotrBouncingEmailCleaner"]
@@ -454,9 +454,9 @@ resource "aws_cloudwatch_log_metric_filter" "MotrBouncingEmailCleanerPermanentFa
   log_group_name = "/aws/lambda/${aws_lambda_function.MotrBouncingEmailCleaner.function_name}"
 
   metric_transformation {
-    name         = "${var.project}-${var.environment}-MotrBouncingEmailCleaner-PermanentFailures"
-    namespace    = "${var.project}-${var.environment}-MotrBouncingEmailCleaner"
-    value        = "$.mdc.x-permanently-failed"
+    name      = "${var.project}-${var.environment}-MotrBouncingEmailCleaner-PermanentFailures"
+    namespace = "${var.project}-${var.environment}-MotrBouncingEmailCleaner"
+    value     = "$.mdc.x-permanently-failed"
   }
 
   depends_on = ["aws_cloudwatch_log_group.MotrBouncingEmailCleaner"]
