@@ -547,3 +547,58 @@ variable "release_version" {
   type        = "string"
   description = "The version of the current release - will be changed on every release through the environment variables"
 }
+
+variable "MotrSmsReceiver_s3_key" {
+  type        = "string"
+  description = "SmsReceiver Lambda Handler S3 key"
+}
+
+variable "MotrSmsReceiver_ver" {
+  type        = "string"
+  description = "SmsReceiver Lambda version"
+}
+
+variable "MotrSmsReceiver_publish" {
+  type        = "string"
+  description = "SmsReceiver Lambda publish switch"
+}
+
+variable "MotrSmsReceiver_mem_size" {
+  type        = "string"
+  description = "Amount of memory in MB Lambda Function can use at runtime"
+}
+
+variable "MotrSmsReceiver_timeout" {
+  type        = "string"
+  description = "The amount of time Lambda Function has to run in seconds"
+}
+
+variable "manage_cw_lg_sms_receiver_lambda" {
+  type        = "string"
+  description = "Enable CloudWatch Log Group for MOTR SmsReceiver Lambda to be managed by Terraform"
+}
+
+variable "cw_lg_sms_receiver_lambda_retention" {
+  type        = "string"
+  description = "Specifies the number of days you want to retain log events"
+}
+
+variable "sms_receiver_log_level" {
+  type        = "string"
+  description = "MOTR SmsReceiver lambda log level"
+}
+
+variable "sms_receiver_notify_bearer_token" {
+  type        = "string"
+  description = "MOTR SmsReceiver encrypted version of GOV Notify token"
+}
+
+variable "sms_receiver_notify_token" {
+  type        = "string"
+  description = "MOTR SmsReceiver token received from GOV Notify, verified by lambda"
+}
+
+variable "sms_receiver_alias_record" {
+  type        = "string"
+  description = "DNS alias record name for SMS Receiver"
+}

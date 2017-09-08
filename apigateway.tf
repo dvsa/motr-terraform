@@ -63,7 +63,7 @@ resource "aws_api_gateway_integration_response" "LambdaRootGET_200" {
 }
 
 ####################################################################################################################################
-# API GATEWAY LAMBDA WILDCARD RESOURCE
+# API GATEWAY LAMBDA WILDCARD RESOURCE FOR WEB APP
 
 resource "aws_api_gateway_resource" "LambdaWildcard" {
   rest_api_id = "${aws_api_gateway_rest_api.MotrWeb.id}"

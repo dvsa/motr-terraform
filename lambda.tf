@@ -122,26 +122,26 @@ resource "aws_lambda_function" "MotrNotifier" {
 
   environment {
     variables = {
-      LOG_LEVEL                                   = "${var.notifier_log_level}"
-      REGION                                      = "${var.aws_region}"
-      DB_TABLE_SUBSCRIPTION                       = "motr-${var.environment}-subscription"
-      SUBSCRIPTIONS_QUEUE_URL                     = "${aws_sqs_queue.MotrSubscriptionsQueue.id}"
-      ONE_MONTH_NOTIFICATION_TEMPLATE_ID          = "${var.one_month_notification_template_id}"
-      TWO_WEEK_NOTIFICATION_TEMPLATE_ID           = "${var.two_week_notification_template_id}"
-      ONE_DAY_AFTER_NOTIFICATION_TEMPLATE_ID      = "${var.one_day_after_notification_template_id}"
-      SMS_ONE_MONTH_NOTIFICATION_TEMPLATE_ID      = "${var.sms_one_month_notification_template_id}"
-      SMS_TWO_WEEK_NOTIFICATION_TEMPLATE_ID       = "${var.sms_two_week_notification_template_id}"
-      SMS_ONE_DAY_AFTER_NOTIFICATION_TEMPLATE_ID  = "${var.sms_one_day_after_notification_template_id}"
-      MOT_API_MOT_TEST_NUMBER_URI                 = "${var.mot_api_mot_test_number_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/mot-tests/{number}" : var.mot_api_mot_test_number_uri}"
-      MOT_API_DVLA_ID_URI                         = "${var.mot_api_dvla_id_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/mot-tests-by-dvla-id/{dvlaId}" : var.mot_api_dvla_id_uri}"
-      GOV_NOTIFY_API_TOKEN                        = "${var.gov_notify_api_token}"
-      MOT_TEST_REMINDER_INFO_TOKEN                = "${var.mot_test_reminder_info_token}"
-      WORKER_COUNT                                = "${var.worker_count_notifier}"
-      MESSAGE_VISIBILITY_TIMEOUT                  = "${var.message_visibility_timeout_notifier}"
-      VEHICLE_API_CLIENT_TIMEOUT                  = "${var.vehicle_api_client_timeout_notifier}"
-      MESSAGE_RECEIVE_TIMEOUT                     = "${var.message_receive_timeout_notifier}"
-      REMAINING_TIME_THRESHOLD                    = "${var.remaining_time_threshold_notifier}"
-      WEB_BASE_URL                                = "${var.base_url == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/" : var.base_url}"
+      LOG_LEVEL                                  = "${var.notifier_log_level}"
+      REGION                                     = "${var.aws_region}"
+      DB_TABLE_SUBSCRIPTION                      = "motr-${var.environment}-subscription"
+      SUBSCRIPTIONS_QUEUE_URL                    = "${aws_sqs_queue.MotrSubscriptionsQueue.id}"
+      ONE_MONTH_NOTIFICATION_TEMPLATE_ID         = "${var.one_month_notification_template_id}"
+      TWO_WEEK_NOTIFICATION_TEMPLATE_ID          = "${var.two_week_notification_template_id}"
+      ONE_DAY_AFTER_NOTIFICATION_TEMPLATE_ID     = "${var.one_day_after_notification_template_id}"
+      SMS_ONE_MONTH_NOTIFICATION_TEMPLATE_ID     = "${var.sms_one_month_notification_template_id}"
+      SMS_TWO_WEEK_NOTIFICATION_TEMPLATE_ID      = "${var.sms_two_week_notification_template_id}"
+      SMS_ONE_DAY_AFTER_NOTIFICATION_TEMPLATE_ID = "${var.sms_one_day_after_notification_template_id}"
+      MOT_API_MOT_TEST_NUMBER_URI                = "${var.mot_api_mot_test_number_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/mot-tests/{number}" : var.mot_api_mot_test_number_uri}"
+      MOT_API_DVLA_ID_URI                        = "${var.mot_api_dvla_id_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/mot-tests-by-dvla-id/{dvlaId}" : var.mot_api_dvla_id_uri}"
+      GOV_NOTIFY_API_TOKEN                       = "${var.gov_notify_api_token}"
+      MOT_TEST_REMINDER_INFO_TOKEN               = "${var.mot_test_reminder_info_token}"
+      WORKER_COUNT                               = "${var.worker_count_notifier}"
+      MESSAGE_VISIBILITY_TIMEOUT                 = "${var.message_visibility_timeout_notifier}"
+      VEHICLE_API_CLIENT_TIMEOUT                 = "${var.vehicle_api_client_timeout_notifier}"
+      MESSAGE_RECEIVE_TIMEOUT                    = "${var.message_receive_timeout_notifier}"
+      REMAINING_TIME_THRESHOLD                   = "${var.remaining_time_threshold_notifier}"
+      WEB_BASE_URL                               = "${var.base_url == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/" : var.base_url}"
     }
   }
 }
@@ -248,4 +248,48 @@ resource "aws_lambda_permission" "Cleaner_Allow_CloudWatchEvent" {
 }
 
 ####################################################################################################################################
+# SMS RECEIVER
 
+resource "aws_lambda_function" "MotrSmsReceiver" {
+  description   = "MotrSmsReceiver"
+  runtime       = "java8"
+  s3_bucket     = "${aws_s3_bucket.MOTRS3Bucket.bucket}"
+  s3_key        = "lambdas/${var.MotrSmsReceiver_s3_key}"
+  function_name = "MotrSmsReceiver-${var.environment}"
+  role          = "${aws_iam_role.MotrSmsReceiverLambda.arn}"
+  handler       = "uk.gov.dvsa.motr.smsreceiver.handler.EventHandler::handle"
+  publish       = "${var.MotrSmsReceiver_publish}"
+  memory_size   = "${var.MotrSmsReceiver_mem_size}"
+  timeout       = "${var.MotrSmsReceiver_timeout}"
+  kms_key_arn   = "${var.kms_key_arn}"
+
+  environment {
+    variables = {
+      LOG_LEVEL                       = "${var.sms_receiver_log_level}"
+      REGION                          = "${var.aws_region}"
+      DB_TABLE_SUBSCRIPTION           = "motr-${var.environment}-subscription"
+      DB_TABLE_CANCELLED_SUBSCRIPTION = "motr-${var.environment}-cancelled_subscription"
+      NOTIFY_BEARER_TOKEN             = "${var.sms_receiver_notify_bearer_token}"
+    }
+  }
+}
+
+resource "aws_lambda_alias" "MotrSmsReceiverAlias" {
+  name             = "${var.environment}"
+  description      = "Alias for ${aws_lambda_function.MotrSmsReceiver.function_name}"
+  function_name    = "${aws_lambda_function.MotrSmsReceiver.arn}"
+  function_version = "${var.MotrSmsReceiver_ver}"
+}
+
+resource "aws_lambda_permission" "Allow_APIGatewaySmsReceiver" {
+  function_name = "${aws_lambda_function.MotrSmsReceiver.function_name}"
+  qualifier     = "${aws_lambda_alias.MotrSmsReceiverAlias.name}"
+  statement_id  = "AllowExecutionFromApiGateway"
+  action        = "lambda:InvokeFunction"
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "arn:aws:execute-api:${var.aws_region}:${data.aws_caller_identity.current.account_id}:${aws_api_gateway_rest_api.MotrSmsReceiver.id}/*/*/*"
+
+  depends_on = ["aws_api_gateway_rest_api.MotrSmsReceiver",
+    "aws_api_gateway_integration.LambdaRootSmsReceiverPOST",
+  ]
+}
