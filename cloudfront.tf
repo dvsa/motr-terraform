@@ -2,13 +2,6 @@ resource "aws_cloudfront_origin_access_identity" "oai" {
   comment = "MOTR ${var.environment} OAI"
 }
 
-data "aws_acm_certificate" "MotrWebCFDistroCert" {
-  count    = "${var.with_cloudfront ? 1 : 0}"
-  provider = "aws.cfdistro_cert"
-  domain   = "${var.alias_record_name}.${var.public_dns_domain}"
-  statuses = ["ISSUED"]
-}
-
 resource "aws_cloudfront_distribution" "MotrWebCFDistro" {
   count       = "${var.with_cloudfront ? 1 : 0}"
   comment     = "CF distro for MOTR ${var.environment} environment"

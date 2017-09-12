@@ -1,10 +1,3 @@
-data "aws_acm_certificate" "SMSReceiver" {
-  count    = "${var.with_cloudfront ? 1 : 0}"
-  domain   = "${var.sms_receiver_alias_record}.${var.public_dns_domain}"
-  statuses = ["ISSUED"]
-  provider = "aws.cfdistro_cert"
-}
-
 resource "aws_api_gateway_rest_api" "MotrSmsReceiver" {
   name        = "motr-sms-receiver-${var.environment}"
   description = "MOTR SMS Receiver ${var.environment}"
