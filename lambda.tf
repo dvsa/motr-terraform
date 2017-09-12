@@ -23,10 +23,13 @@ resource "aws_lambda_function" "MotrWebHandler" {
       DB_TABLE_SUBSCRIPTION                                = "motr-${var.environment}-subscription"
       DB_TABLE_PENDING_SUBSCRIPTION                        = "motr-${var.environment}-pending_subscription"
       DB_TABLE_CANCELLED_SUBSCRIPTION                      = "motr-${var.environment}-cancelled_subscription"
+      DB_TABLE_SMS_CONFIRMATION                            = "motr-${var.environment}-sms_confirmation"
       MOT_TEST_REMINDER_INFO_API_URI                       = "${var.mot_test_reminder_info_api_uri == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/mot-test-reminder-mock/vehicles/{registration}" : var.mot_test_reminder_info_api_uri}"
       GOV_NOTIFY_API_TOKEN                                 = "${var.gov_notify_api_token}"
       CONFIRM_EMAIL_NOTIFICATION_TEMPLATE_ID               = "${var.confirm_email_notification_template_id}"
       CONFIRMATION_TEMPLATE_ID                             = "${var.confirmation_template_id}"
+      SMS_CONFIRM_PHONE_TEMPLATE_ID                        = "${var.sms_confirm_phone_template_id}"
+      SMS_CONFIRMATION_TEMPLATE_ID                         = "${var.sms_confirmation_template_id}"
       BASE_URL                                             = "${var.base_url == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/" : var.base_url}"
       WARM_UP                                              = "${var.webapp_warm_up}"
       MOT_TEST_REMINDER_INFO_API_CLIENT_READ_TIMEOUT       = "${var.mot_test_reminder_info_api_client_read_timeout}"
@@ -34,6 +37,7 @@ resource "aws_lambda_function" "MotrWebHandler" {
       WARM_UP_TIMEOUT_SEC                                  = "${var.webapp_warm_up_timeout_sec}"
       RELEASE_VERSION                                      = "${var.release_version}"
       MOT_TEST_REMINDER_INFO_TOKEN                         = "${var.mot_test_reminder_info_token}"
+      FEATURE_TOGGLE_SMS                                   = "${var.feature_toggle_sms}"
     }
   }
 

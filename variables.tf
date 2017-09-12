@@ -148,6 +148,16 @@ variable "tb_pending_subscr_write_capacity" {
   description = "Table motr-pending_subscription write capacity"
 }
 
+variable "tb_sms_confirmation_read_capacity" {
+  type        = "string"
+  description = "Table motr-sms_confirmation read capacity"
+}
+
+variable "tb_sms_confirmation_write_capacity" {
+  type        = "string"
+  description = "Table motr-sms_confirmation write capacity"
+}
+
 variable "ix_subscr_ddg_read_capacity" {
   type        = "string"
   description = "Index due-date-md-gsi (motr-subscription) read capacity"
@@ -438,6 +448,16 @@ variable "confirm_email_notification_template_id" {
   description = "Gov Notify Template ID for user email confirmation"
 }
 
+variable "sms_confirm_phone_template_id" {
+  type = "string"
+  description = "Gov Notify Template ID for confirm phone SMS"
+}
+
+variable "sms_confirmation_template_id" {
+  type = "string"
+  description = "Gov Notify Template ID for subscription confirmation SMS"
+}
+
 variable "inflight_batches_loader" {
   type        = "string"
   description = "The maximum number of concurrent message batches that can be put on the Amazon SQS queue"
@@ -541,6 +561,11 @@ variable "manage_cw_lg_npinger_lambda" {
 variable "cw_lg_npinger_lambda_retention" {
   type        = "string"
   description = "Specifies the number of days you want to retain log events"
+}
+
+variable "feature_toggle_sms" {
+  type        = "string"
+  description = "Whether to enable the SMS features of MOTR"
 }
 
 variable "release_version" {
