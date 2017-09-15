@@ -449,12 +449,12 @@ variable "confirm_email_notification_template_id" {
 }
 
 variable "sms_confirm_phone_template_id" {
-  type = "string"
+  type        = "string"
   description = "Gov Notify Template ID for confirm phone SMS"
 }
 
 variable "sms_confirmation_template_id" {
-  type = "string"
+  type        = "string"
   description = "Gov Notify Template ID for subscription confirmation SMS"
 }
 

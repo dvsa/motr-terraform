@@ -1,9 +1,11 @@
+# zone
 data "aws_route53_zone" "Route53Zone" {
   count        = "${var.with_cloudfront ? 1 : 0}"
   name         = "${var.public_dns_domain}."
   private_zone = false
 }
 
+# records
 resource "aws_route53_record" "MotrWeb" {
   count   = "${var.with_cloudfront ? 1 : 0}"
   name    = "${var.alias_record_name}"
