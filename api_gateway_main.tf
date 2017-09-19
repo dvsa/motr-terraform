@@ -453,6 +453,15 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
         "manufactureYear": "1999",
         "motTestExpiryDate": "2018-03-09",
         "dvlaId": "12349876"
+    #elseif($input.params('registration').contains("MAKE-IN-FULL-"))
+        "make": null
+        "model": null
+        "primaryColour": "testDVLAPrimaryColour",
+        "secondaryColour": "testDVLASecondaryColour",
+        "registration": "$input.params('registration')",
+        "manufactureYear": "1999",
+        "motTestExpiryDate": "2030-03-09",
+        "makeInFull": "Ford Focus 1.8 TDCI"
     #else
         "make": "testMake",
         "model": "testModel",
