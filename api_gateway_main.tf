@@ -453,7 +453,7 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
         "manufactureYear": "1999",
         "motTestExpiryDate": "2018-03-09",
         "dvlaId": "12349876"
-    #elseif($input.params('registration').contains("MAKE-IN-FULL-"))
+    #elseif($input.params('registration').contains("MAKEINFULL"))
         "make": null
         "model": null
         "primaryColour": "testDVLAPrimaryColour",
