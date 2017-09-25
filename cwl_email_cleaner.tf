@@ -52,6 +52,48 @@ resource "aws_cloudwatch_log_metric_filter" "MotrBouncingEmailCleanerPermanentFa
   depends_on = ["aws_cloudwatch_log_group.MotrBouncingEmailCleaner"]
 }
 
+resource "aws_cloudwatch_log_metric_filter" "MotrBouncingEmailCleanerSmsTemporaryFailures" {
+  name           = "MotrBouncingEmailCleanerSmsTemporaryFailures"
+  pattern        = "{ $.message = STATUS-REPORT }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrBouncingEmailCleaner.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrBouncingEmailCleaner-Sms-TemporaryFailures"
+    namespace = "${var.project}-${var.environment}-MotrBouncingEmailCleaner"
+    value     = "$.mdc.x-sms-temporary-failure"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrBouncingEmailCleaner"]
+}
+
+resource "aws_cloudwatch_log_metric_filter" "MotrBouncingEmailCleanerSmsTechnicalFailures" {
+  name           = "MotrBouncingEmailCleanerSmsTechnicalFailures"
+  pattern        = "{ $.message = STATUS-REPORT }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrBouncingEmailCleaner.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrBouncingEmailCleaner-Sms-TechnicalFailures"
+    namespace = "${var.project}-${var.environment}-MotrBouncingEmailCleaner"
+    value     = "$.mdc.x-sms-technical-failure"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrBouncingEmailCleaner"]
+}
+
+resource "aws_cloudwatch_log_metric_filter" "MotrBouncingEmailCleanerSmsPermanentFailures" {
+  name           = "MotrBouncingEmailCleanerSmsPermanentFailures"
+  pattern        = "{ $.message = STATUS-REPORT }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrBouncingEmailCleaner.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrBouncingEmailCleaner-Sms-PermanentFailures"
+    namespace = "${var.project}-${var.environment}-MotrBouncingEmailCleaner"
+    value     = "$.mdc.x-sms-permanently-failed"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrBouncingEmailCleaner"]
+}
+
 resource "aws_cloudwatch_event_rule" "MotrBouncingEmailCleanerStart" {
   name                = "motr-cleaner-start-${var.environment}"
   description         = "MOTR MotrBouncingEmailCleanerStart Start (${var.environment}) event rule | Schedule: ${var.motr_cleaner_schedule}"
