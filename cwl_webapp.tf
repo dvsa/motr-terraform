@@ -149,3 +149,31 @@ resource "aws_cloudwatch_log_metric_filter" "MotrWebHandler_MiscError_log_metric
 
   depends_on = ["aws_cloudwatch_log_group.MotrWebHandler"]
 }
+
+resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerPendingSubscriptionAlreadyDeleted_log_metric_filter" {
+  name           = "MotrWebHandlerPendingSubscriptionAlreadyDeleted_log_metric_filter"
+  pattern        = "{ $.message = PENDING-SUBSCRIPTION-ALREADY-DELETED }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrWebHandler-PendingSubscriptionAlreadyDeleted"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler-PendingSubscriptionAlreadyDeleted"
+    value     = "1"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrWebHandler"]
+}
+
+resource "aws_cloudwatch_log_metric_filter" "MotrWebHandlerPendingSubscriptionDeletionFailed_log_metric_filter" {
+  name           = "MotrWebHandlerPendingSubscriptionDeletionFailed_log_metric_filter"
+  pattern        = "{ $.message = PENDING-SUBSCRIPTION-DELETION-FAILED }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrWebHandler.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrWebHandler-PendingSubscriptionDeletionFailed"
+    namespace = "${var.project}-${var.environment}-MotrWebHandler-PendingSubscriptionDeletionFailed"
+    value     = "1"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrWebHandler"]
+}
