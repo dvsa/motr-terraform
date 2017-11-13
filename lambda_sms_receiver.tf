@@ -13,11 +13,13 @@ resource "aws_lambda_function" "MotrSmsReceiver" {
 
   environment {
     variables = {
-      LOG_LEVEL                       = "${var.sms_receiver_log_level}"
-      REGION                          = "${var.aws_region}"
-      DB_TABLE_SUBSCRIPTION           = "motr-${var.environment}-subscription"
-      DB_TABLE_CANCELLED_SUBSCRIPTION = "motr-${var.environment}-cancelled_subscription"
-      NOTIFY_BEARER_TOKEN             = "${var.sms_receiver_notify_bearer_token}"
+      LOG_LEVEL                                   = "${var.sms_receiver_log_level}"
+      REGION                                      = "${var.aws_region}"
+      DB_TABLE_SUBSCRIPTION                       = "motr-${var.environment}-subscription"
+      DB_TABLE_CANCELLED_SUBSCRIPTION             = "motr-${var.environment}-cancelled_subscription"
+      NOTIFY_BEARER_TOKEN                         = "${var.sms_receiver_notify_bearer_token}"
+      GOV_NOTIFY_API_TOKEN                        = "${var.gov_notify_api_token}"
+      SMS_UNSUBSCRIPTION_CONFIRMATION_TEMPLATE_ID = "${var.sms_unsubscription_confirmation_template_id}"
     }
   }
 }
