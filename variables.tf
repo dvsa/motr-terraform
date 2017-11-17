@@ -458,6 +458,11 @@ variable "sms_confirmation_template_id" {
   description = "Gov Notify Template ID for subscription confirmation SMS"
 }
 
+variable "sms_unsubscription_confirmation_template_id" {
+  type        = "string"
+  description = "Gov Notify Template ID for unsubscription confirmation SMS"
+}
+
 variable "inflight_batches_loader" {
   type        = "string"
   description = "The maximum number of concurrent message batches that can be put on the Amazon SQS queue"
