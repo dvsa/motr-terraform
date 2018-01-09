@@ -53,6 +53,11 @@ variable "static_assets_hash" {
   description = "Static assets current commit hash"
 }
 
+variable "commons_module_hash" {
+  type        = "string"
+  description = "Commons module current commit hash"
+}
+
 variable "status_email_recipients" {
   type        = "string"
   description = "List of email addresses which the daily failed notification count is sent"
