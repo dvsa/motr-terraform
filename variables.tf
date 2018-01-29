@@ -637,3 +637,18 @@ variable "sms_receiver_alias_record" {
   type        = "string"
   description = "DNS alias record name for SMS Receiver"
 }
+
+variable "ops_genie_sns_topic_sub_create" {
+  type = "string"
+  description = "OpsGenie topic subsription create boolean flag"
+}
+
+variable "ops_genie_sns_topic_sub_protocol" {
+  type = "string"
+  description = "OpsGenie topic subsription protocol"
+}
+
+variable "ops_genie_sns_topic_sub_endpoint" {
+  type = "string"
+  description = "OpsGenie topic subsription endpoint"
+}
