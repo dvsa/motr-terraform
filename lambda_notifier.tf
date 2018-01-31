@@ -33,6 +33,8 @@ resource "aws_lambda_function" "MotrNotifier" {
       MESSAGE_RECEIVE_TIMEOUT                    = "${var.message_receive_timeout_notifier}"
       REMAINING_TIME_THRESHOLD                   = "${var.remaining_time_threshold_notifier}"
       WEB_BASE_URL                               = "${var.base_url == "" ? "https://${aws_api_gateway_rest_api.MotrWeb.id}.execute-api.${var.aws_region}.amazonaws.com/${var.environment}/" : var.base_url}"
+      MOTH_DIRECT_URL_PREFIX                     = "${var.moth_direct_url_prefix}"
+      CHECKSUM_SALT                              = "${var.checksum_salt}"
     }
   }
 }
