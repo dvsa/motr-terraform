@@ -10,6 +10,21 @@ resource "aws_cloudwatch_log_group" "MotrBouncingEmailCleaner" {
   }
 }
 
+resource "aws_cloudwatch_event_rule" "MotrBouncingEmailCleanerStart" {
+  name                = "motr-cleaner-start-${var.environment}"
+  description         = "MOTR MotrBouncingEmailCleanerStart Start (${var.environment}) event rule | Schedule: ${var.motr_cleaner_schedule}"
+  is_enabled          = "${var.motr_cleaner_enabled}"
+  schedule_expression = "${var.motr_cleaner_schedule}"
+}
+
+resource "aws_cloudwatch_event_target" "MotrBouncingEmailCleanerStart" {
+  rule      = "${aws_cloudwatch_event_rule.MotrBouncingEmailCleanerStart.name}"
+  target_id = "${aws_cloudwatch_event_rule.MotrBouncingEmailCleanerStart.name}-target"
+  arn       = "${aws_lambda_alias.MotrBouncingEmailCleaner.arn}"
+}
+
+####################################################################################################################################
+# METRICS
 resource "aws_cloudwatch_log_metric_filter" "MotrBouncingEmailCleanerTemporaryFailures_log_metric_filter" {
   name           = "MotrBouncingEmailCleanerTemporaryFailures_log_metric_filter"
   pattern        = "{ $.message = STATUS-REPORT }"
@@ -94,15 +109,32 @@ resource "aws_cloudwatch_log_metric_filter" "MotrBouncingEmailCleanerSmsPermanen
   depends_on = ["aws_cloudwatch_log_group.MotrBouncingEmailCleaner"]
 }
 
-resource "aws_cloudwatch_event_rule" "MotrBouncingEmailCleanerStart" {
-  name                = "motr-cleaner-start-${var.environment}"
-  description         = "MOTR MotrBouncingEmailCleanerStart Start (${var.environment}) event rule | Schedule: ${var.motr_cleaner_schedule}"
-  is_enabled          = "${var.motr_cleaner_enabled}"
-  schedule_expression = "${var.motr_cleaner_schedule}"
+resource "aws_cloudwatch_log_metric_filter" "MotrBouncingEmailCleanerNotifyFailure_log_metric_filter" {
+  name           = "MotrBouncingEmailCleanerNotifyFailure_log_metric_filter"
+  pattern        = "{ $.message = NOTIFICATION-CLIENT-ERROR	 }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrBouncingEmailCleaner.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrBouncingEmailCleaner-NotifyFailure"
+    namespace = "${var.project}-${var.environment}-MotrBouncingEmailCleaner"
+    value     = "1"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrBouncingEmailCleaner"]
 }
 
-resource "aws_cloudwatch_event_target" "MotrBouncingEmailCleanerStart" {
-  rule      = "${aws_cloudwatch_event_rule.MotrBouncingEmailCleanerStart.name}"
-  target_id = "${aws_cloudwatch_event_rule.MotrBouncingEmailCleanerStart.name}-target"
-  arn       = "${aws_lambda_alias.MotrBouncingEmailCleaner.arn}"
+####################################################################################################################################
+# ALARMS
+resource "aws_cloudwatch_metric_alarm" "MotrBouncingEmailCleanerNotifyFailure_alarm" {
+  alarm_name          = "${var.project}-${var.environment}-MotrBouncingEmailCleanerNotifyFailureAlarm"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "3"
+  metric_name         = "${var.project}-${var.environment}-MotrBouncingEmailCleaner-NotifyFailure"
+  namespace           = "${var.project}-${var.environment}-MotrBouncingEmailCleaner"
+  period              = "60"
+  statistic           = "Sum"
+  threshold           = "1"
+
+  alarm_description = "Error getting data from GOV Notify"
+  alarm_actions     = ["${aws_sns_topic.MotrOpsGenieAlarm_sns_topic.arn}"]
 }

@@ -23,6 +23,8 @@ resource "aws_cloudwatch_event_target" "MotrNotifierStart" {
   arn       = "${aws_lambda_alias.MotrNotifier.arn}"
 }
 
+####################################################################################################################################
+# METRICS
 resource "aws_cloudwatch_log_metric_filter" "MotrNotifierSubscriptionProcessingFailed_log_metric_filter" {
   name           = "MotrNotifierSubscriptionProcessingFailed_log_metric_filter"
   pattern        = "{ $.message = SUBSCRIPTION-PROCESSING-FAILED }"
@@ -30,7 +32,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierSubscriptionProcessingF
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-SubscriptionProcessingFailed"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-SubscriptionProcessingFailed"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -44,7 +46,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierDvlaIdUpdatedToMotTestN
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-DvlaIdUpdatedToMotTestNumber"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-DvlaIdUpdatedToMotTestNumber"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -58,7 +60,21 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierSubscriptionQueueItemRe
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-SubscriptionQueueItemRemovalFailed"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-SubscriptionQueueItemRemovalFailed"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
+    value     = "1"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrNotifier"]
+}
+
+resource "aws_cloudwatch_log_metric_filter" "MotrNotifierNotifyReminderFailed_log_metric_filter" {
+  name           = "MotrNotifierNotifyReminderFailed_log_metric_filter"
+  pattern        = "{ $.message = NOTIFY-REMINDER-FAILED }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrNotifier.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrNotifier-NotifyReminderFailed"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -72,7 +88,21 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierVehicleDetailsRetrieval
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-VehicleDetailsRetrievalFailed"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-VehicleDetailsRetrievalFailed"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
+    value     = "1"
+  }
+
+  depends_on = ["aws_cloudwatch_log_group.MotrNotifier"]
+}
+
+resource "aws_cloudwatch_log_metric_filter" "MotrNotifierVehicleNotFound_log_metric_filter" {
+  name           = "MotrNotifierVehicleNotFound_log_metric_filter"
+  pattern        = "{ $.message = VEHICLE-NOT-FOUND }"
+  log_group_name = "/aws/lambda/${aws_lambda_function.MotrNotifier.function_name}"
+
+  metric_transformation {
+    name      = "${var.project}-${var.environment}-MotrNotifier-VehicleNotFound"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -86,7 +116,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierUnloadingTimedOut_log_m
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-UnloadingTimedOut"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-UnloadingTimedOut"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -100,7 +130,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierOneMonthReminderSuccess
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-OneMonthReminderSuccess"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-OneMonthReminderSuccess"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -114,7 +144,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierTwoWeekReminderSuccess_
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-TwoWeekReminderSuccess"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-TwoWeekReminderSuccess"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -128,7 +158,7 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifierOneDayAfterReminderSucc
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-OneDayAfterReminderSuccess"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-OneDayAfterReminderSuccess"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
@@ -142,9 +172,39 @@ resource "aws_cloudwatch_log_metric_filter" "MotrNotifier_MiscError_log_metric_f
 
   metric_transformation {
     name      = "${var.project}-${var.environment}-MotrNotifier-MiscError"
-    namespace = "${var.project}-${var.environment}-MotrNotifier-MiscError"
+    namespace = "${var.project}-${var.environment}-MotrNotifier"
     value     = "1"
   }
 
   depends_on = ["aws_cloudwatch_log_group.MotrNotifier"]
+}
+
+####################################################################################################################################
+# ALARMS
+resource "aws_cloudwatch_metric_alarm" "MotrNotifierNotifyReminderFailed_alarm" {
+  alarm_name          = "${var.project}-${var.environment}-MotrNotifierNotifyReminderFailedAlarm"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "3"
+  metric_name         = "${var.project}-${var.environment}-MotrNotifier-NotifyReminderFailed"
+  namespace           = "${var.project}-${var.environment}-MotrNotifier"
+  period              = "60"
+  statistic           = "Sum"
+  threshold           = "1"
+
+  alarm_description = "Error submitting SMS or email to GOV Notify"
+  alarm_actions     = ["${aws_sns_topic.MotrOpsGenieAlarm_sns_topic.arn}"]
+}
+
+resource "aws_cloudwatch_metric_alarm" "MotrNotifierVehicleDetailsRetrievalFailed_alarm" {
+  alarm_name          = "${var.project}-${var.environment}-MotrNotifierVehicleDetailsRetrievalFailedAlarm"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = "3"
+  metric_name         = "${var.project}-${var.environment}-MotrNotifier-VehicleDetailsRetrievalFailed"
+  namespace           = "${var.project}-${var.environment}-MotrNotifier"
+  period              = "60"
+  statistic           = "Sum"
+  threshold           = "1"
+
+  alarm_description = "Error communicating with Trade API"
+  alarm_actions     = ["${aws_sns_topic.MotrOpsGenieAlarm_sns_topic.arn}"]
 }
