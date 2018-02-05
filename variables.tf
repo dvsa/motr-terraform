@@ -418,6 +418,16 @@ variable "base_url" {
   description = "MOT reminder base url"
 }
 
+variable "moth_direct_url_prefix" {
+  type        = "string"
+  description = "MOT history direct url prefix"
+}
+
+variable "checksum_salt" {
+  type        = "string"
+  description = "Salt used when generating MOTH direct url checksum"
+}
+
 variable "one_month_notification_template_id" {
   type        = "string"
   description = "Gov Notify Template ID for one month reminder email"
