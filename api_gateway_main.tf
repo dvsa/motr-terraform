@@ -451,7 +451,7 @@ resource "aws_api_gateway_integration_response" "MotTestReminderMockRegistration
         "secondaryColour": "testDVLASecondaryColour",
         "registration": "$input.params('registration')",
         "manufactureYear": "1999",
-        "motTestExpiryDate": "2018-03-09",
+        "motTestExpiryDate": "2020-03-09",
         "dvlaId": "12349876"
     #else
         "make": "testMake",
