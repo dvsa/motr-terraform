@@ -583,11 +583,6 @@ variable "cw_lg_npinger_lambda_retention" {
   description = "Specifies the number of days you want to retain log events"
 }
 
-variable "feature_toggle_sms" {
-  type        = "string"
-  description = "Whether to enable the SMS features of MOTR"
-}
-
 variable "feature_toggle_hgv_psv_vehicles" {
   type        = "string"
   description = "Whether to enable signing up hgv/psv vehicle in MOTR"
