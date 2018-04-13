@@ -35,6 +35,7 @@ resource "aws_lambda_function" "MotrWebHandler" {
       RELEASE_VERSION                                      = "${var.release_version}"
       MOT_TEST_REMINDER_INFO_TOKEN                         = "${var.mot_test_reminder_info_token}"
       FEATURE_TOGGLE_SMS                                   = "${var.feature_toggle_sms}"
+      FEATURE_TOGGLE_HGV_PSV_VEHICLES                      = "${var.feature_toggle_hgv_psv_vehicles}"
     }
   }
 

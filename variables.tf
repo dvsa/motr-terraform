@@ -588,6 +588,11 @@ variable "feature_toggle_sms" {
   description = "Whether to enable the SMS features of MOTR"
 }
 
+variable "feature_toggle_hgv_psv_vehicles" {
+  type        = "string"
+  description = "Whether to enable signing up hgv/psv vehicle in MOTR"
+}
+
 variable "release_version" {
   type        = "string"
   description = "The version of the current release - will be changed on every release through the environment variables"
