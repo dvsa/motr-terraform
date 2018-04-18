@@ -20,6 +20,11 @@ resource "aws_dynamodb_table" "motr-cancelled_subscription" {
     type = "S"
   }
 
+  attribute {
+    name = "vehicle_type"
+    type = "S"
+  }
+
   global_secondary_index {
     name               = "email-gsi"
     hash_key           = "email"
