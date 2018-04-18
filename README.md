@@ -1,2 +1,3 @@
-# motr-terraform
+# motr-terraform (DEPRECATED)
 MOTR terraform code
+
